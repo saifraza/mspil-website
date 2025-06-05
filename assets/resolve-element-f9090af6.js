@@ -1,0 +1,1 @@
+import{Y as e}from"./index-e8e769b7.js";function r(r,t,n){var o;if("string"==typeof r){let l=document;t&&(e(Boolean(t.current)),l=t.current),n?(null!==(o=n[r])&&void 0!==o||(n[r]=l.querySelectorAll(r)),r=n[r]):r=l.querySelectorAll(r)}else r instanceof Element&&(r=[r]);return Array.from(r||[])}export{r};
