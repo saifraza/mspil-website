@@ -35,20 +35,22 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^10.16.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.285.0",
     "multer": "^2.0.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
     "recharts": "^2.10.3",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "overrides": {
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",
