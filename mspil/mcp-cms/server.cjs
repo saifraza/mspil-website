@@ -457,13 +457,17 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     }
 
     // Create content info with smart filename
-    const protocol = req.secure ? 'https' : 'http';
-    const host = req.get('host');
+    const protocol = req.secure || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
+    const host = req.get('x-forwarded-host') || req.get('host');
+    
+    // Force HTTPS for Replit production URLs
+    const finalProtocol = host.includes('replit.dev') ? 'https' : protocol;
+    
     const content = {
       id: Date.now(),
       filename: copyResult.newFilename, // Use the smart renamed filename
       originalFilename: file.originalname, // Keep original for reference
-      url: `${protocol}://${host}/uploads/${file.filename}`,
+      url: `${finalProtocol}://${host}/uploads/${file.filename}`,
       mimeType: file.mimetype,
       size: file.size,
       category: category,
