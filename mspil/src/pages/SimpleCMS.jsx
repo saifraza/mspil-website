@@ -7,7 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 
-const API_URL = 'https://workspace.saifraza91.repl.co/api';
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://workspace.saifraza91.repl.co/api' 
+  : 'http://localhost:3002/api';
 
 const SimpleCMS = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
