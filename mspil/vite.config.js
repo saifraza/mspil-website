@@ -181,23 +181,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            }
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor';
-            }
-            if (id.includes('@radix-ui')) {
-              return 'ui-vendor';
-            }
-            if (id.includes('recharts')) {
-              return 'charts-vendor';
-            }
-            return 'vendor';
-          }
-        },
+        manualChunks: undefined,
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
           return `js/[name]-${facadeModuleId}-[hash].js`;
@@ -219,13 +203,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     manifest: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    },
+    minify: false,
     sourcemap: false,
     reportCompressedSize: false,
     chunkSizeWarningLimit: 1000
