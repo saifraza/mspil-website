@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -5,12 +6,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const pdfParse = require('pdf-parse');
+const Tesseract = require('tesseract.js');
+const OpenAI = require('openai');
 const { generateSuggestions } = require('./ai-suggestions.cjs');
 
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET || 'simple-cms-secret-key';
+
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY // Add this to your .env file
+});
 
 // Create uploads directory
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -434,11 +443,13 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
   try {
     const file = req.file;
     const comment = req.body.comment || '';
+    const summary = req.body.summary || '';
     const forcePlacement = req.body.forcePlacement;
 
     console.log(`📤 Upload request:`, {
       filename: file.originalname,
       comment: comment,
+      summary: summary,
       forcePlacement: forcePlacement
     });
 
@@ -472,6 +483,7 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
       size: file.size,
       category: category,
       comment: comment,
+      summary: summary,
       uploadedBy: req.user.username,
       uploadedAt: new Date().toISOString()
     };
@@ -668,6 +680,191 @@ app.get('/api/download/:category/:filename', authMiddleware, (req, res) => {
     res.status(500).json({ error: 'Download failed' });
   }
 });
+
+// Update file summary
+app.put('/api/update-summary', authMiddleware, (req, res) => {
+  try {
+    const { fileId, summary } = req.body;
+    
+    if (!fileId) {
+      return res.status(400).json({ error: 'File ID required' });
+    }
+
+    const dataPath = path.join(__dirname, 'published-content.json');
+    
+    if (!fs.existsSync(dataPath)) {
+      return res.status(404).json({ error: 'No content found' });
+    }
+    
+    const content = fs.readFileSync(dataPath, 'utf-8');
+    let data = JSON.parse(content);
+    
+    // Find and update the file
+    const fileIndex = data.findIndex(item => item.id === fileId || item.id === parseInt(fileId));
+    
+    if (fileIndex === -1) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    
+    // Update the summary
+    data[fileIndex].summary = summary || '';
+    data[fileIndex].lastModified = new Date().toISOString();
+    data[fileIndex].modifiedBy = req.user.username;
+    
+    // Save updated content
+    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+    
+    console.log(`✅ Summary updated for file: ${data[fileIndex].filename} by ${req.user.username}`);
+    
+    res.json({
+      success: true,
+      message: 'Summary updated successfully',
+      file: data[fileIndex]
+    });
+    
+  } catch (error) {
+    console.error('Update summary error:', error);
+    res.status(500).json({ error: 'Failed to update summary' });
+  }
+});
+
+// AI Insights endpoint with progress tracking
+app.post('/api/ai-insights', authMiddleware, upload.single('file'), async (req, res) => {
+  try {
+    const file = req.file;
+    
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    console.log(`🔍 Starting AI insights for: ${file.originalname}`);
+    
+    let extractedText = '';
+    const filePath = file.path;
+    let progress = 0;
+    
+    // Step 1: Text extraction (30% progress)
+    progress = 10;
+    console.log(`📊 Progress: ${progress}% - Starting text extraction...`);
+    
+    if (file.mimetype === 'application/pdf') {
+      try {
+        progress = 20;
+        console.log(`📊 Progress: ${progress}% - Extracting text from PDF...`);
+        const dataBuffer = fs.readFileSync(filePath);
+        const pdfData = await pdfParse(dataBuffer);
+        extractedText = pdfData.text;
+        progress = 30;
+        console.log(`📊 Progress: ${progress}% - PDF text extracted: ${extractedText.length} characters`);
+      } catch (pdfError) {
+        console.log('❌ PDF text extraction failed, trying OCR...');
+      }
+    }
+    
+    // Step 2: OCR if needed (50% progress)
+    if (!extractedText || extractedText.trim().length < 50) {
+      try {
+        progress = 35;
+        console.log(`📊 Progress: ${progress}% - Running OCR analysis...`);
+        const { data: { text } } = await Tesseract.recognize(filePath, 'eng');
+        extractedText = text;
+        progress = 50;
+        console.log(`📊 Progress: ${progress}% - OCR completed: ${extractedText.length} characters`);
+      } catch (ocrError) {
+        console.log('❌ OCR failed:', ocrError.message);
+        progress = 50;
+      }
+    } else {
+      progress = 50;
+    }
+    
+    // Step 3: Generate AI summary with OpenAI (100% progress)
+    let aiSummary = '';
+    if (extractedText && extractedText.trim().length > 20) {
+      try {
+        progress = 60;
+        console.log(`📊 Progress: ${progress}% - Generating AI summary with OpenAI...`);
+        aiSummary = await generateOpenAISummary(extractedText);
+        progress = 100;
+        console.log(`📊 Progress: ${progress}% - AI summary generated: ${aiSummary.length} characters`);
+      } catch (aiError) {
+        console.log('❌ OpenAI failed:', aiError.message);
+        progress = 80;
+        console.log(`📊 Progress: ${progress}% - Fallback to basic summary...`);
+        aiSummary = generateBasicSummary(extractedText);
+        progress = 100;
+      }
+    } else {
+      progress = 100;
+      aiSummary = `Document analysis: ${file.originalname} - ${(file.size / 1024).toFixed(1)}KB file uploaded successfully.`;
+    }
+
+    // Clean up uploaded file
+    fs.unlinkSync(filePath);
+    
+    res.json({
+      success: true,
+      summary: aiSummary,
+      extractedText: extractedText.substring(0, 500), // First 500 chars for preview
+      hasText: extractedText.length > 20,
+      filename: file.originalname,
+      progress: 100
+    });
+    
+  } catch (error) {
+    console.error('AI insights error:', error);
+    res.status(500).json({ error: 'Failed to generate AI insights' });
+  }
+});
+
+// Helper function to generate AI summary using OpenAI
+async function generateOpenAISummary(text) {
+  try {
+    // Truncate text if too long (OpenAI has token limits)
+    const truncatedText = text.length > 8000 ? text.substring(0, 8000) + '...' : text;
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional document analyzer. Create concise, informative summaries that highlight key points, important data, dates, and actionable insights. Focus on business-relevant information."
+        },
+        {
+          role: "user",
+          content: `Please analyze this document and provide a comprehensive summary highlighting:
+1. Main topic and purpose
+2. Key findings or data points
+3. Important dates, numbers, or percentages
+4. Conclusions or recommendations
+
+Document content:
+${truncatedText}`
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.3
+    });
+
+    return completion.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+    throw error;
+  }
+}
+
+// Helper function to generate basic summary
+function generateBasicSummary(text) {
+  if (!text || text.trim().length < 20) {
+    return 'Document uploaded successfully. Text content not available for analysis.';
+  }
+  
+  const words = text.trim().split(/\s+/);
+  const wordCount = words.length;
+  const charCount = text.length;
+  
+  return `Document contains ${wordCount} words (${charCount} characters). Preview: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`;
+}
 
 // Start server
 app.listen(PORT, () => {

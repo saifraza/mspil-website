@@ -19,6 +19,7 @@ const SimpleCMS = () => {
   const [password, setPassword] = useState('');
   const [files, setFiles] = useState([]);
   const [comment, setComment] = useState('');
+  const [summary, setSummary] = useState('');
   const [uploading, setUploading] = useState(false);
   const [recentUploads, setRecentUploads] = useState([]);
   const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(false);
@@ -26,6 +27,10 @@ const SimpleCMS = () => {
   const [selectedPlacement, setSelectedPlacement] = useState(null);
   const [allFiles, setAllFiles] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [aiProgress, setAiProgress] = useState(0);
+  const [aiProcessing, setAiProcessing] = useState(false);
+  const [progressMessage, setProgressMessage] = useState('');
+  const [dragActive, setDragActive] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -319,6 +324,7 @@ const SimpleCMS = () => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('comment', enhancedComment);
+        formData.append('summary', summary);
         formData.append('forcePlacement', placementId); // Override auto-detection
 
         try {
@@ -367,6 +373,7 @@ const SimpleCMS = () => {
       // Reset state
       setFiles([]);
       setComment('');
+      setSummary('');
       setShowPlacementSuggestions(false);
       setSelectedPlacement(null);
       setPlacementSuggestions([]);
@@ -418,6 +425,7 @@ const SimpleCMS = () => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('comment', comment || `Batch upload: ${file.name}`);
+        formData.append('summary', summary);
 
         try {
           const response = await fetch(`${API_URL}/upload`, {
@@ -468,6 +476,7 @@ const SimpleCMS = () => {
       // Clear form and refresh
       setFiles([]);
       setComment('');
+      setSummary('');
       document.getElementById('file-input').value = '';
       verifyTokenAndFetchContent();
 
@@ -482,18 +491,118 @@ const SimpleCMS = () => {
     }
   };
 
+  // Drag and drop handlers
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      setFiles(droppedFiles);
+      
+      toast({
+        title: 'Files Added',
+        description: `${droppedFiles.length} file(s) ready for upload`,
+      });
+    }
+  };
+
+  // AI Insights function with progress tracking
+  const generateAIInsights = async () => {
+    if (files.length === 0) return;
+
+    try {
+      setAiProcessing(true);
+      setAiProgress(0);
+      setProgressMessage('Starting AI analysis...');
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        setProgressMessage(`Analyzing ${file.name}...`);
+        setAiProgress(10);
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Simulate progress updates during processing
+        const progressInterval = setInterval(() => {
+          setAiProgress(prev => {
+            if (prev < 90) return prev + 5;
+            return prev;
+          });
+        }, 1000);
+        
+        const response = await fetch(`${API_URL}/ai-insights`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        clearInterval(progressInterval);
+
+        if (response.ok) {
+          const result = await response.json();
+          setAiProgress(100);
+          setProgressMessage('AI analysis complete!');
+          
+          if (result.summary) {
+            setSummary(result.summary);
+            toast({
+              title: '✨ AI Insights Generated',
+              description: `Intelligent summary created for ${file.name}`,
+            });
+          }
+        } else {
+          throw new Error('Failed to process file');
+        }
+      }
+    } catch (error) {
+      setAiProgress(0);
+      setProgressMessage('');
+      toast({
+        title: 'Error',
+        description: 'Failed to generate AI insights: ' + error.message,
+        variant: 'destructive'
+      });
+    } finally {
+      setTimeout(() => {
+        setAiProcessing(false);
+        setAiProgress(0);
+        setProgressMessage('');
+      }, 2000); // Keep progress visible for 2 seconds
+    }
+  };
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-bio-green-50 to-eco-lime-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl text-center">Simple CMS Login</CardTitle>
+          <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-md">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg text-center">
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                  <FileText className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <CardTitle className="text-2xl">Simple CMS</CardTitle>
+              <p className="text-purple-100 text-sm">AI-Powered Document Management</p>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleLogin} className="space-y-4">
@@ -529,13 +638,23 @@ const SimpleCMS = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-bio-green-50 to-eco-lime-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-purple-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-900">Simple CMS</h1>
-            <Button variant="outline" onClick={handleLogout}>
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                <FileText className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  Simple CMS
+                </h1>
+                <p className="text-sm text-gray-500">AI-Powered Document Management</p>
+              </div>
+            </div>
+            <Button variant="outline" onClick={handleLogout} className="border-purple-200 hover:bg-purple-50">
               <LogOut className="h-4 w-4 mr-2" />
               Logout
             </Button>
@@ -551,80 +670,180 @@ const SimpleCMS = () => {
           className="space-y-6"
         >
           {/* Upload Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Upload Document</CardTitle>
+          <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
+              <CardTitle className="flex items-center space-x-2">
+                <Upload className="h-5 w-5" />
+                <span>Upload Document</span>
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Select Files (Any documents, images, or reports)
-                </label>
-                <Input
+              {/* Drag and Drop Upload Area */}
+              <div
+                className={`
+                  relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300
+                  ${dragActive 
+                    ? 'border-purple-500 bg-purple-50 scale-105' 
+                    : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'
+                  }
+                `}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                <input
                   id="file-input"
                   type="file"
                   onChange={handleFileChange}
                   accept="*/*"
                   multiple
-                  className="cursor-pointer"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                {files.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    <p className="text-sm font-medium text-gray-700">
-                      Selected {files.length} file{files.length > 1 ? 's' : ''}:
-                    </p>
-                    <div className="max-h-40 overflow-y-auto space-y-2">
-                      {files.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {file.name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {(file.size / 1024 / 1024).toFixed(2)} MB • {file.type || 'Unknown type'}
-                            </p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeFile(index)}
-                            className="ml-2 text-red-500 hover:text-red-700"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
+                <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${
+                      dragActive ? 'bg-purple-200' : 'bg-gray-100'
+                    }`}>
+                      <Upload className={`w-8 h-8 ${dragActive ? 'text-purple-600' : 'text-gray-500'}`} />
                     </div>
                   </div>
-                )}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {dragActive ? 'Drop files here!' : 'Upload Your Documents'}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {dragActive 
+                        ? 'Release to add files' 
+                        : 'Drag and drop files here, or click to browse'
+                      }
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Supports PDFs, Images, Documents • Max 100MB per file
+                    </p>
+                  </div>
+                  {!dragActive && (
+                    <Button 
+                      variant="outline" 
+                      className="border-dashed border-gray-400 hover:border-purple-500 hover:text-purple-600"
+                      onClick={() => document.getElementById('file-input').click()}
+                    >
+                      Choose Files
+                    </Button>
+                  )}
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Comment (What is this file?)
-                </label>
-                <Textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="e.g., Annual Report 2024, Q3 Financial Results, CSR Policy Document..."
-                  rows={3}
-                />
+              {files.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  <p className="text-sm font-medium text-gray-700">
+                    Selected {files.length} file{files.length > 1 ? 's' : ''}:
+                  </p>
+                  <div className="max-h-40 overflow-y-auto space-y-2">
+                    {files.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {file.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {(file.size / 1024 / 1024).toFixed(2)} MB • {file.type || 'Unknown type'}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                          className="ml-2 text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Comment (What is this file?)
+                  </label>
+                  <Textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="e.g., Annual Report 2024, Q3 Financial Results, CSR Policy Document..."
+                    rows={3}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Summary (Brief description)
+                  </label>
+                  <Textarea
+                    value={summary}
+                    readOnly
+                    placeholder="Click 'AI Insights' to generate automatic summary..."
+                    rows={3}
+                    className="bg-gray-50 cursor-not-allowed text-gray-800 placeholder-gray-500"
+                  />
+                </div>
               </div>
 
-              <Button 
-                onClick={getPlacementSuggestions}
-                disabled={files.length === 0 || uploading}
-                className="w-full"
-              >
-                {uploading ? (
-                  <>Uploading...</>
-                ) : (
-                  <>
-                    🧠 <Upload className="h-4 w-4 ml-2 mr-2" />
-                    Smart Upload with Intelligent Suggestions
-                  </>
-                )}
-              </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Button 
+                  onClick={getPlacementSuggestions}
+                  disabled={files.length === 0 || uploading}
+                  className="w-full"
+                >
+                  {uploading ? (
+                    <>Uploading...</>
+                  ) : (
+                    <>
+                      🧠 <Upload className="h-4 w-4 ml-2 mr-2" />
+                      Smart Upload with Intelligent Suggestions
+                    </>
+                  )}
+                </Button>
+
+                <Button 
+                  onClick={generateAIInsights}
+                  disabled={files.length === 0 || uploading || aiProcessing}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  {aiProcessing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>✨ AI Insights</>
+                  )}
+                </Button>
+              </div>
+
+              {/* AI Progress Bar */}
+              {aiProcessing && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-purple-700">AI Analysis Progress</span>
+                    <span className="text-sm text-purple-600">{aiProgress}%</span>
+                  </div>
+                  <div className="w-full bg-purple-200 rounded-full h-3">
+                    <div 
+                      className="bg-purple-600 h-3 rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${aiProgress}%` }}
+                    ></div>
+                  </div>
+                  {progressMessage && (
+                    <p className="text-sm text-purple-600 mt-2 flex items-center">
+                      <div className="animate-pulse w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                      {progressMessage}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* AI Placement Suggestions - moved here to appear right under upload */}
               {showPlacementSuggestions && (
@@ -714,9 +933,12 @@ const SimpleCMS = () => {
 
           {/* Recent Uploads */}
           {recentUploads.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Uploads</CardTitle>
+            <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-t-lg">
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="h-5 w-5" />
+                  <span>Recent Uploads</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -726,6 +948,9 @@ const SimpleCMS = () => {
                       <div className="flex-1">
                         <p className="font-medium text-sm">{item.metadata?.title || item.filename}</p>
                         <p className="text-xs text-gray-600 mt-1">{item.comment}</p>
+                        {item.summary && (
+                          <p className="text-xs text-gray-500 mt-1 italic">📝 {item.summary}</p>
+                        )}
                         <div className="flex items-center space-x-4 mt-2">
                           <span className="text-xs text-gray-500">
                             Category: {item.category}
@@ -755,9 +980,12 @@ const SimpleCMS = () => {
 
           {/* File Browser */}
           {allFiles.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>📁 File Browser</CardTitle>
+            <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="h-5 w-5" />
+                  <span>File Browser</span>
+                </CardTitle>
                 <div className="flex space-x-2">
                   <select 
                     value={selectedCategory} 
@@ -790,6 +1018,9 @@ const SimpleCMS = () => {
                         <FileText className="h-4 w-4 text-gray-500" />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{file.filename}</p>
+                          {file.summary && (
+                            <p className="text-xs text-gray-500 mt-1 truncate italic">📝 {file.summary}</p>
+                          )}
                           <div className="flex items-center space-x-2 mt-1">
                             <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
                               {file.category}

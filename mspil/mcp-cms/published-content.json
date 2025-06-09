@@ -90,5 +90,30 @@
     "comment": "nawab raza [AI Placement: Nawab Raza (Chairman)]",
     "uploadedBy": "admin",
     "uploadedAt": "2025-06-09T12:05:04.310Z"
+  },
+  {
+    "id": 1749479916409,
+    "filename": "document_2025-06-09_test_placement_6396.pdf",
+    "originalFilename": "ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "url": "http://localhost:3002/uploads/1749479916377-ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "mimeType": "application/pdf",
+    "size": 1406250,
+    "category": "general-documents",
+    "comment": "test [AI Placement: General Documents]",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T14:38:36.409Z"
+  },
+  {
+    "id": 1749480956905,
+    "filename": "document_2025-06-09_placement_general_6888.pdf",
+    "originalFilename": "ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "url": "http://localhost:3002/uploads/1749480956874-ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "mimeType": "application/pdf",
+    "size": 1406250,
+    "category": "general-documents",
+    "comment": " [AI Placement: General Documents]",
+    "summary": "",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T14:55:56.905Z"
   }
 ]
