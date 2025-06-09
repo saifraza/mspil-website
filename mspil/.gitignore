@@ -134,3 +134,13 @@ dist
 
 # Temporary vite config files
 vite.config.js.timestamp-*.mjs
+
+# MCP CMS uploaded files - these should come from MCP server dynamically
+mcp-cms/uploads/
+public/images/**/*/2025-*
+public/images/**/*_2025-*
+public/documents/**/*/2025-*
+public/documents/**/*_2025-*
+
+# Ignore all uploaded files with timestamps in their names
+**/2025-*
