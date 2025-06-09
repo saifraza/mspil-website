@@ -457,11 +457,13 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     }
 
     // Create content info with smart filename
+    const protocol = req.secure ? 'https' : 'http';
+    const host = req.get('host');
     const content = {
       id: Date.now(),
       filename: copyResult.newFilename, // Use the smart renamed filename
       originalFilename: file.originalname, // Keep original for reference
-      url: `http://localhost:${PORT}/uploads/${file.filename}`,
+      url: `${protocol}://${host}/uploads/${file.filename}`,
       mimeType: file.mimetype,
       size: file.size,
       category: category,
