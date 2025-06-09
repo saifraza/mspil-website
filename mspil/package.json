@@ -10,6 +10,7 @@
     "start": "./start-all.sh",
     "start:simple": "npm run dev",
     "cms:server": "node mcp-cms/server.cjs",
+    "cms:production": "node mcp-cms/server.cjs",
     "app:only": "vite",
     "lint": "eslint src --ext .js,.jsx",
     "lint:fix": "eslint src --ext .js,.jsx --fix"
