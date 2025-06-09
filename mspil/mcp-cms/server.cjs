@@ -21,7 +21,11 @@ if (!fs.existsSync(uploadsDir)) {
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir, {
+  maxAge: '1d', // Cache for 1 day
+  etag: true,
+  lastModified: true
+}));
 
 // Users (passwords are hashed)
 const users = [
@@ -447,7 +451,21 @@ app.get('/api/content', (req, res) => {
     }
     
     const content = fs.readFileSync(dataPath, 'utf-8');
-    res.json(JSON.parse(content));
+    const parsedContent = JSON.parse(content);
+    
+    // Fix URLs to use current server
+    const currentHost = req.get('host');
+    const protocol = req.secure ? 'https' : 'http';
+    const fixedContent = parsedContent.map(item => {
+      if (item.url && (item.url.includes('localhost') || item.url.includes('workspace.saifraza91.repl.co'))) {
+        // Extract filename from the URL
+        const filename = item.url.split('/').pop();
+        item.url = `${protocol}://${currentHost}/uploads/${filename}`;
+      }
+      return item;
+    });
+    
+    res.json(fixedContent);
   } catch (error) {
     console.error('Content fetch error:', error);
     res.json([]);
