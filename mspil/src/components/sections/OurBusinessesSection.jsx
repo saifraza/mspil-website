@@ -216,13 +216,13 @@ const OurBusinessesSection = () => {
         // Use the public download endpoint that serves real uploaded files
         let publicUrl = '#';
         if (business.id === 'sugar') {
-          publicUrl = 'https://workspace.saifraza91.repl.co/api/public/download/sugar-data';
+          publicUrl = 'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api/public/download/sugar-data';
         } else if (business.id === 'ethanol') {
-          publicUrl = 'https://workspace.saifraza91.repl.co/api/public/download/ethanol-data';
+          publicUrl = 'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api/public/download/ethanol-data';
         } else if (business.id === 'power') {
-          publicUrl = 'https://workspace.saifraza91.repl.co/api/public/download/power-data';
+          publicUrl = 'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api/public/download/power-data';
         } else if (business.id === 'feed') {
-          publicUrl = 'https://workspace.saifraza91.repl.co/api/public/download/feed-data';
+          publicUrl = 'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api/public/download/feed-data';
         }
         
         const resolvedCycleSteps = business.cycleSteps.map(step => ({
