@@ -20,26 +20,6 @@
     "comment": ""
   },
   {
-    "id": "1749415548854-IMG_B547C723-09FF-4D6D-9EE6-DE0A105203DC.jpeg",
-    "url": "https://workspace.saifraza91.repl.co/uploads/1749415548854-IMG_B547C723-09FF-4D6D-9EE6-DE0A105203DC.jpeg",
-    "filename": "nawab_raza_chairman_2025-06-08_comment_1749415548854.jpeg",
-    "size": 221146,
-    "mimetype": "image/jpeg",
-    "uploadedAt": "2025-06-08T10:05:48.854Z",
-    "category": "nawab-raza-image",
-    "comment": "comment"
-  },
-  {
-    "id": "1749415548885-IMG_1484.png",
-    "url": "https://workspace.saifraza91.repl.co/uploads/1749415548885-IMG_1484.png",
-    "filename": "nawab_raza_chairman_2025-06-08_raza_1749415548885.png",
-    "size": 491410,
-    "mimetype": "image/png",
-    "uploadedAt": "2025-06-08T10:05:48.885Z",
-    "category": "nawab-raza-image",
-    "comment": "raza"
-  },
-  {
     "id": "1749415548895-IMG_1483.png",
     "url": "https://workspace.saifraza91.repl.co/uploads/1749415548895-IMG_1483.png",
     "filename": "saif_raza_md_2025-06-08_raza_1749415548895.png",
@@ -98,5 +78,17 @@
     "uploadedAt": "2025-06-08T11:00:38.378Z",
     "category": "infrastructure-images",
     "comment": ""
+  },
+  {
+    "id": 1749470704310,
+    "filename": "nawab_raza_chairman.png",
+    "originalFilename": "Screenshot 2025-06-09 at 07.04.22.png",
+    "url": "http://localhost:3002/uploads/1749470704296-Screenshot_2025-06-09_at_07.04.22.png",
+    "mimeType": "image/png",
+    "size": 63867,
+    "category": "nawab-raza-image",
+    "comment": "nawab raza [AI Placement: Nawab Raza (Chairman)]",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T12:05:04.310Z"
   }
 ]

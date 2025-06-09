@@ -289,6 +289,12 @@ function copyFileToPublic(file, category, comment) {
     'general-documents': '../public/documents/general'
   };
   
+  // Categories that should overwrite existing files (single-purpose)
+  const overwriteCategories = [
+    'saif-raza-image',
+    'nawab-raza-image'
+  ];
+  
   const targetDir = path.join(__dirname, categoryPaths[category] || categoryPaths['general-documents']);
   
   try {
@@ -297,16 +303,48 @@ function copyFileToPublic(file, category, comment) {
       fs.mkdirSync(targetDir, { recursive: true });
     }
     
-    // Generate smart filename
-    const smartFilename = generateSmartFilename(file.originalname, category, comment);
+    let finalFilename;
+    let targetPath;
     
-    // Copy file with smart name
+    if (overwriteCategories.includes(category)) {
+      // For single-purpose categories, use fixed filename and overwrite
+      const ext = path.extname(file.originalname);
+      const fixedFilenames = {
+        'saif-raza-image': `saif_raza_md${ext}`,
+        'nawab-raza-image': `nawab_raza_chairman${ext}`
+      };
+      
+      finalFilename = fixedFilenames[category] || `${category}${ext}`;
+      targetPath = path.join(targetDir, finalFilename);
+      
+      // Delete old file if it exists
+      if (fs.existsSync(targetPath)) {
+        fs.unlinkSync(targetPath);
+        console.log(`🗑️ Deleted old file: ${finalFilename}`);
+      }
+      
+      // Also clean up any old files matching the pattern
+      const files = fs.readdirSync(targetDir);
+      const patternToClean = category.replace('-image', '');
+      files.forEach(fileName => {
+        if (fileName.includes(patternToClean) && fileName !== finalFilename) {
+          fs.unlinkSync(path.join(targetDir, fileName));
+          console.log(`🗑️ Cleaned up old file: ${fileName}`);
+        }
+      });
+      
+    } else {
+      // For multi-file categories, use smart filename with timestamp
+      finalFilename = generateSmartFilename(file.originalname, category, comment);
+      targetPath = path.join(targetDir, finalFilename);
+    }
+    
+    // Copy file
     const sourcePath = file.path;
-    const targetPath = path.join(targetDir, smartFilename);
     fs.copyFileSync(sourcePath, targetPath);
     
-    console.log(`✅ File copied: ${file.originalname} → ${smartFilename} (${category})`);
-    return { success: true, newFilename: smartFilename };
+    console.log(`✅ File copied: ${file.originalname} → ${finalFilename} (${category})`);
+    return { success: true, newFilename: finalFilename };
   } catch (error) {
     console.error(`❌ Copy failed:`, error);
     return { success: false, error: error.message };
@@ -325,6 +363,18 @@ function saveContentInfo(content) {
     }
   } catch (error) {
     console.log('Creating new content file');
+  }
+  
+  // Categories that should overwrite existing entries
+  const overwriteCategories = [
+    'saif-raza-image',
+    'nawab-raza-image'
+  ];
+  
+  if (overwriteCategories.includes(content.category)) {
+    // Remove any existing entries with the same category
+    existingData = existingData.filter(item => item.category !== content.category);
+    console.log(`🗑️ Removed old ${content.category} entries from database`);
   }
   
   existingData.push(content);
