@@ -199,9 +199,9 @@ const NewsMediaSection = () => {
       const uploadedItems = uploadedMediaFiles.map((file, index) => ({
         type: 'image',
         titleKey: `uploadedMedia${index}Title`,
-        imagePath: `/images/media/${file.filename}`,
+        imagePath: file.url,
         altKey: `uploadedMedia${index}Alt`,
-        imageUrl: `/images/media/${file.filename}`,
+        imageUrl: file.url,
         isUploaded: true,
         uploadedTitle: file.metadata?.title || file.filename,
         uploadedDescription: file.comment || 'Uploaded media file'
