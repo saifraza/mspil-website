@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User
@@ -6,10 +6,36 @@ import {
 import { useTranslation } from '@/contexts/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
-// Removed AutoPublishedContent - using static content now
 
 const AboutUsPage = () => {
   const t = useTranslation();
+  const [uploadedLeadershipImages, setUploadedLeadershipImages] = useState([]);
+
+  useEffect(() => {
+    const fetchUploadedLeadershipImages = async () => {
+      try {
+        const API_URL = process.env.NODE_ENV === 'production' 
+          ? 'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api' 
+          : 'http://localhost:3002/api';
+        
+        const response = await fetch(`${API_URL}/content`);
+        const allContent = await response.json();
+        
+        // Filter for leadership images
+        const leadershipFiles = allContent.filter(item => 
+          item.category === 'leadership-images' || 
+          item.category === 'nawab-raza-image' || 
+          item.category === 'saif-raza-image'
+        );
+        
+        setUploadedLeadershipImages(leadershipFiles);
+      } catch (error) {
+        console.log('Could not fetch leadership images:', error);
+      }
+    };
+
+    fetchUploadedLeadershipImages();
+  }, []);
 
   const fadeInProps = {
     initial: { opacity: 0, y: 20 },
@@ -19,18 +45,24 @@ const AboutUsPage = () => {
   };
 
 
+  // Helper function to get uploaded image or fallback to static
+  const getLeadershipImage = (category, fallbackImage) => {
+    const uploadedImage = uploadedLeadershipImages.find(img => img.category === category);
+    return uploadedImage ? uploadedImage.url : fallbackImage;
+  };
+
   const leadership = [
     {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg'
+      image: getLeadershipImage('nawab-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: '/images/leadership/saif_raza_md_2025-06-08_8384.jpeg'
+      image: getLeadershipImage('saif-raza-image', '/images/leadership/saif_raza_md_2025-06-08_8384.jpeg')
     },
     {
       name: t('aboutDirectorName'),
