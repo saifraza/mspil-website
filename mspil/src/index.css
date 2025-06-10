@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes scroll-horizontal {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%); /* Scroll by half the total width (since content is duplicated) */
+    }
+  }
+
+  .animate-scroll-horizontal {
+    animation: scroll-horizontal 40s linear infinite;
+    /* Adjust 40s to control speed. Higher value = slower scroll. */
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  .scroll-snap-align-start {
+    scroll-snap-align: start;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* White */
+    --foreground: 140 30% 15%; /* Dark Green */
+
+    --card: 0 0% 100%;
+    --card-foreground: 140 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 30% 15%;
+
+    --primary: 142 70% 35%; /* Vibrant Green - Main brand color */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+
+    --secondary: 82 60% 50%; /* Lime Green - Bio energy accent */
+    --secondary-foreground: 140 30% 15%; /* Dark green text */
+
+    --muted: 120 20% 95%; /* Light green-gray */
+    --muted-foreground: 140 25% 35%;
+
+    --accent: 47 95% 53%; /* Sunny Yellow - Energy accent */
+    --accent-foreground: 140 30% 15%;
+
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 120 20% 85%;
+    --input: 120 20% 85%;
+    --ring: 142 70% 35%; /* Green for focus rings */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 140 30% 10%; /* Very dark green */
+    --foreground: 120 20% 95%; /* Light green-white */
+
+    --card: 140 25% 15%;
+    --card-foreground: 120 20% 95%;
+
+    --popover: 140 25% 15%;
+    --popover-foreground: 120 20% 95%;
+
+    --primary: 142 70% 45%; /* Brighter green for dark mode */
+    --primary-foreground: 140 30% 10%;
+
+    --secondary: 82 60% 60%; /* Brighter lime green */
+    --secondary-foreground: 140 30% 10%;
+
+    --muted: 140 20% 20%;
+    --muted-foreground: 120 15% 70%;
+
+    --accent: 47 95% 63%; /* Brighter yellow */
+    --accent-foreground: 140 30% 10%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 140 20% 25%;
+    --input: 140 20% 25%;
+    --ring: 142 70% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom scrollbar for a more modern look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.7);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+/* Section padding helper */
+.section-padding {
+  @apply py-16 md:py-24 lg:py-32;
+}

@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 0067fd421c4930edf75408664b6ce76258c548df Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749427360 -0500	commit (initial): feat: Initial commit with server and build fixes
+0067fd421c4930edf75408664b6ce76258c548df 2c78327b448126674879ba8bddf3526cdd75dff7 Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749427632 -0500	commit: fix: Convert mspil from submodule to regular directory
+2c78327b448126674879ba8bddf3526cdd75dff7 fe07d2d905fc22bcc4dddbc3930cf8d077212415 Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749427941 -0500	commit: Fix: configure Netlify build settings and move config to root
+fe07d2d905fc22bcc4dddbc3930cf8d077212415 54223f8baa2c5035ec1e774deafaa678c2bffed0 Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749428101 -0500	commit: Fix(netlify): install dependencies in subdirectory
+54223f8baa2c5035ec1e774deafaa678c2bffed0 c15851fd3e212759ec7eb8bf1c876c918bdcff03 Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749428259 -0500	commit: Fix(react): use overrides instead of resolutions for npm
+c15851fd3e212759ec7eb8bf1c876c918bdcff03 c15851fd3e212759ec7eb8bf1c876c918bdcff03 Saif Raza <saifraza@Arshis-MacBook-Air.local> 1749428364 -0500	checkout: moving from main to asset-fix

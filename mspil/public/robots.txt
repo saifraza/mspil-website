@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mspil.com/sitemap.xml
+
+# Important pages for crawlers
+Allow: /about
+Allow: /businesses
+Allow: /investor-relations
+Allow: /sustainability
+Allow: /csr
+Allow: /news-media
+Allow: /careers
+Allow: /contact
+
+# Crawl delay
+Crawl-delay: 1
