@@ -877,12 +877,14 @@ function generateBasicSummary(text) {
 }
 
 // Start server
-app.listen(PORT, () => {
+const HOST = '0.0.0.0'; // Bind to all interfaces for Railway
+app.listen(PORT, HOST, () => {
   console.log(`
 🚀 MCP CMS Server Started!
 ==========================
-URL: http://localhost:${PORT}
-Health: http://localhost:${PORT}/health
+URL: http://${HOST}:${PORT}
+Health: http://${HOST}:${PORT}/health
+Environment: ${process.env.NODE_ENV || 'development'}
 
 Login Credentials:
 - admin / admin123
@@ -891,6 +893,9 @@ Login Credentials:
 Ready to accept uploads!
 ==========================
   `);
+  
+  // Start keep-alive system
+  keepAlive();
 });
 
 // Graceful shutdown
