@@ -16,10 +16,16 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET || 'simple-cms-secret-key';
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY // Add this to your .env file
-});
+// Initialize OpenAI (optional - will work without it)
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+  });
+  console.log('✅ OpenAI initialized');
+} else {
+  console.log('⚠️ OpenAI API key not found - AI features will be limited');
+}
 
 // Create uploads directory
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -820,6 +826,10 @@ app.post('/api/ai-insights', authMiddleware, upload.single('file'), async (req, 
 // Helper function to generate AI summary using OpenAI
 async function generateOpenAISummary(text) {
   try {
+    if (!openai) {
+      throw new Error('OpenAI not configured');
+    }
+    
     // Truncate text if too long (OpenAI has token limits)
     const truncatedText = text.length > 8000 ? text.substring(0, 8000) + '...' : text;
     
