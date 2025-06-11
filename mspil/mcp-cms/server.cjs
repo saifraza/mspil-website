@@ -13,7 +13,7 @@ const { generateSuggestions } = require('./ai-suggestions.cjs');
 
 // Create Express app
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET || 'simple-cms-secret-key';
 
 // Initialize OpenAI (optional - will work without it)
