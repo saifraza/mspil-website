@@ -171,7 +171,7 @@ const addTransformIndexHtml = {
 export default defineConfig({
   plugins: [react()/*, addTransformIndexHtml*/],
   define: {
-    'process.env.VITE_API_BASE_URL': JSON.stringify('https://workspace.saifraza91.repl.co')
+    'process.env.VITE_API_BASE_URL': JSON.stringify('https://mspil-mcp-production.up.railway.app')
   },
   resolve: {
     alias: {
