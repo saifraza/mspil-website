@@ -59,15 +59,15 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li className="flex items-start">
                 <MapPin size={16} className="mr-2 mt-1 shrink-0 text-primary" />
-                <span>Corporate Office Address, City, State, India</span>
+                <span>Village Bachai, Dist. Narsinghpur (M.P.) - 487001</span>
               </li>
               <li className="flex items-center">
                 <Phone size={16} className="mr-2 shrink-0 text-primary" />
-                <a href="tel:+910000000000" className="hover:text-primary transition-colors">+91 (000) 000-0000</a>
+                <a href="tel:+919907494252" className="hover:text-primary transition-colors">+91 99074 94252</a>
               </li>
               <li className="flex items-center">
                 <Mail size={16} className="mr-2 shrink-0 text-primary" />
-                <a href="mailto:info@mahakaushal.com" className="hover:text-primary transition-colors">info@mahakaushal.com</a>
+                <a href="mailto:info@mspil.in" className="hover:text-primary transition-colors">info@mspil.in</a>
               </li>
             </ul>
           </div>
@@ -85,6 +85,9 @@ const Footer = () => {
 
         <div className="mt-12 border-t border-border pt-8 text-center text-sm">
           <p>&copy; {currentYear} {companyName}. All rights reserved.</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            CIN: U01543MP2005PLC017514 | GSTIN: 23AAECM3666P1Z1
+          </p>
         </div>
       </div>
     </footer>

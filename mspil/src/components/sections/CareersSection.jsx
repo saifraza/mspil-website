@@ -91,24 +91,7 @@ const CareersSection = () => {
                         <p className="font-semibold text-foreground">{t(job.titleKey)}</p>
                         <p className="text-sm text-muted-foreground">{t(job.locationKey)} • {t(job.typeKey)}</p>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-primary hover:text-primary/80 hover:bg-primary/10 transition-all"
-                        onClick={() => {
-                          const formElement = document.querySelector('#career-application-form');
-                          if (formElement) {
-                            formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            // Focus on the first input after scrolling
-                            setTimeout(() => {
-                              const nameInput = document.querySelector('#career-name');
-                              if (nameInput) nameInput.focus();
-                            }, 1000);
-                          }
-                        }}
-                      >
-                        {t('careersApplyButton')} <ChevronRight className="w-4 h-4 ml-1"/>
-                      </Button>
+                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary">{t('careersApplyButton')} <ChevronRight className="w-4 h-4 ml-1"/></Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -116,19 +99,7 @@ const CareersSection = () => {
                 <p className="text-muted-foreground">{t('careersNoOpenings')}</p>
               )}
             </div>
-             <Button 
-               variant="link" 
-               className="mt-6 text-primary hover:text-primary/80 transition-colors"
-               onClick={() => {
-                 // Scroll to the application form
-                 const formElement = document.querySelector('#career-application-form');
-                 if (formElement) {
-                   formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                 }
-               }}
-             >
-               {t('careersViewAllButton')} <span aria-hidden="true">→</span>
-             </Button>
+             <Button variant="link" className="mt-6 text-primary">{t('careersViewAllButton')} <span aria-hidden="true">→</span></Button>
           </motion.div>
         </div>
         
@@ -163,7 +134,7 @@ const CareersSection = () => {
           </div>
         </motion.div>
 
-        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }} id="career-application-form">
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
           <Card className="max-w-2xl mx-auto shadow-xl p-6 sm:p-8">
             <CardHeader className="text-center p-0 mb-6">
               <Users className="w-12 h-12 text-primary mx-auto mb-3"/>

@@ -67,16 +67,16 @@ const InvestorRelationsPage = () => {
   // Investor contact details
   const investorContacts = {
     complianceOfficer: {
-      name: 'Mr. Rajesh Kumar',
-      designation: 'Company Secretary & Compliance Officer',
-      phone: '+91 987 654 3210',
-      email: 'cs@mahakaushal.com'
+      name: 'Company Secretary',
+      designation: 'Compliance Officer',
+      phone: '+91 98915 46422',
+      email: 'cs@mspil.in'
     },
     registrar: {
-      name: 'ABC Registrars Pvt. Ltd.',
-      address: '123 Financial District, Mumbai - 400001',
-      phone: '+91 22 1234 5678',
-      email: 'mahakaushal@abcregistrar.com'
+      name: 'Link Intime India Pvt. Ltd.',
+      address: 'C-101, 247 Park, L.B.S. Marg, Vikhroli (West), Mumbai - 400083',
+      phone: '+91 22 4918 6000',
+      email: 'rnt.helpdesk@linkintime.co.in'
     }
   };
 
@@ -294,10 +294,13 @@ const InvestorRelationsPage = () => {
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-6">
                         {[
-                          { name: 'Mr. Ashok Kumar', position: 'Chairman & Managing Director', type: 'Executive' },
-                          { name: 'Mrs. Priya Sharma', position: 'Independent Director', type: 'Independent' },
-                          { name: 'Mr. Vijay Singh', position: 'Non-Executive Director', type: 'Non-Executive' },
-                          { name: 'Mr. Rahul Verma', position: 'Independent Director', type: 'Independent' }
+                          { name: 'Mr. Nawab Raza', position: 'Chairman', type: 'Executive' },
+                          { name: 'Mr. Saif Raza', position: 'Managing Director', type: 'Executive' },
+                          { name: 'Mr. Sahil Raza', position: 'Director - Supply Chain', type: 'Executive' },
+                          { name: 'Dr. Rajan Dubey', position: 'Non-Executive Director', type: 'Non-Executive' },
+                          { name: 'Mr. E. S. Ranganathan', position: 'Independent Director', type: 'Independent' },
+                          { name: 'Mr. Mohan Tiwari', position: 'Independent Director', type: 'Independent' },
+                          { name: 'Dr. Chandrakant N. Patil', position: 'Independent Director', type: 'Independent' }
                         ].map((director, index) => (
                           <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                             <h4 className="font-semibold">{director.name}</h4>
@@ -318,10 +321,10 @@ const InvestorRelationsPage = () => {
                     <CardContent>
                       <div className="space-y-4">
                         {[
-                          { name: 'Audit Committee', members: 3, chairman: 'Mrs. Priya Sharma' },
-                          { name: 'Nomination & Remuneration Committee', members: 3, chairman: 'Mr. Vijay Singh' },
-                          { name: 'Stakeholders Relationship Committee', members: 3, chairman: 'Mr. Rahul Verma' },
-                          { name: 'Risk Management Committee', members: 4, chairman: 'Mr. Ashok Kumar' }
+                          { name: 'Audit Committee', members: 3, chairman: 'Mr. E. S. Ranganathan' },
+                          { name: 'Nomination & Remuneration Committee', members: 3, chairman: 'Mr. Mohan Tiwari' },
+                          { name: 'Stakeholders Relationship Committee', members: 3, chairman: 'Dr. Rajan Dubey' },
+                          { name: 'Risk Management Committee', members: 4, chairman: 'Mr. Nawab Raza' }
                         ].map((committee, index) => (
                           <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                             <div>
@@ -459,7 +462,7 @@ const InvestorRelationsPage = () => {
                 <CardContent>
                   <div className="bg-primary/5 dark:bg-primary/10 p-4 rounded-lg">
                     <p className="text-sm">
-                      Email your queries to: <a href="mailto:investors@mahakaushal.com" className="font-medium text-primary hover:underline">investors@mahakaushal.com</a>
+                      Email your queries to: <a href="mailto:cs@mspil.in" className="font-medium text-primary hover:underline">cs@mspil.in</a>
                     </p>
                     <p className="text-sm mt-2">
                       Response time: Within 48 hours on working days

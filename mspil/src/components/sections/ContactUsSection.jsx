@@ -17,23 +17,30 @@ const ContactUsSection = () => {
 
   const contactDetails = [
     {
-      type: "Corporate Office",
+      type: "Registered Office",
       icon: <Building className="w-7 h-7 text-primary" />,
-      address: "123 Agri Towers, Business Park, Narsinghpur, MP, India 487001",
-      phone: "+91 123 456 7890",
-      email: "corporate@mahakaushal.com"
+      address: "SF-11, Second Floor, Aakriti Business Center, Aakriti Eco city, Bawadiya Kalan, Bhopal-462039",
+      phone: "+91 99074 94252",
+      email: "corporate@mspil.in"
+    },
+    {
+      type: "Admin Office & Factory",
+      icon: <Building className="w-7 h-7 text-primary" />,
+      address: "Village Bachai, Dist. Narsinghpur (M.P.) - 487001",
+      phone: "+91 99074 94252",
+      email: "info@mspil.in"
     },
     {
       type: "Investor Relations",
       icon: <User className="w-7 h-7 text-primary" />,
-      phone: "+91 987 654 3210",
-      email: "investors@mahakaushal.com"
+      phone: "+91 98915 46422",
+      email: "cs@mspil.in"
     },
     {
       type: "Human Resources",
       icon: <User className="w-7 h-7 text-primary" />,
-      phone: "+91 876 543 2109",
-      email: "hr@mahakaushal.com"
+      phone: "+91 94258 16416",
+      email: "info@mspil.in"
     }
   ];
 
