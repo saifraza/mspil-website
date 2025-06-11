@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://mspil-website-production.up.railway.app/api' 
+  ? 'https://mspil-mcp-production.up.railway.app/api' 
   : 'http://localhost:3002/api';
 
 const SimpleCMS = () => {
