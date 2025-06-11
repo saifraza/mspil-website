@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm:mcp-server\" \"npm:app:only\"",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "npx serve -s dist -l 3000",
+    "start": "vite preview --port 3000 --host",
     "start:simple": "npm run dev",
     "cms:server": "node --max-old-space-size=4096 mcp-cms/server.cjs",
     "cms:production": "node mcp-cms/server.cjs",
@@ -43,6 +43,7 @@
     "react-dom": "18.2.0",
     "react-router-dom": "^6.21.1",
     "recharts": "^2.10.3",
+    "serve": "^14.2.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"
   },
