@@ -1,0 +1,8 @@
+{
+  "name": "mspil-server",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd mcp-cms && npm install",
+    "start": "node mcp-cms/server.cjs"
+  }
+}
