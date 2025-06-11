@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm:mcp-server\" \"npm:app:only\"",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "./start-all.sh",
+    "start": "npx serve -s dist -l 3000",
     "start:simple": "npm run dev",
     "cms:server": "node --max-old-space-size=4096 mcp-cms/server.cjs",
     "cms:production": "node mcp-cms/server.cjs",
