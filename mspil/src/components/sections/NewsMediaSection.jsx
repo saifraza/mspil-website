@@ -457,6 +457,7 @@ const NewsMediaSection = () => {
                 variant="outline" 
                 size="lg" 
                 className="hover:bg-primary/10 hover:border-primary group relative overflow-hidden"
+                onClick={() => window.open('https://www.linkedin.com/company/27478454/', '_blank')}
               >
                 <motion.div
                   className="absolute inset-0 bg-[#0077b5]/10"
@@ -476,6 +477,7 @@ const NewsMediaSection = () => {
                 variant="outline" 
                 size="lg" 
                 className="hover:bg-primary/10 hover:border-primary group relative overflow-hidden"
+                onClick={() => window.open('https://twitter.com/mspil_official', '_blank')}
               >
                 <motion.div
                   className="absolute inset-0 bg-[#1DA1F2]/10"
