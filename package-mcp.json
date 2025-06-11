@@ -1,0 +1,12 @@
+{
+  "name": "mspil-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP CMS Server for MSPIL",
+  "scripts": {
+    "postinstall": "cd mcp-cms && npm install",
+    "start": "cd mcp-cms && node server.cjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
