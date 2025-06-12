@@ -21,26 +21,37 @@ const ContactUsSection = () => {
       icon: <Building className="w-7 h-7 text-primary" />,
       address: "SF-11, Second Floor, Aakriti Business Center, Aakriti Eco city, Bawadiya Kalan, Bhopal-462039",
       phone: "+91 99074 94252",
-      email: "corporate@mspil.in"
+      email: "saifraza@mspil.in",
+      mapUrl: "https://maps.app.goo.gl/oTbMy9KMRKmNt5M66"
     },
     {
       type: "Admin Office & Factory",
       icon: <Building className="w-7 h-7 text-primary" />,
       address: "Village Bachai, Dist. Narsinghpur (M.P.) - 487001",
       phone: "+91 99074 94252",
-      email: "info@mspil.in"
+      email: "saifraza@mspil.in",
+      mapUrl: "https://maps.app.goo.gl/oTbMy9KMRKmNt5M66"
     },
     {
-      type: "Investor Relations",
+      type: "Company Secretary & Compliance",
       icon: <User className="w-7 h-7 text-primary" />,
       phone: "+91 98915 46422",
-      email: "cs@mspil.in"
+      email: "cs@mspil.in",
+      description: "For investor relations and compliance matters"
     },
     {
-      type: "Human Resources",
+      type: "Finance Department",
       icon: <User className="w-7 h-7 text-primary" />,
       phone: "+91 94258 16416",
-      email: "info@mspil.in"
+      email: "finance@mspil.in",
+      description: "For finance-related inquiries"
+    },
+    {
+      type: "Technical & Projects",
+      icon: <User className="w-7 h-7 text-primary" />,
+      phone: "+91 94258 16416",
+      email: "projects@mspil.in",
+      description: "For technical queries and job requirements"
     }
   ];
 
@@ -65,9 +76,21 @@ const ContactUsSection = () => {
                     <CardTitle className="text-xl">{detail.type}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {detail.address && <p className="flex items-start text-sm text-muted-foreground mb-1"><MapPin size={15} className="mr-2 mt-0.5 shrink-0"/> {detail.address}</p>}
+                    {detail.address && (
+                      <p className="flex items-start text-sm text-muted-foreground mb-1">
+                        <MapPin size={15} className="mr-2 mt-0.5 shrink-0"/> 
+                        {detail.mapUrl ? (
+                          <a href={detail.mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                            {detail.address}
+                          </a>
+                        ) : (
+                          detail.address
+                        )}
+                      </p>
+                    )}
                     {detail.phone && <p className="flex items-center text-sm text-muted-foreground mb-1"><Phone size={15} className="mr-2 shrink-0"/> <a href={`tel:${detail.phone}`} className="hover:text-primary">{detail.phone}</a></p>}
-                    {detail.email && <p className="flex items-center text-sm text-muted-foreground"><Mail size={15} className="mr-2 shrink-0"/> <a href={`mailto:${detail.email}`} className="hover:text-primary">{detail.email}</a></p>}
+                    {detail.email && <p className="flex items-center text-sm text-muted-foreground mb-1"><Mail size={15} className="mr-2 shrink-0"/> <a href={`mailto:${detail.email}`} className="hover:text-primary">{detail.email}</a></p>}
+                    {detail.description && <p className="text-sm text-muted-foreground italic mt-2">{detail.description}</p>}
                   </CardContent>
                 </Card>
               ))}
@@ -97,8 +120,9 @@ const ContactUsSection = () => {
                     <Label htmlFor="contact-inquiry-type">Type of Inquiry</Label>
                     <select id="contact-inquiry-type" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                       <option>General Inquiry</option>
-                      <option>Investor Relations</option>
-                      <option>Human Resources</option>
+                      <option>Company Secretary / Compliance</option>
+                      <option>Finance</option>
+                      <option>Technical / Projects</option>
                       <option>Product Information</option>
                       <option>Partnerships</option>
                     </select>
@@ -115,12 +139,57 @@ const ContactUsSection = () => {
         </div>
         
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
-          <h3 className="text-2xl font-semibold text-foreground text-center mb-6">Our Location</h3>
-          <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-xl border border-primary/20">
-            <div className="bg-muted flex items-center justify-center">
-              <p className="text-muted-foreground">OpenStreetMap Embed Placeholder</p>
-              {/* Example of an iframe for OpenStreetMap - replace with actual coordinates */}
-              {/* <iframe width="100%" height="100%" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=79.93,22.94,79.97,22.96&layer=mapnik&marker=22.95,79.95" style={{ border: '1px solid black' }}></iframe> */}
+          <h3 className="text-2xl font-semibold text-foreground text-center mb-6">Our Locations</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="text-lg font-semibold mb-3">Registered Office</h4>
+              <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-xl border border-primary/20">
+                <iframe 
+                  width="100%" 
+                  height="300" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  marginHeight="0" 
+                  marginWidth="0" 
+                  src="https://maps.google.com/maps?q=SF-11,+Second+Floor,+Aakriti+Business+Center,+Aakriti+Eco+city,+Bawadiya+Kalan,+Bhopal&output=embed"
+                  title="MSPIL Registered Office Location"
+                ></iframe>
+              </div>
+              <div className="mt-2 text-center">
+                <a 
+                  href="https://maps.app.goo.gl/oTbMy9KMRKmNt5M66" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline text-sm"
+                >
+                  View on Google Maps →
+                </a>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-3">Factory Location</h4>
+              <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-xl border border-primary/20">
+                <iframe 
+                  width="100%" 
+                  height="300" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  marginHeight="0" 
+                  marginWidth="0" 
+                  src="https://maps.google.com/maps?q=Village+Bachai,+Dist.+Narsinghpur+(M.P.)&output=embed"
+                  title="MSPIL Factory Location"
+                ></iframe>
+              </div>
+              <div className="mt-2 text-center">
+                <a 
+                  href="https://maps.app.goo.gl/oTbMy9KMRKmNt5M66" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline text-sm"
+                >
+                  View on Google Maps →
+                </a>
+              </div>
             </div>
           </div>
         </motion.div>

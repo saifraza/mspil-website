@@ -39,12 +39,12 @@ app.use(compression()); // Enable gzip compression
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(uploadsDir, {
-  maxAge: '7d', // Cache for 7 days
+  maxAge: '1h', // Cache for 1 hour
   etag: true,
   lastModified: true,
   setHeaders: (res, path) => {
     if (path.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-      res.setHeader('Cache-Control', 'public, max-age=604800, immutable'); // 7 days
+      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate'); // 1 hour
       res.setHeader('X-Content-Type-Options', 'nosniff');
     }
   }
@@ -321,7 +321,11 @@ function copyFileToPublic(file, category, comment) {
   const overwriteCategories = [
     'saif-raza-image',
     'nawab-raza-image',
-    'sahil-raza-image'
+    'sahil-raza-image',
+    // Add other single-purpose categories that should replace old files
+    'about-images',
+    'office-images',
+    'infrastructure-images'
   ];
   
   const targetDir = path.join(__dirname, categoryPaths[category] || categoryPaths['general-documents']);
@@ -341,25 +345,25 @@ function copyFileToPublic(file, category, comment) {
       const fixedFilenames = {
         'saif-raza-image': `saif_raza_md${ext}`,
         'nawab-raza-image': `nawab_raza_chairman${ext}`,
-        'sahil-raza-image': `sahil_raza_director_supply_chain${ext}`
+        'sahil-raza-image': `sahil_raza_director_supply_chain${ext}`,
+        'about-images': `about_main${ext}`,
+        'office-images': `office_main${ext}`,
+        'infrastructure-images': `infrastructure_main${ext}`
       };
       
-      finalFilename = fixedFilenames[category] || `${category}${ext}`;
+      // Add timestamp to filename for cache busting
+      const timestamp = Date.now();
+      const baseFilename = fixedFilenames[category] || `${category}${ext}`;
+      finalFilename = baseFilename.replace(ext, `_${timestamp}${ext}`);
       targetPath = path.join(targetDir, finalFilename);
       
-      // Delete old file if it exists
-      if (fs.existsSync(targetPath)) {
-        fs.unlinkSync(targetPath);
-        console.log(`🗑️ Deleted old file: ${finalFilename}`);
-      }
-      
-      // Also clean up any old files matching the pattern
+      // Delete all old versions of this file
       const files = fs.readdirSync(targetDir);
-      const patternToClean = category.replace('-image', '');
+      const basePattern = baseFilename.replace(ext, '');
       files.forEach(fileName => {
-        if (fileName.includes(patternToClean) && fileName !== finalFilename) {
+        if (fileName.startsWith(basePattern) && fileName.endsWith(ext)) {
           fs.unlinkSync(path.join(targetDir, fileName));
-          console.log(`🗑️ Cleaned up old file: ${fileName}`);
+          console.log(`🗑️ Deleted old file: ${fileName}`);
         }
       });
       
@@ -399,7 +403,10 @@ function saveContentInfo(content) {
   const overwriteCategories = [
     'saif-raza-image',
     'nawab-raza-image',
-    'sahil-raza-image'
+    'sahil-raza-image',
+    'about-images',
+    'office-images',
+    'infrastructure-images'
   ];
   
   if (overwriteCategories.includes(content.category)) {
