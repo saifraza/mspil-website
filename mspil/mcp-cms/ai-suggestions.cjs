@@ -41,7 +41,7 @@ const suggestions = {
     description: 'Photos of company leaders and management',
     path: '/images/leadership/',
     icon: '👥',
-    keywords: ['leadership', 'management', 'director', 'ceo', 'team', 'executive', 'chairman', 'founder', 'saif', 'nawab', 'raza', 'md', 'managing']
+    keywords: ['leadership', 'management', 'director', 'ceo', 'team', 'executive', 'chairman', 'founder', 'saif', 'nawab', 'raza', 'md', 'managing', 'sahil', 'supply chain']
   },
   'saif-raza-image': {
     name: 'Saif Raza (Managing Director)',
@@ -56,6 +56,13 @@ const suggestions = {
     path: '/images/leadership/',
     icon: '👨‍💼',
     keywords: ['nawab', 'nawab raza', 'chairman', 'founder', 'nawab_raza']
+  },
+  'sahil-raza-image': {
+    name: 'Sahil Raza (Director Supply Chain)',
+    description: 'Photo of Mr. Sahil Raza, Director Supply Chain',
+    path: '/images/leadership/',
+    icon: '👔',
+    keywords: ['sahil', 'sahil raza', 'director', 'supply chain', 'sahil_raza']
   },
   'career-images': {
     name: 'Career Photos',

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
@@ -34,12 +35,19 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Middleware
+app.use(compression()); // Enable gzip compression
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(uploadsDir, {
-  maxAge: '1d', // Cache for 1 day
+  maxAge: '7d', // Cache for 7 days
   etag: true,
-  lastModified: true
+  lastModified: true,
+  setHeaders: (res, path) => {
+    if (path.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable'); // 7 days
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+    }
+  }
 }));
 
 // Users (passwords are hashed)
@@ -107,6 +115,11 @@ function detectCategory(filename, comment) {
       (lower.includes('founder') && lower.includes('raza'))) {
     console.log('✅ Detected: nawab-raza-image');
     return 'nawab-raza-image';
+  }
+  
+  if (lower.includes('sahil') || (lower.includes('director') && lower.includes('supply chain'))) {
+    console.log('✅ Detected: sahil-raza-image');
+    return 'sahil-raza-image';
   }
   
   // Image Categories (check first for images)
@@ -307,7 +320,8 @@ function copyFileToPublic(file, category, comment) {
   // Categories that should overwrite existing files (single-purpose)
   const overwriteCategories = [
     'saif-raza-image',
-    'nawab-raza-image'
+    'nawab-raza-image',
+    'sahil-raza-image'
   ];
   
   const targetDir = path.join(__dirname, categoryPaths[category] || categoryPaths['general-documents']);
@@ -326,7 +340,8 @@ function copyFileToPublic(file, category, comment) {
       const ext = path.extname(file.originalname);
       const fixedFilenames = {
         'saif-raza-image': `saif_raza_md${ext}`,
-        'nawab-raza-image': `nawab_raza_chairman${ext}`
+        'nawab-raza-image': `nawab_raza_chairman${ext}`,
+        'sahil-raza-image': `sahil_raza_director_supply_chain${ext}`
       };
       
       finalFilename = fixedFilenames[category] || `${category}${ext}`;
@@ -383,7 +398,8 @@ function saveContentInfo(content) {
   // Categories that should overwrite existing entries
   const overwriteCategories = [
     'saif-raza-image',
-    'nawab-raza-image'
+    'nawab-raza-image',
+    'sahil-raza-image'
   ];
   
   if (overwriteCategories.includes(content.category)) {

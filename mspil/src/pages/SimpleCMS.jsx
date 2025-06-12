@@ -942,37 +942,55 @@ const SimpleCMS = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {recentUploads.map((item) => (
-                    <div key={item.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{item.metadata?.title || item.filename}</p>
-                        <p className="text-xs text-gray-600 mt-1">{item.comment}</p>
-                        {item.summary && (
-                          <p className="text-xs text-gray-500 mt-1 italic">📝 {item.summary}</p>
+                  {recentUploads.map((item) => {
+                    const isImage = item.mimeType && item.mimeType.startsWith('image/');
+                    return (
+                      <div key={item.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                        {isImage ? (
+                          <img 
+                            src={item.url} 
+                            alt={item.filename}
+                            className="h-12 w-12 object-cover rounded"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '';
+                              e.target.style.display = 'none';
+                              e.target.parentElement.innerHTML = '<div class="h-12 w-12 bg-gray-200 rounded flex items-center justify-center"><svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                            }}
+                          />
+                        ) : (
+                          <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
                         )}
-                        <div className="flex items-center space-x-4 mt-2">
-                          <span className="text-xs text-gray-500">
-                            Category: {item.category}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {new Date(item.uploadedAt).toLocaleDateString()}
-                          </span>
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{item.metadata?.title || item.filename}</p>
+                          <p className="text-xs text-gray-600 mt-1">{item.comment}</p>
+                          {item.summary && (
+                            <p className="text-xs text-gray-500 mt-1 italic">📝 {item.summary}</p>
+                          )}
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-xs text-gray-500">
+                              Category: {item.category}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(item.uploadedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownload(item.filename, item.category)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                          <Check className="h-5 w-5 text-green-500" />
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDownload(item.filename, item.category)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-                        <Check className="h-5 w-5 text-green-500" />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -1012,39 +1030,60 @@ const SimpleCMS = () => {
                   {allFiles
                     .filter(file => selectedCategory === 'all' || file.category === selectedCategory)
                     .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt))
-                    .map((file) => (
-                    <div key={file.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center space-x-3 flex-1">
-                        <FileText className="h-4 w-4 text-gray-500" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{file.filename}</p>
-                          {file.summary && (
-                            <p className="text-xs text-gray-500 mt-1 truncate italic">📝 {file.summary}</p>
-                          )}
-                          <div className="flex items-center space-x-2 mt-1">
-                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-                              {file.category}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {new Date(file.uploadedAt).toLocaleDateString()}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {(file.size / 1024).toFixed(1)}KB
-                            </span>
+                    .map((file) => {
+                      const isImage = file.mimeType && file.mimeType.startsWith('image/');
+                      return (
+                        <div key={file.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center space-x-3 flex-1">
+                            {isImage ? (
+                              <img 
+                                src={file.url} 
+                                alt={file.filename}
+                                className="h-12 w-12 object-cover rounded"
+                                loading="lazy"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = '';
+                                  e.target.style.display = 'none';
+                                  e.target.parentElement.innerHTML = '<div class="h-12 w-12 bg-gray-200 rounded flex items-center justify-center"><svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                                }}
+                              />
+                            ) : (
+                              <FileText className="h-4 w-4 text-gray-500" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate">{file.filename}</p>
+                              {file.comment && (
+                                <p className="text-xs text-gray-600 mt-0.5">💬 {file.comment}</p>
+                              )}
+                              {file.summary && (
+                                <p className="text-xs text-gray-500 mt-1 truncate italic">📝 {file.summary}</p>
+                              )}
+                              <div className="flex items-center space-x-2 mt-1">
+                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                                  {file.category}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(file.uploadedAt).toLocaleDateString()}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {(file.size / 1024).toFixed(1)}KB
+                                </span>
+                              </div>
+                            </div>
                           </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownload(file.filename, file.category)}
+                            className="ml-2 h-8 px-3"
+                          >
+                            <Download className="h-4 w-4 mr-1" />
+                            Download
+                          </Button>
                         </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownload(file.filename, file.category)}
-                        className="ml-2 h-8 px-3"
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
-                    </div>
-                  ))}
+                      );
+                    })}
                 </div>
                 <div className="mt-4 text-sm text-gray-600">
                   Total files: {allFiles.filter(file => selectedCategory === 'all' || file.category === selectedCategory).length}
