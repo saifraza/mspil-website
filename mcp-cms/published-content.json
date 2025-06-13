@@ -1,0 +1,119 @@
+[
+  {
+    "id": "1749411843011-IMG_1477.jpeg",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749411843011-IMG_1477.jpeg",
+    "filename": "media_images_2025-06-08__1749411843011.jpeg",
+    "size": 195328,
+    "mimetype": "image/jpeg",
+    "uploadedAt": "2025-06-08T09:04:03.011Z",
+    "category": "media-images",
+    "comment": ""
+  },
+  {
+    "id": "1749412034264-IMG_1475.jpeg",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749412034264-IMG_1475.jpeg",
+    "filename": "leadership_team_2025-06-08__1749412034264.jpeg",
+    "size": 204908,
+    "mimetype": "image/jpeg",
+    "uploadedAt": "2025-06-08T09:07:14.264Z",
+    "category": "leadership-images",
+    "comment": ""
+  },
+  {
+    "id": "1749415548895-IMG_1483.png",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749415548895-IMG_1483.png",
+    "filename": "saif_raza_md_2025-06-08_raza_1749415548895.png",
+    "size": 526723,
+    "mimetype": "image/png",
+    "uploadedAt": "2025-06-08T10:05:48.895Z",
+    "category": "saif-raza-image",
+    "comment": "raza"
+  },
+  {
+    "id": "1749415548909-IMG_1480.jpeg",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749415548909-IMG_1480.jpeg",
+    "filename": "saif_raza_md_2025-06-08_raza_1749415548909.jpeg",
+    "size": 178972,
+    "mimetype": "image/jpeg",
+    "uploadedAt": "2025-06-08T10:05:48.909Z",
+    "category": "saif-raza-image",
+    "comment": "raza"
+  },
+  {
+    "id": "1749415616168-Suger_tev.docx",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749415616168-Suger_tev.docx",
+    "filename": "sugar_production_data_2025-06-08_suger_1749415616168.docx",
+    "size": 22347,
+    "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "uploadedAt": "2025-06-08T10:06:56.168Z",
+    "category": "sugar-data",
+    "comment": "suger tev"
+  },
+  {
+    "id": "1749416694739-I_1_Form_New.pdf",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749416694739-I_1_Form_New.pdf",
+    "filename": "annual_report_2025-06-08__1749416694739.pdf",
+    "size": 315995,
+    "mimetype": "application/pdf",
+    "uploadedAt": "2025-06-08T10:24:54.739Z",
+    "category": "annual-reports",
+    "comment": ""
+  },
+  {
+    "id": "1749418458711-DSCF1299.jpeg",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749418458711-DSCF1299.jpeg",
+    "filename": "media_images_2025-06-08__1749418458711.jpeg",
+    "size": 4768397,
+    "mimetype": "image/jpeg",
+    "uploadedAt": "2025-06-08T10:54:18.711Z",
+    "category": "media-images",
+    "comment": ""
+  },
+  {
+    "id": "1749418838378-0b0c76b5-ce9d-487b-98c6-616e327897e6.jpeg",
+    "url": "https://workspace.saifraza91.repl.co/uploads/1749418838378-0b0c76b5-ce9d-487b-98c6-616e327897e6.jpeg",
+    "filename": "infrastructure_facility_2025-06-08__1749418838378.jpeg",
+    "size": 182745,
+    "mimetype": "image/jpeg",
+    "uploadedAt": "2025-06-08T11:00:38.378Z",
+    "category": "infrastructure-images",
+    "comment": ""
+  },
+  {
+    "id": 1749470704310,
+    "filename": "nawab_raza_chairman.png",
+    "originalFilename": "Screenshot 2025-06-09 at 07.04.22.png",
+    "url": "https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/uploads/1749470704296-Screenshot_2025-06-09_at_07.04.22.png",
+    "mimeType": "image/png",
+    "size": 63867,
+    "category": "nawab-raza-image",
+    "comment": "nawab raza [AI Placement: Nawab Raza (Chairman)]",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T12:05:04.310Z"
+  },
+  {
+    "id": 1749479916409,
+    "filename": "document_2025-06-09_test_placement_6396.pdf",
+    "originalFilename": "ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "url": "http://localhost:3002/uploads/1749479916377-ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "mimeType": "application/pdf",
+    "size": 1406250,
+    "category": "general-documents",
+    "comment": "test [AI Placement: General Documents]",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T14:38:36.409Z"
+  },
+  {
+    "id": 1749480956905,
+    "filename": "document_2025-06-09_placement_general_6888.pdf",
+    "originalFilename": "ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "url": "http://localhost:3002/uploads/1749480956874-ECLSEIAA_207875_7J6660_SIA_MP_IND2_78697_2020.pdf",
+    "mimeType": "application/pdf",
+    "size": 1406250,
+    "category": "general-documents",
+    "comment": " [AI Placement: General Documents]",
+    "summary": "",
+    "uploadedBy": "admin",
+    "uploadedAt": "2025-06-09T14:55:56.905Z"
+  }
+]
