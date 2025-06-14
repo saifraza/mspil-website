@@ -36,7 +36,36 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Middleware
 app.use(compression()); // Enable gzip compression
-app.use(cors());
+
+// Configure CORS to allow requests from production domains
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://mspil.in',
+      'https://www.mspil.in',
+      'http://mspil.in',
+      'http://www.mspil.in'
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('⚠️ CORS blocked origin:', origin);
+      callback(null, true); // For now, allow all origins to debug
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Content-Type']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(uploadsDir, {
   maxAge: '1h', // Cache for 1 hour

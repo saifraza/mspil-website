@@ -54,11 +54,9 @@ export const ImageProvider = ({ children }) => {
           
           // Try multiple production URLs in order of likelihood
           const productionUrls = [
+            'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev', // Working production server
             process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app', // Railway production
             'https://mspil-mcp-production.up.railway.app', // Railway fallback
-            'https://mspil.in/mcp-cms', // If CMS is hosted on main domain
-            'https://cms.mspil.in', // CMS subdomain
-            'https://api.mspil.in', // API subdomain
           ].filter(Boolean);
           
           console.log('🔍 Will try these production URLs:', productionUrls);
