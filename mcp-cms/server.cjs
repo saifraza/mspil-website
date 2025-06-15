@@ -368,34 +368,43 @@ function generateSmartFilename(originalFilename, category, comment) {
 
 // Helper function to copy files to public directories
 function copyFileToPublic(file, category, comment) {
+  // Determine the base path - in production on Railway, both apps are in same directory
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+  const basePath = isProduction 
+    ? path.join(__dirname, '..', 'public')  // In production, go up one level to find public
+    : path.join(__dirname, '..', 'public'); // Same structure locally
+    
+  console.log(`📁 Base path for public files: ${basePath}`);
+  console.log(`🚂 Railway environment: ${process.env.RAILWAY_ENVIRONMENT}`);
+  
   const categoryPaths = {
     // Image categories
-    'media-images': '../public/images/media',
-    'news-images': '../public/images/news',
-    'timeline-images': '../public/images/about-us',
-    'office-images': '../public/images/office',
-    'infrastructure-images': '../public/images/infrastructure',
-    'leadership-images': '../public/images/leadership',
-    'saif-raza-image': '../public/images/leadership',
-    'nawab-raza-image': '../public/images/leadership',
-    'career-images': '../public/images/careers',
-    'about-images': '../public/images/about',
-    'csr-education-images': '../public/images/csr/education',
-    'csr-healthcare-images': '../public/images/csr/healthcare',
-    'csr-rural-images': '../public/images/csr/rural-development',
+    'media-images': 'images/media',
+    'news-images': 'images/news_media',
+    'timeline-images': 'images/about-us',
+    'office-images': 'images/office',
+    'infrastructure-images': 'images/infrastructure',
+    'leadership-images': 'images/leadership',
+    'saif-raza-image': 'images/leadership',
+    'nawab-raza-image': 'images/leadership',
+    'career-images': 'images/careers',
+    'about-images': 'images/about',
+    'csr-education-images': 'images/csr/education',
+    'csr-healthcare-images': 'images/csr/healthcare',
+    'csr-rural-images': 'images/csr/rural-development',
     
     // Document categories
-    'sugar-data': '../public/documents/sugar-data',
-    'ethanol-data': '../public/documents/ethanol-data',
-    'power-data': '../public/documents/power-data',
-    'feed-data': '../public/documents/feed-data',
-    'annual-reports': '../public/documents/investor-relations/annual-reports',
-    'quarterly-results': '../public/documents/investor-relations/quarterly-results',
-    'presentations': '../public/documents/investor-relations/presentations',
-    'policies': '../public/documents/investor-relations/policies',
-    'shareholding': '../public/documents/investor-relations/shareholding',
-    'csr-reports': '../public/documents/csr',
-    'general-documents': '../public/documents/general'
+    'sugar-data': 'documents/sugar-data',
+    'ethanol-data': 'documents/ethanol-data',
+    'power-data': 'documents/power-data',
+    'feed-data': 'documents/feed-data',
+    'annual-reports': 'documents/investor-relations/annual-reports',
+    'quarterly-results': 'documents/investor-relations/quarterly-results',
+    'presentations': 'documents/investor-relations/presentations',
+    'policies': 'documents/investor-relations/policies',
+    'shareholding': 'documents/investor-relations/shareholding',
+    'csr-reports': 'documents/csr',
+    'general-documents': 'documents/general'
   };
   
   // Categories that should overwrite existing files (single-purpose)
@@ -409,7 +418,8 @@ function copyFileToPublic(file, category, comment) {
     'infrastructure-images'
   ];
   
-  const targetDir = path.join(__dirname, categoryPaths[category] || categoryPaths['general-documents']);
+  const relativePath = categoryPaths[category] || categoryPaths['general-documents'];
+  const targetDir = path.join(basePath, relativePath);
   
   try {
     // Create directory if it doesn't exist
@@ -588,11 +598,15 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     // Force HTTPS for production URLs
     const finalProtocol = protocol === 'https' || process.env.NODE_ENV === 'production' ? 'https' : protocol;
     
+    // Generate the static file URL based on category
+    const relativePath = categoryPaths[category] || categoryPaths['general-documents'];
+    const staticUrl = `/${relativePath}/${copyResult.newFilename || file.filename}`;
+    
     const content = {
       id: Date.now(),
       filename: copyResult.newFilename, // Use the smart renamed filename
       originalFilename: file.originalname, // Keep original for reference
-      url: `${finalProtocol}://${host}/uploads/${copyResult.newFilename || file.filename}`,
+      url: staticUrl, // Now points to static file location
       mimeType: file.mimetype,
       size: file.size,
       category: category,
@@ -635,14 +649,47 @@ app.get('/api/content', (req, res) => {
     const content = fs.readFileSync(dataPath, 'utf-8');
     const parsedContent = JSON.parse(content);
     
-    // Fix URLs to use current server
-    const currentHost = req.get('host');
-    const protocol = req.secure ? 'https' : 'http';
+    // Same category paths as used in upload
+    const categoryPaths = {
+      'media-images': 'images/media',
+      'news-images': 'images/news_media',
+      'timeline-images': 'images/about-us',
+      'office-images': 'images/office',
+      'infrastructure-images': 'images/infrastructure',
+      'leadership-images': 'images/leadership',
+      'saif-raza-image': 'images/leadership',
+      'nawab-raza-image': 'images/leadership',
+      'career-images': 'images/careers',
+      'about-images': 'images/about',
+      'csr-education-images': 'images/csr/education',
+      'csr-healthcare-images': 'images/csr/healthcare',
+      'csr-rural-images': 'images/csr/rural-development',
+      'sugar-data': 'documents/sugar-data',
+      'ethanol-data': 'documents/ethanol-data',
+      'power-data': 'documents/power-data',
+      'feed-data': 'documents/feed-data',
+      'annual-reports': 'documents/investor-relations/annual-reports',
+      'quarterly-results': 'documents/investor-relations/quarterly-results',
+      'presentations': 'documents/investor-relations/presentations',
+      'policies': 'documents/investor-relations/policies',
+      'csr-reports': 'documents/csr',
+      'general-documents': 'documents/general'
+    };
+    
+    // Content already has static URLs starting with /, no need to fix
     const fixedContent = parsedContent.map(item => {
-      if (item.url && item.url.includes('localhost')) {
-        // Extract filename from the URL
+      // If URL starts with /, it's already a static path
+      if (item.url && item.url.startsWith('/')) {
+        return item; // Keep as is - it's already pointing to static files
+      }
+      
+      // For backward compatibility, fix old upload URLs
+      if (item.url && (item.url.includes('/uploads/') || item.url.includes('localhost'))) {
+        // Try to determine the category and generate proper static URL
         const filename = item.url.split('/').pop();
-        item.url = `${protocol}://${currentHost}/uploads/${filename}`;
+        const category = item.category || 'general-documents';
+        const relativePath = categoryPaths[category] || categoryPaths['general-documents'];
+        item.url = `/${relativePath}/${filename}`;
       }
       return item;
     });
