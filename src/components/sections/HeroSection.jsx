@@ -33,7 +33,7 @@ const FloatingParticle = ({ delay = 0 }) => {
 
 const HeroSection = () => {
   const t = useTranslation();
-  const { getImage } = useImages();
+  const { getImage, getCategoryImages } = useImages();
   const prefersReducedMotion = useReducedMotion();
   const [backgroundVideoUrl, setBackgroundVideoUrl] = useState('');
   const [videoPosterUrl, setVideoPosterUrl] = useState('');
@@ -73,13 +73,33 @@ const HeroSection = () => {
   }), []);
 
   useEffect(() => {
-    // Try to get video from CMS first, fallback to local path
-    const cmsVideoUrl = getImage('media-images', heroData.backgroundVideoPath, 0);
-    const cmsPosterUrl = getImage('media-images', heroData.videoPosterPath, 1);
+    // Get all items from general-documents category (where videos are stored)
+    const generalDocs = getCategoryImages('general-documents');
     
-    setBackgroundVideoUrl(cmsVideoUrl || heroData.backgroundVideoPath);
-    setVideoPosterUrl(cmsPosterUrl || heroData.videoPosterPath);
-  }, [heroData.backgroundVideoPath, heroData.videoPosterPath, getImage]);
+    // Find video and poster from uploaded files
+    const videoItem = generalDocs.find(item => 
+      (item.comment && item.comment.toLowerCase().includes('hero background')) ||
+      (item.filename && item.filename.includes('.mp4'))
+    );
+    const posterItem = generalDocs.find(item => 
+      (item.comment && item.comment.toLowerCase().includes('hero video thumbnail')) ||
+      (item.comment && item.comment.toLowerCase().includes('poster'))
+    );
+    
+    // Use CMS URLs if found, otherwise fall back to static files
+    const videoUrl = videoItem ? videoItem.url : heroData.backgroundVideoPath;
+    const posterUrl = posterItem ? posterItem.url : heroData.videoPosterPath;
+    
+    console.log('🎬 Hero Video Debug:', {
+      generalDocsCount: generalDocs.length,
+      videoFound: !!videoItem,
+      videoUrl: videoUrl,
+      posterUrl: posterUrl
+    });
+    
+    setBackgroundVideoUrl(videoUrl);
+    setVideoPosterUrl(posterUrl);
+  }, [heroData.backgroundVideoPath, heroData.videoPosterPath, getImage, getCategoryImages]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-100 via-teal-50 to-blue-100 dark:from-green-900 dark:via-teal-800 dark:to-blue-900 pt-20">

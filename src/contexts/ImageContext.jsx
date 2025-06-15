@@ -167,9 +167,10 @@ export const ImageProvider = ({ children }) => {
       const imageItem = categoryImages[index];
       let imageUrl = imageItem.url;
       
-      // If URL is already absolute, use it as is
+      // If URL is already absolute, ensure it uses HTTPS
       if (imageUrl.startsWith('http')) {
-        return imageUrl;
+        // Force HTTPS for security
+        return imageUrl.replace('http://', 'https://');
       }
       
       // For relative URLs, determine the correct base URL
@@ -178,13 +179,13 @@ export const ImageProvider = ({ children }) => {
       if (activeServerUrl) {
         baseUrl = activeServerUrl;
       } else if (process.env.NODE_ENV === 'production') {
-        baseUrl = process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil.in:3002';
+        baseUrl = process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app';
       } else {
         // Check if the image was loaded from production server
         const isFromProduction = imageUrl.includes('/uploads/') && 
           !imageUrl.startsWith('http://localhost');
         baseUrl = isFromProduction 
-          ? (process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil.in:3002')
+          ? (process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app')
           : 'http://localhost:3002';
       }
       
@@ -200,9 +201,10 @@ export const ImageProvider = ({ children }) => {
     return categoryImages.map(img => {
       let imageUrl = img.url;
       
-      // If URL is already absolute, use it as is
+      // If URL is already absolute, ensure it uses HTTPS
       if (imageUrl.startsWith('http')) {
-        return { ...img, url: imageUrl };
+        // Force HTTPS for security
+        return { ...img, url: imageUrl.replace('http://', 'https://') };
       }
       
       // For relative URLs, determine the correct base URL
@@ -211,13 +213,13 @@ export const ImageProvider = ({ children }) => {
       if (activeServerUrl) {
         baseUrl = activeServerUrl;
       } else if (process.env.NODE_ENV === 'production') {
-        baseUrl = process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil.in:3002';
+        baseUrl = process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app';
       } else {
         // Check if the image was loaded from production server
         const isFromProduction = imageUrl.includes('/uploads/') && 
           !imageUrl.startsWith('http://localhost');
         baseUrl = isFromProduction 
-          ? (process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil.in:3002')
+          ? (process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app')
           : 'http://localhost:3002';
       }
       
