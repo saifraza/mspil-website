@@ -54,9 +54,8 @@ export const ImageProvider = ({ children }) => {
           
           // Try multiple production URLs in order of likelihood
           const productionUrls = [
-            'https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev', // Working production server
-            process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app', // Railway production
-            'https://mspil-mcp-production.up.railway.app', // Railway fallback
+            'https://mspil-mcp-production.up.railway.app', // Railway production (now working!)
+            process.env.REACT_APP_PRODUCTION_CMS_URL || 'https://mspil-mcp-production.up.railway.app', // Railway fallback
           ].filter(Boolean);
           
           console.log('🔍 Will try these production URLs:', productionUrls);
@@ -100,6 +99,11 @@ export const ImageProvider = ({ children }) => {
                       item.url = `${baseUrl}/uploads/${filename}`;
                       console.log(`🔄 Fixed: ${oldUrl} → ${item.url}`);
                     }
+                    // Also fix HTTP to HTTPS
+                    if (item.url && item.url.startsWith('http://')) {
+                      item.url = item.url.replace('http://', 'https://');
+                      console.log(`🔒 Fixed HTTP to HTTPS: ${item.url}`);
+                    }
                   });
                   
                   allContent = productionContent;
@@ -131,6 +135,11 @@ export const ImageProvider = ({ children }) => {
             const baseUrl = activeServerUrl || 'https://mspil-mcp-production.up.railway.app';
             item.url = `${baseUrl}/uploads/${filename}`;
             console.log(`🔄 Fixed in grouping: ${oldUrl} → ${item.url}`);
+          }
+          
+          // Fix HTTP to HTTPS
+          if (item.url && item.url.startsWith('http://')) {
+            item.url = item.url.replace('http://', 'https://');
           }
           
           if (!groupedImages[item.category]) {
