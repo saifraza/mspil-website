@@ -81,9 +81,7 @@ const ImageGalleryModal = ({ isOpen, setIsOpen, images, businessName }) => {
                     src={currentImage.srcUrl || "/images/infrastructure/sugar-mill.jpg"} 
                     alt={t(currentImage.altKey) || currentImage.altKey || (t('defaultImageAlt') || 'Gallery image')} 
                     className="max-h-full max-w-full object-contain"
-                    onError={(e) => {
-                      e.target.src = '/images/infrastructure/sugar-mill.jpg';
-                    }}
+                    fallbackSrc="/images/infrastructure/sugar-mill.jpg"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -131,9 +129,7 @@ const ImageGalleryModal = ({ isOpen, setIsOpen, images, businessName }) => {
                     src={img.srcUrl || "/images/infrastructure/sugar-mill.jpg"} 
                     alt={t(img.altKey) || img.altKey || (t('thumbnailAlt') || 'Thumbnail')} 
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = '/images/infrastructure/sugar-mill.jpg';
-                    }}
+                    fallbackSrc="/images/infrastructure/sugar-mill.jpg"
                   />
                 </button>
               ))}

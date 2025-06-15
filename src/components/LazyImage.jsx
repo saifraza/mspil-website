@@ -6,6 +6,7 @@ const LazyImage = ({
   alt, 
   className, 
   placeholderSrc = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23e0e0e0"/%3E%3C/svg%3E',
+  fallbackSrc,
   onLoad,
   onError,
   ...props 
@@ -29,6 +30,10 @@ const LazyImage = ({
             };
             img.onerror = () => {
               setIsError(true);
+              if (fallbackSrc && fallbackSrc !== src) {
+                setImageSrc(fallbackSrc);
+                setIsLoaded(true);
+              }
               onError?.();
             };
             observer.disconnect();

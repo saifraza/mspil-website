@@ -154,11 +154,7 @@ const AboutUsPage = () => {
                       src={leader.image}
                       alt={leader.name}
                       className="w-full h-full rounded-2xl object-cover border-4 border-primary/20 shadow-2xl"
-                      onError={(e) => {
-                        console.error(`Failed to load image for ${leader.name}:`, leader.image);
-                        // Fallback to a placeholder if image fails
-                        e.target.src = '/images/leadership/nawab_raza_chairman.jpg';
-                      }}
+                      fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
                     />
                     <div className="absolute bottom-4 right-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg">
                       <User className="w-8 h-8 text-white" />

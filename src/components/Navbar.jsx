@@ -127,9 +127,7 @@ const Navbar = () => {
               src={getImage('company-logo', '/images/leadership/nawab_raza_chairman.jpg')}
               alt={t('companyLogoAlt')}
               className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
-              onError={(e) => {
-                e.target.src = '/images/leadership/nawab_raza_chairman.jpg';
-              }}
+              fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
             />
             <div className="flex flex-col min-w-0">
               {/* Show only short name on mobile, full layout on larger screens */}
