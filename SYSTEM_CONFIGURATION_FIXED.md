@@ -67,8 +67,8 @@ This automatically starts both:
 **File:** `vite.config.js`
 **Changed:** 
 ```js
-// OLD (pointing to Replit)
-'process.env.VITE_API_BASE_URL': 'https://workspace.saifraza91.repl.co'
+// OLD (pointing to external server)
+'process.env.VITE_API_BASE_URL': 'https://external-server.com'
 
 // NEW (pointing to local CMS)
 'process.env.VITE_API_BASE_URL': 'http://localhost:3002'

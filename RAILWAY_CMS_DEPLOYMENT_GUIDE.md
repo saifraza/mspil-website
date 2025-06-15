@@ -96,9 +96,6 @@ For a full-stack app like yours, you need:
 - **Service 1**: Frontend (React/Vite) - serves the website
 - **Service 2**: Backend (Express/CMS) - serves the API
 
-## Current Working Setup
+## Deployment Notes
 
-Your CMS is currently working on Replit at:
-`https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev`
-
-This is why images upload there but your Railway "CMS" URL shows the frontend instead.
+Make sure to deploy the CMS as a separate service from your frontend for proper functionality.

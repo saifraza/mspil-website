@@ -90,10 +90,10 @@ export const ImageProvider = ({ children }) => {
                   // Set active server URL before processing content
                   setActiveServerUrl(baseUrl);
                   
-                  // Fix any old Replit/localhost URLs in the content
+                  // Fix any old/localhost URLs in the content
                   console.log(`🔧 Fixing URLs for ${productionContent.length} items...`);
                   productionContent.forEach(item => {
-                    if (item.url && (item.url.includes('replit.dev') || item.url.includes('repl.co') || item.url.includes('localhost:3002'))) {
+                    if (item.url && item.url.includes('localhost:3002')) {
                       const oldUrl = item.url;
                       const filename = item.url.split('/uploads/').pop();
                       item.url = `${baseUrl}/uploads/${filename}`;
@@ -128,8 +128,8 @@ export const ImageProvider = ({ children }) => {
         // Group images by category and fix old URLs
         const groupedImages = {};
         allContent.forEach(item => {
-          // Fix old Replit/localhost URLs
-          if (item.url && (item.url.includes('replit.dev') || item.url.includes('repl.co') || item.url.includes('localhost:3002'))) {
+          // Fix old localhost URLs
+          if (item.url && item.url.includes('localhost:3002')) {
             const oldUrl = item.url;
             const filename = item.url.split('/uploads/').pop();
             const baseUrl = activeServerUrl || 'https://mspil-mcp-production.up.railway.app';

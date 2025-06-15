@@ -585,8 +585,8 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     const protocol = req.secure || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
     const host = req.get('x-forwarded-host') || req.get('host');
     
-    // Force HTTPS for Replit production URLs
-    const finalProtocol = host.includes('replit.dev') ? 'https' : protocol;
+    // Force HTTPS for production URLs
+    const finalProtocol = protocol === 'https' || process.env.NODE_ENV === 'production' ? 'https' : protocol;
     
     const content = {
       id: Date.now(),
@@ -639,7 +639,7 @@ app.get('/api/content', (req, res) => {
     const currentHost = req.get('host');
     const protocol = req.secure ? 'https' : 'http';
     const fixedContent = parsedContent.map(item => {
-      if (item.url && (item.url.includes('localhost') || item.url.includes('workspace.saifraza91.repl.co'))) {
+      if (item.url && item.url.includes('localhost')) {
         // Extract filename from the URL
         const filename = item.url.split('/').pop();
         item.url = `${protocol}://${currentHost}/uploads/${filename}`;
