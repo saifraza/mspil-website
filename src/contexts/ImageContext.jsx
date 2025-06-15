@@ -22,12 +22,6 @@ export const ImageProvider = ({ children }) => {
       // Check if user wants to force production images
       const forceProduction = true; // Temporarily hardcoded to force production
       // const forceProduction = process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
-      console.log('🔧 Environment check:', {
-        NODE_ENV: process.env.NODE_ENV,
-        FORCE_PRODUCTION: process.env.REACT_APP_FORCE_PRODUCTION_IMAGES,
-        forceProduction: forceProduction,
-        hardcoded: true
-      });
       
       try {
         // First, try local server (only if not forced to production)

@@ -4,7 +4,6 @@ import { Menu, X, Sun, Moon, Globe, Settings, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageContext, useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 import LazyImage from '@/components/LazyImage';
 
 const Navbar = () => {
@@ -20,7 +19,6 @@ const Navbar = () => {
 
   const { setLanguage } = useContext(LanguageContext);
   const t = useTranslation();
-  const { getImage } = useImages();
 
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -124,7 +122,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20 gap-4">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0 max-w-[200px] sm:max-w-[300px] lg:max-w-none">
             <LazyImage
-              src={getImage('company-logo', '/images/leadership/nawab_raza_chairman.jpg')}
+              src="/images/leadership/nawab_raza_chairman.jpg"
               alt={t('companyLogoAlt')}
               className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
               fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
