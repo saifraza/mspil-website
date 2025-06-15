@@ -122,10 +122,10 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20 gap-4">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0 max-w-[200px] sm:max-w-[300px] lg:max-w-none">
             <LazyImage
-              src="/images/leadership/nawab_raza_chairman.jpg"
+              src="/images/leadership/nawab_raza.png"
               alt={t('companyLogoAlt')}
-              className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
-              fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0 rounded-full"
+              fallbackSrc="/images/leadership/nawab_raza.png"
             />
             <div className="flex flex-col min-w-0">
               {/* Show only short name on mobile, full layout on larger screens */}

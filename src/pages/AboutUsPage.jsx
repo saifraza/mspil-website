@@ -76,7 +76,7 @@ const AboutUsPage = () => {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg'
+      image: '/images/leadership/nawab_raza.png'
     },
     {
       name: t('aboutMDName'),
