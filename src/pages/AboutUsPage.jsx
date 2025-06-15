@@ -96,25 +96,25 @@ const AboutUsPage = () => {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: getLeadershipImage('sahil-raza-image', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')
+      image: getLeadershipImage('sahil-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutDirector2Name'),
       title: t('aboutDirector2Title'),
       bio: t('aboutDirector2Bio'),
-      image: getLeadershipImage('asad-raza-image', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')
+      image: getLeadershipImage('asad-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutDirector3Name'),
       title: t('aboutDirector3Title'),
       bio: t('aboutDirector3Bio'),
-      image: getLeadershipImage('ahmed-raza-image', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')
+      image: getLeadershipImage('ahmed-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutDirector4Name'),
       title: t('aboutDirector4Title'),
       bio: t('aboutDirector4Bio'),
-      image: getLeadershipImage('fatima-raza-image', 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')
+      image: getLeadershipImage('fatima-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     }
   ];
 
@@ -153,6 +153,12 @@ const AboutUsPage = () => {
                       src={leader.image}
                       alt={leader.name}
                       className="w-full h-full rounded-2xl object-cover border-4 border-primary/20 shadow-2xl"
+                      onError={(e) => {
+                        console.error(`Failed to load image for ${leader.name}:`, leader.image);
+                        // Fallback to a placeholder if image fails
+                        e.target.src = '/images/leadership/nawab_raza_chairman.jpg';
+                      }}
+                      loading="lazy"
                     />
                     <div className="absolute bottom-4 right-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg">
                       <User className="w-8 h-8 text-white" />
