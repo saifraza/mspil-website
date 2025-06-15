@@ -1,7 +1,7 @@
 {
   "name": "mspil-cms-server",
   "version": "1.0.0",
-  "description": "MSPIL CMS Server for Replit Production",
+  "description": "MSPIL CMS Server for Production",
   "main": "server.cjs",
   "scripts": {
     "start": "node server.cjs",

@@ -24,7 +24,6 @@ import InvestorDisclaimerPage from '@/pages/InvestorDisclaimerPage';
 
 // CMS Pages
 import SimpleCMS from '@/pages/SimpleCMS';
-import StaticUploadCMS from '@/pages/StaticUploadCMS';
 
 // Loading component with bio-energy theme
 const LoadingSpinner = () => (
@@ -64,7 +63,6 @@ function App() {
                 
                 {/* CMS Routes */}
                 <Route path="/simple-cms" element={<SimpleCMS />} />
-                <Route path="/static-upload" element={<StaticUploadCMS />} />
               </Routes>
             </Suspense>
           </Layout>

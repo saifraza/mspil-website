@@ -172,7 +172,10 @@ const NewsMediaSection = () => {
   useEffect(() => {
     const fetchUploadedMedia = async () => {
       try {
-        const response = await fetch('https://cc50211b-1805-4ab0-90fb-7fcbdbeeeb89-00-1zns0fu6kq06t.janeway.replit.dev/api/content');
+        const API_URL = process.env.NODE_ENV === 'production' 
+          ? 'https://mspil-mcp-production.up.railway.app/api' 
+          : 'http://localhost:3002/api';
+        const response = await fetch(`${API_URL}/content`);
         const allContent = await response.json();
         
         // Filter for media-images and news-images
