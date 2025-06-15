@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 import { useImages } from '@/contexts/ImageContext';
+import LazyImage from '@/components/LazyImage';
 import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
@@ -149,7 +150,7 @@ const AboutUsPage = () => {
                 {/* Large Image Section */}
                 <div className="flex-shrink-0 w-full lg:w-1/3">
                   <div className="relative w-80 h-80 mx-auto">
-                    <img
+                    <LazyImage
                       src={leader.image}
                       alt={leader.name}
                       className="w-full h-full rounded-2xl object-cover border-4 border-primary/20 shadow-2xl"
@@ -158,7 +159,6 @@ const AboutUsPage = () => {
                         // Fallback to a placeholder if image fails
                         e.target.src = '/images/leadership/nawab_raza_chairman.jpg';
                       }}
-                      loading="lazy"
                     />
                     <div className="absolute bottom-4 right-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg">
                       <User className="w-8 h-8 text-white" />

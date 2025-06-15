@@ -93,8 +93,8 @@ const AboutUsSection = () => {
       <motion.div 
         className="absolute inset-0 z-0 opacity-10"
         style={{ 
-          backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')",
-          backgroundSize: "400px",
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(139, 195, 74, 0.3) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
           y
         }}
       />

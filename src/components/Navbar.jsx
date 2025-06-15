@@ -4,6 +4,8 @@ import { Menu, X, Sun, Moon, Globe, Settings, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageContext, useTranslation } from '@/contexts/LanguageContext';
+import { useImages } from '@/contexts/ImageContext';
+import LazyImage from '@/components/LazyImage';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,6 +20,7 @@ const Navbar = () => {
 
   const { setLanguage } = useContext(LanguageContext);
   const t = useTranslation();
+  const { getImage } = useImages();
 
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -120,10 +123,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 gap-4">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0 max-w-[200px] sm:max-w-[300px] lg:max-w-none">
-            <img
-              src="https://storage.googleapis.com/hostinger-horizons-assets-prod/4863e124-c92c-47bd-a756-134ba49a613f/2bfaa4fa85d42efbc427b1c881d20027.png"
+            <LazyImage
+              src={getImage('company-logo', '/images/leadership/nawab_raza_chairman.jpg')}
               alt={t('companyLogoAlt')}
               className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
+              onError={(e) => {
+                e.target.src = '/images/leadership/nawab_raza_chairman.jpg';
+              }}
             />
             <div className="flex flex-col min-w-0">
               {/* Show only short name on mobile, full layout on larger screens */}

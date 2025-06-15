@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X, ImageOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '@/contexts/LanguageContext';
+import LazyImage from '@/components/LazyImage';
 
 const ImageGalleryModal = ({ isOpen, setIsOpen, images, businessName }) => {
   const t = useTranslation();
@@ -76,10 +77,13 @@ const ImageGalleryModal = ({ isOpen, setIsOpen, images, businessName }) => {
                   transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
-                  <img  
-                    src={currentImage.srcUrl || "https://images.unsplash.com/photo-1599056272659-f80e0a60a3ba?q=80&w=1200&auto=format&fit=crop"} 
+                  <LazyImage  
+                    src={currentImage.srcUrl || "/images/infrastructure/sugar-mill.jpg"} 
                     alt={t(currentImage.altKey) || currentImage.altKey || (t('defaultImageAlt') || 'Gallery image')} 
-                    className="max-h-full max-w-full object-contain" 
+                    className="max-h-full max-w-full object-contain"
+                    onError={(e) => {
+                      e.target.src = '/images/infrastructure/sugar-mill.jpg';
+                    }}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -123,10 +127,13 @@ const ImageGalleryModal = ({ isOpen, setIsOpen, images, businessName }) => {
                     ${index === currentIndex ? 'border-primary scale-105' : 'border-transparent hover:border-primary/50'}`}
                   aria-label={`${t('goToImageAria') || "Go to image"} ${index + 1}: ${t(img.altKey)}`}
                 >
-                  <img  
-                    src={img.srcUrl || "https://images.unsplash.com/photo-1617839978994-745e59c14a9e?q=80&w=200&auto=format&fit=crop"} 
+                  <LazyImage  
+                    src={img.srcUrl || "/images/infrastructure/sugar-mill.jpg"} 
                     alt={t(img.altKey) || img.altKey || (t('thumbnailAlt') || 'Thumbnail')} 
-                    className="w-full h-full object-cover" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = '/images/infrastructure/sugar-mill.jpg';
+                    }}
                   />
                 </button>
               ))}

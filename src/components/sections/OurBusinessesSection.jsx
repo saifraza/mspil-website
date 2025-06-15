@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Droplets, Zap, Wheat, Download, Package, Truck, ClipboardCheck, Pipette, Layers, Waves, Sparkles, Fan, PackageCheck, Archive, FlaskConical, Flame, Recycle, Warehouse, Send, Boxes, CloudSnow, Gauge, Snowflake, Network, Tractor, Shuffle, Disc3, ShoppingBasket, Camera, Image } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import { useImages } from '@/contexts/ImageContext';
+import LazyImage from '@/components/LazyImage';
 import ImageGalleryModal from '@/components/ImageGalleryModal';
 import { useLocation } from 'react-router-dom';
 // Document paths are now handled locally
@@ -199,18 +201,18 @@ const lineVariants = {
 
 const OurBusinessesSection = () => {
   const t = useTranslation();
+  const { getCategoryImages } = useImages();
   const location = useLocation();
   const [processedBusinessesData, setProcessedBusinessesData] = useState([]);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentGalleryImages, setCurrentGalleryImages] = useState([]);
   const [currentBusinessName, setCurrentBusinessName] = useState('');
   const [activeTab, setActiveTab] = useState('sugar');
-  const [uploadedBusinessImages, setUploadedBusinessImages] = useState([]);
 
   const openGallery = (businessId, businessNameKey) => {
     // Combine static images with uploaded images from CMS
     const staticImages = businessImageGalleries[businessId] || [];
-    const uploadedImages = uploadedBusinessImages.filter(img => img.category === `${businessId}-images`);
+    const uploadedImages = getCategoryImages(`${businessId}-images`);
     
     // Convert uploaded images to the format expected by gallery
     const convertedUploadedImages = uploadedImages.map(img => ({
@@ -227,34 +229,7 @@ const OurBusinessesSection = () => {
     setIsGalleryOpen(true);
   };
 
-  // Fetch uploaded business images from CMS
-  useEffect(() => {
-    const fetchUploadedBusinessImages = async () => {
-      try {
-        const API_URL = process.env.NODE_ENV === 'production' 
-          ? 'https://mspil-mcp-production.up.railway.app/api' 
-          : 'http://localhost:3002/api';
-        
-        const response = await fetch(`${API_URL}/content`);
-        const allContent = await response.json();
-        
-        // Filter for business images
-        const businessFiles = allContent.filter(item => 
-          item.category === 'sugar-images' || 
-          item.category === 'ethanol-images' ||
-          item.category === 'power-images' ||
-          item.category === 'feed-images'
-        );
-        
-        setUploadedBusinessImages(businessFiles);
-        console.log('🏭 Fetched business images:', businessFiles);
-      } catch (error) {
-        console.log('Could not fetch business images:', error);
-      }
-    };
-
-    fetchUploadedBusinessImages();
-  }, []);
+  // Business images are now fetched via ImageContext
 
   // Handle hash navigation
   useEffect(() => {
