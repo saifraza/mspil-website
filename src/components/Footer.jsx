@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
-const companyLogoUrl = "https://storage.googleapis.com/hostinger-horizons-assets-prod/4863e124-c92c-47bd-a756-134ba49a613f/2bfaa4fa85d42efbc427b1c881d20027.png";
+const companyLogoUrl = "/images/company_logo.png";
 const companyName = "Mahakaushal Sugar & Power Industries Ltd.";
 
 const Footer = () => {
