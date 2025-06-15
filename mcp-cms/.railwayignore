@@ -1,0 +1,7 @@
+# Ignore parent directory files
+../src
+../public
+../node_modules
+../*.json
+../*.js
+../*.html
