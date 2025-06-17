@@ -11,7 +11,7 @@ const pdfParse = require('pdf-parse');
 const Tesseract = require('tesseract.js');
 const OpenAI = require('openai');
 const { generateSuggestions } = require('./ai-suggestions.cjs');
-const { handleGitDeploy } = require('./git-auto-deploy.cjs');
+const { deployViaGitHubAPI, prepareFileForDeploy } = require('./github-api-deploy.cjs');
 
 // Create Express app
 const app = express();
@@ -711,10 +711,11 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     
     // Auto-deploy to GitHub if enabled
     if (process.env.ENABLE_AUTO_DEPLOY === 'true') {
-      console.log('🚀 Starting auto-deploy to GitHub...');
+      console.log('🚀 Starting auto-deploy to GitHub via API...');
       setTimeout(async () => {
         try {
-          const deployResult = await handleGitDeploy([content]);
+          const fileForDeploy = prepareFileForDeploy(content);
+          const deployResult = await deployViaGitHubAPI([fileForDeploy]);
           console.log('✅ Auto-deploy completed:', deployResult.message);
         } catch (deployError) {
           console.error('❌ Auto-deploy failed:', deployError);
@@ -1036,147 +1037,4 @@ app.post('/api/ai-insights', authMiddleware, upload.single('file'), async (req, 
     if (extractedText && extractedText.trim().length > 20) {
       try {
         progress = 60;
-        console.log(`📊 Progress: ${progress}% - Generating AI summary with OpenAI...`);
-        aiSummary = await generateOpenAISummary(extractedText);
-        progress = 100;
-        console.log(`📊 Progress: ${progress}% - AI summary generated: ${aiSummary.length} characters`);
-      } catch (aiError) {
-        console.log('❌ OpenAI failed:', aiError.message);
-        progress = 80;
-        console.log(`📊 Progress: ${progress}% - Fallback to basic summary...`);
-        aiSummary = generateBasicSummary(extractedText);
-        progress = 100;
-      }
-    } else {
-      progress = 100;
-      aiSummary = `Document analysis: ${file.originalname} - ${(file.size / 1024).toFixed(1)}KB file uploaded successfully.`;
-    }
-
-    // Clean up uploaded file
-    fs.unlinkSync(filePath);
-    
-    res.json({
-      success: true,
-      summary: aiSummary,
-      extractedText: extractedText.substring(0, 500), // First 500 chars for preview
-      hasText: extractedText.length > 20,
-      filename: file.originalname,
-      progress: 100
-    });
-    
-  } catch (error) {
-    console.error('AI insights error:', error);
-    res.status(500).json({ error: 'Failed to generate AI insights' });
-  }
-});
-
-// Helper function to generate AI summary using OpenAI
-async function generateOpenAISummary(text) {
-  try {
-    if (!openai) {
-      throw new Error('OpenAI not configured');
-    }
-    
-    // Truncate text if too long (OpenAI has token limits)
-    const truncatedText = text.length > 8000 ? text.substring(0, 8000) + '...' : text;
-    
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are a professional document analyzer. Create concise, informative summaries that highlight key points, important data, dates, and actionable insights. Focus on business-relevant information."
-        },
-        {
-          role: "user",
-          content: `Please analyze this document and provide a comprehensive summary highlighting:
-1. Main topic and purpose
-2. Key findings or data points
-3. Important dates, numbers, or percentages
-4. Conclusions or recommendations
-
-Document content:
-${truncatedText}`
-        }
-      ],
-      max_tokens: 300,
-      temperature: 0.3
-    });
-
-    return completion.choices[0].message.content.trim();
-  } catch (error) {
-    console.error('OpenAI API error:', error);
-    throw error;
-  }
-}
-
-// Helper function to generate basic summary
-function generateBasicSummary(text) {
-  if (!text || text.trim().length < 20) {
-    return 'Document uploaded successfully. Text content not available for analysis.';
-  }
-  
-  const words = text.trim().split(/\s+/);
-  const wordCount = words.length;
-  const charCount = text.length;
-  
-  return `Document contains ${wordCount} words (${charCount} characters). Preview: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`;
-}
-
-// Manual deploy endpoint
-app.post('/api/deploy', authMiddleware, async (req, res) => {
-  try {
-    console.log('📱 Manual deploy requested by:', req.user.username);
-    
-    const { files } = req.body;
-    const deployModule = require('./git-auto-deploy.cjs');
-    
-    const result = await deployModule.gitAutoDeploy(files || []);
-    
-    if (result.success) {
-      res.json({
-        success: true,
-        message: result.message,
-        details: result.details
-      });
-    } else {
-      res.status(500).json({
-        success: false,
-        error: result.message
-      });
-    }
-  } catch (error) {
-    console.error('Deploy error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Start server
-const HOST = '0.0.0.0'; // Bind to all interfaces for Railway
-app.listen(PORT, HOST, () => {
-  console.log(`
-🚀 MCP CMS Server Started!
-==========================
-URL: http://${HOST}:${PORT}
-Health: http://${HOST}:${PORT}/health
-Environment: ${process.env.NODE_ENV || 'development'}
-
-Login Credentials:
-- admin / admin123
-- editor / editor123
-
-Ready to accept uploads!
-==========================
-  `);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('Server shutting down...');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  console.log('Server shutting down...');
-  process.exit(0);
-});
+        console.log(`📊 Pro
