@@ -53,14 +53,24 @@ class ClaudeContentManager {
       });
     }
     
-    if (requestLower.includes('change') && requestLower.includes('capacity') && requestLower.includes('sugar')) {
-      changes.push({
-        type: 'content-update',
-        file: 'src/locales/en.json',
-        key: 'aboutSugarMillDesc',
-        action: 'extract-capacity',
-        description: 'Update sugar mill capacity'
-      });
+    if (requestLower.includes('change') && requestLower.includes('capacity') && (requestLower.includes('sugar') || requestLower.includes('mill') || requestLower.includes('plant'))) {
+      // Update multiple capacity-related fields
+      const capacityKeys = [
+        'aboutSugarMillDesc',
+        'businessSugarDetails', 
+        'businessSugarData'
+      ];
+      
+      for (const key of capacityKeys) {
+        changes.push({
+          type: 'content-update',
+          file: 'src/locales/en.json',
+          key: key,
+          action: 'extract-capacity',
+          originalRequest: request,
+          description: `Update sugar capacity in ${key}`
+        });
+      }
     }
     
     if (requestLower.includes('add') && requestLower.includes('director') || requestLower.includes('board member')) {
@@ -212,20 +222,40 @@ class ClaudeContentManager {
     // Look for capacity numbers in the request
     const patterns = [
       /capacity.*to\s*(\d+)/i,
-      /change.*capacity.*(\d+)/i,
+      /change.*capacity.*to\s*(\d+)/i,
+      /set.*capacity.*to\s*(\d+)/i,
+      /update.*capacity.*to\s*(\d+)/i,
+      /change.*plant.*capacity.*to\s*(\d+)/i,
       /(\d+)\s*tcd/i,
-      /(\d+)\s*tons/i
+      /(\d+)\s*tons/i,
+      /capacity.*(\d+)/i
     ];
     
     for (const pattern of patterns) {
       const match = request.match(pattern);
       if (match && match[1]) {
         const newCapacity = match[1];
+        console.log(`🎯 Extracted capacity: ${newCapacity} from request: ${request}`);
+        
         // Replace the capacity number in the current value
-        return currentValue.replace(/\d+(\s*TCD|\s*tons)/i, `${newCapacity} TCD`);
+        let updatedValue = currentValue;
+        
+        // Try different replacement patterns
+        if (updatedValue.includes('TCD')) {
+          updatedValue = updatedValue.replace(/\d+,?\d*\s*TCD/gi, `${newCapacity} TCD`);
+        } else if (updatedValue.includes('capacity')) {
+          updatedValue = updatedValue.replace(/capacity.*?(\d+,?\d*)/gi, `capacity of ${newCapacity}`);
+        } else {
+          // If no pattern found, append the capacity info
+          updatedValue = `${newCapacity} TCD capacity with advanced automation and quality control systems`;
+        }
+        
+        console.log(`🔄 Updated value: ${updatedValue}`);
+        return updatedValue;
       }
     }
     
+    console.log(`❌ No capacity pattern found in: ${request}`);
     return null;
   }
 
