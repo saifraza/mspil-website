@@ -99,49 +99,49 @@ const AboutUsPage = () => {
     'leadership-images'  // Generic board member
   ];
 
-  // Use CMS images for leadership with static fallbacks
+  // Use static images directly - no CMS server needed
   const leadership = [
     {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: getImage('nawab-raza-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png'
     },
     {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: getImage('saif-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/saif_raza_md.jpg' // Update this with actual filename after upload
     },
     {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: getImage('sahil-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/sahil_raza_director_supply_chain.jpg' // Update after upload
     },
     {
       name: t('aboutBoard1Name'),
       title: t('aboutBoard1Title'),
       bio: t('aboutBoard1Bio'),
-      image: getImage('asad-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/ranganathan.jpg' // Update after upload
     },
     {
       name: t('aboutBoard2Name'),
       title: t('aboutBoard2Title'),
       bio: t('aboutBoard2Bio'),
-      image: getImage('ahmed-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/mohan_tiwari.jpg' // Update after upload
     },
     {
       name: t('aboutBoard3Name'),
       title: t('aboutBoard3Title'),
       bio: t('aboutBoard3Bio'),
-      image: getImage('fatima-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/rajan_dubey.jpg' // Update after upload
     },
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
       bio: t('aboutBoard4Bio'),
-      image: getImage('leadership-images', '/images/leadership/nawab_raza_chairman.jpg')
+      image: '/images/leadership/chandrakant_patil.jpg' // Update after upload
     }
   ];
 
