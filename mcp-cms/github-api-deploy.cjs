@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
+// Use built-in fetch (Node.js 18+) instead of node-fetch
 
 // GitHub API configuration
 const GITHUB_OWNER = process.env.GITHUB_OWNER || 'saifraza';
