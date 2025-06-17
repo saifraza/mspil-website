@@ -19,8 +19,8 @@ export const ImageProvider = ({ children }) => {
     const fetchAllImages = async () => {
       let allContent = [];
       
-      // Check if user wants to force production images
-      const forceProduction = process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
+      // Always use production CMS for images in production
+      const forceProduction = process.env.NODE_ENV === 'production' || process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
       
       try {
         // First, try local server (only if not forced to production)

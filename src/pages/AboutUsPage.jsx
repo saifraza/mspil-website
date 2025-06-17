@@ -99,49 +99,49 @@ const AboutUsPage = () => {
     'leadership-images'  // Generic board member
   ];
 
-  // Use static images directly - no CMS server needed
+  // Use CMS images with static fallbacks
   const leadership = [
     {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: '/images/leadership/nawab_raza.png'
+      image: getImage('nawab-raza-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: '/images/leadership/saif_raza_md_1750155257355.jpg'
+      image: getImage('saif-raza-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: '/images/leadership/sahil_raza_director_supply_chain.jpg' // Update after upload
+      image: getImage('sahil-raza-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutBoard1Name'),
       title: t('aboutBoard1Title'),
       bio: t('aboutBoard1Bio'),
-      image: '/images/leadership/ranganathan.jpg' // Update after upload
+      image: getImage('ranganathan-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutBoard2Name'),
       title: t('aboutBoard2Title'),
       bio: t('aboutBoard2Bio'),
-      image: '/images/leadership/mohan_tiwari.jpg' // Update after upload
+      image: getImage('mohan-tiwari-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutBoard3Name'),
       title: t('aboutBoard3Title'),
       bio: t('aboutBoard3Bio'),
-      image: '/images/leadership/rajan_dubey.jpg' // Update after upload
+      image: getImage('rajan-dubey-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
       bio: t('aboutBoard4Bio'),
-      image: '/images/leadership/chandrakant_patil.jpg' // Update after upload
+      image: getImage('chandrakant-patil-image', '/images/leadership/nawab_raza.png')
     }
   ];
 
