@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, FileText, LogOut, Check, X, Download, ImageOff, GitBranch } from 'lucide-react';
+import { Upload, FileText, LogOut, Check, X, Download, ImageOff, GitBranch, Bot, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,6 +35,9 @@ const SimpleCMS = () => {
   const [dragActive, setDragActive] = useState(false);
   const [imageErrors, setImageErrors] = useState({});
   const [isLoadingContent, setIsLoadingContent] = useState(false);
+  const [claudeRequest, setClaudeRequest] = useState('');
+  const [claudeProcessing, setClaudeProcessing] = useState(false);
+  const [claudeCommands, setClaudeCommands] = useState([]);
   const { toast } = useToast();
 
   // Helper function to get category path
@@ -71,8 +74,89 @@ const SimpleCMS = () => {
     if (token) {
       // Verify token is still valid
       verifyTokenAndFetchContent();
+      // Load Claude commands
+      fetchClaudeCommands();
     }
   }, [token]);
+
+  const fetchClaudeCommands = async () => {
+    try {
+      const response = await fetch(`${API_URL}/claude/commands`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setClaudeCommands(data.commands || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch Claude commands:', error);
+    }
+  };
+
+  const handleClaudeRequest = async () => {
+    if (!claudeRequest.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a content change request',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setClaudeProcessing(true);
+    
+    try {
+      const response = await fetch(`${API_URL}/claude/change-content`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          request: claudeRequest,
+          context: {
+            timestamp: new Date().toISOString()
+          }
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        toast({
+          title: '🧠 Claude Applied Changes',
+          description: result.message,
+          duration: 5000
+        });
+        
+        // Show detailed results
+        if (result.changes && result.changes.length > 0) {
+          const changeDetails = result.changes.map(change => 
+            `✅ ${change.description || change.action}`
+          ).join('\n');
+          
+          setTimeout(() => {
+            alert(`Changes Applied:\n\n${changeDetails}\n\nThe website will need to be rebuilt to see changes.`);
+          }, 1000);
+        }
+        
+        setClaudeRequest('');
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      toast({
+        title: 'Claude Error',
+        description: error.message,
+        variant: 'destructive'
+      });
+    } finally {
+      setClaudeProcessing(false);
+    }
+  };
 
   const verifyTokenAndFetchContent = async () => {
     try {
@@ -1128,6 +1212,93 @@ const SimpleCMS = () => {
                   <li>📅 <strong>Timeline images</strong> → About Us Section</li>
                   <li>📊 <strong>Excel/CSV files</strong> → Data & Analytics</li>
                   <li>📋 <strong>Reports/PDFs</strong> → Document Library</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Claude Content Management */}
+          <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-t-lg">
+              <CardTitle className="flex items-center space-x-2">
+                <Bot className="h-5 w-5" />
+                <span>Claude Content Manager</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200">
+                <h3 className="font-semibold text-indigo-900 mb-2 flex items-center">
+                  <Bot className="h-5 w-5 mr-2" />
+                  AI-Powered Content Changes
+                </h3>
+                <p className="text-sm text-indigo-700 mb-3">
+                  Tell Claude what content you want to change on your website using natural language. 
+                  No coding or file editing required!
+                </p>
+                
+                {/* Available Commands */}
+                {claudeCommands.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-indigo-800 mb-2">Example Commands:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {claudeCommands.slice(0, 4).map((cmd, index) => (
+                        <div key={index} className="text-xs bg-white/70 p-2 rounded border border-indigo-200">
+                          <code className="text-indigo-700">{cmd.command}</code>
+                          <p className="text-gray-600 mt-1">{cmd.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Claude Request Input */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Content Change Request
+                  </label>
+                  <Textarea
+                    value={claudeRequest}
+                    onChange={(e) => setClaudeRequest(e.target.value)}
+                    placeholder="Examples:
+• Update chairman bio to 'Mr. Nawab Raza is a visionary leader...'
+• Change sugar capacity to 12000 TCD
+• Add board member Dr. John Smith as Independent Director
+• Update contact email to info@newdomain.com
+• Change company description to mention our green initiatives"
+                    rows={4}
+                    className="resize-none"
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleClaudeRequest}
+                  disabled={claudeProcessing || !claudeRequest.trim()}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                >
+                  {claudeProcessing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Claude is working...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Apply Changes with Claude
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Help Section */}
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="text-sm font-semibold text-blue-900 mb-2">💡 How it works:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Type what you want to change in plain English</li>
+                  <li>• Claude analyzes your request and identifies the right content</li>
+                  <li>• Changes are applied directly to your website content</li>
+                  <li>• No need to edit files manually or use terminal commands</li>
                 </ul>
               </div>
             </CardContent>
