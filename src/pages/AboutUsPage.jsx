@@ -111,7 +111,7 @@ const AboutUsPage = () => {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: '/images/leadership/saif_raza_md.jpg' // Update this with actual filename after upload
+      image: '/images/leadership/saif_raza_md_1750155257355.jpg'
     },
     {
       name: t('aboutDirectorName'),
