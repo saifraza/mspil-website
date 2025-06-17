@@ -34,6 +34,45 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// Category paths mapping - used throughout the application
+const categoryPaths = {
+  // Image categories
+  'media-images': 'images/media',
+  'news-images': 'images/news_media',
+  'timeline-images': 'images/about-us',
+  'office-images': 'images/office',
+  'infrastructure-images': 'images/infrastructure',
+  'leadership-images': 'images/leadership',
+  'saif-raza-image': 'images/leadership',
+  'nawab-raza-image': 'images/leadership',
+  'sahil-raza-image': 'images/leadership',
+  'asad-raza-image': 'images/leadership',
+  'ahmed-raza-image': 'images/leadership',
+  'fatima-raza-image': 'images/leadership',
+  'career-images': 'images/careers',
+  'about-images': 'images/about',
+  'csr-education-images': 'images/csr/education',
+  'csr-healthcare-images': 'images/csr/healthcare',
+  'csr-rural-images': 'images/csr/rural-development',
+  'sugar-images': 'images/sugar',
+  'ethanol-images': 'images/ethanol',
+  'power-images': 'images/power',
+  'feed-images': 'images/feed',
+  
+  // Document categories
+  'sugar-data': 'documents/sugar-data',
+  'ethanol-data': 'documents/ethanol-data',
+  'power-data': 'documents/power-data',
+  'feed-data': 'documents/feed-data',
+  'annual-reports': 'documents/investor-relations/annual-reports',
+  'quarterly-results': 'documents/investor-relations/quarterly-results',
+  'presentations': 'documents/investor-relations/presentations',
+  'policies': 'documents/investor-relations/policies',
+  'shareholding': 'documents/investor-relations/shareholding',
+  'csr-reports': 'documents/csr',
+  'general-documents': 'documents/general'
+};
+
 // Middleware
 app.use(compression()); // Enable gzip compression
 
@@ -377,35 +416,7 @@ function copyFileToPublic(file, category, comment) {
   console.log(`📁 Base path for public files: ${basePath}`);
   console.log(`🚂 Railway environment: ${process.env.RAILWAY_ENVIRONMENT}`);
   
-  const categoryPaths = {
-    // Image categories
-    'media-images': 'images/media',
-    'news-images': 'images/news_media',
-    'timeline-images': 'images/about-us',
-    'office-images': 'images/office',
-    'infrastructure-images': 'images/infrastructure',
-    'leadership-images': 'images/leadership',
-    'saif-raza-image': 'images/leadership',
-    'nawab-raza-image': 'images/leadership',
-    'career-images': 'images/careers',
-    'about-images': 'images/about',
-    'csr-education-images': 'images/csr/education',
-    'csr-healthcare-images': 'images/csr/healthcare',
-    'csr-rural-images': 'images/csr/rural-development',
-    
-    // Document categories
-    'sugar-data': 'documents/sugar-data',
-    'ethanol-data': 'documents/ethanol-data',
-    'power-data': 'documents/power-data',
-    'feed-data': 'documents/feed-data',
-    'annual-reports': 'documents/investor-relations/annual-reports',
-    'quarterly-results': 'documents/investor-relations/quarterly-results',
-    'presentations': 'documents/investor-relations/presentations',
-    'policies': 'documents/investor-relations/policies',
-    'shareholding': 'documents/investor-relations/shareholding',
-    'csr-reports': 'documents/csr',
-    'general-documents': 'documents/general'
-  };
+  // Use global categoryPaths mapping
   
   // Categories that should overwrite existing files (single-purpose)
   const overwriteCategories = [
@@ -518,13 +529,26 @@ function saveContentInfo(content) {
     }
   }
   
-  existingData.push(content);
+  // Add new content to beginning of array (most recent first)
+  existingData.unshift(content);
   
   try {
-    fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2));
-    console.log(`✅ Saved content to published-content.json (${existingData.length} total entries)`);
+    // Write with proper error handling and sync
+    fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2), 'utf-8');
+    
+    // Verify the write was successful
+    const verifyContent = fs.readFileSync(dataPath, 'utf-8');
+    const verifyData = JSON.parse(verifyContent);
+    
+    if (verifyData.length === existingData.length) {
+      console.log(`✅ Successfully saved content to published-content.json (${existingData.length} total entries)`);
+      console.log(`📝 New entry: ${content.filename} in category: ${content.category}`);
+    } else {
+      throw new Error('Data verification failed after write');
+    }
   } catch (writeError) {
     console.error('❌ Failed to write published-content.json:', writeError);
+    console.error('Attempted to write:', JSON.stringify(content, null, 2));
     throw writeError;
   }
 }
@@ -664,38 +688,22 @@ app.get('/api/content', (req, res) => {
     const dataPath = path.join(__dirname, 'published-content.json');
     
     if (!fs.existsSync(dataPath)) {
+      console.log('📄 No published-content.json file found');
       return res.json([]);
     }
     
     const content = fs.readFileSync(dataPath, 'utf-8');
-    const parsedContent = JSON.parse(content);
+    let parsedContent = [];
     
-    // Same category paths as used in upload
-    const categoryPaths = {
-      'media-images': 'images/media',
-      'news-images': 'images/news_media',
-      'timeline-images': 'images/about-us',
-      'office-images': 'images/office',
-      'infrastructure-images': 'images/infrastructure',
-      'leadership-images': 'images/leadership',
-      'saif-raza-image': 'images/leadership',
-      'nawab-raza-image': 'images/leadership',
-      'career-images': 'images/careers',
-      'about-images': 'images/about',
-      'csr-education-images': 'images/csr/education',
-      'csr-healthcare-images': 'images/csr/healthcare',
-      'csr-rural-images': 'images/csr/rural-development',
-      'sugar-data': 'documents/sugar-data',
-      'ethanol-data': 'documents/ethanol-data',
-      'power-data': 'documents/power-data',
-      'feed-data': 'documents/feed-data',
-      'annual-reports': 'documents/investor-relations/annual-reports',
-      'quarterly-results': 'documents/investor-relations/quarterly-results',
-      'presentations': 'documents/investor-relations/presentations',
-      'policies': 'documents/investor-relations/policies',
-      'csr-reports': 'documents/csr',
-      'general-documents': 'documents/general'
-    };
+    try {
+      parsedContent = JSON.parse(content);
+      console.log(`📖 Loaded ${parsedContent.length} entries from published-content.json`);
+    } catch (parseError) {
+      console.error('❌ Failed to parse published-content.json:', parseError);
+      return res.json([]);
+    }
+    
+    // Use global categoryPaths mapping
     
     // Content already has static URLs starting with /, no need to fix
     const fixedContent = parsedContent.map(item => {
@@ -715,10 +723,18 @@ app.get('/api/content', (req, res) => {
       return item;
     });
     
-    res.json(fixedContent);
+    // Sort by uploadedAt date in descending order (newest first)
+    const sortedContent = fixedContent.sort((a, b) => {
+      const dateA = new Date(a.uploadedAt || 0);
+      const dateB = new Date(b.uploadedAt || 0);
+      return dateB - dateA; // Newest first
+    });
+    
+    console.log(`✅ Returning ${sortedContent.length} entries (sorted by date, newest first)`);
+    res.json(sortedContent);
   } catch (error) {
-    console.error('Content fetch error:', error);
-    res.json([]);
+    console.error('❌ Content fetch error:', error);
+    res.status(500).json([]);
   }
 });
 
@@ -746,14 +762,12 @@ app.get('/api/public/download/:category', (req, res) => {
   try {
     const { category } = req.params;
     
-    const categoryPaths = {
-      'sugar-data': '../public/documents/sugar-data',
-      'ethanol-data': '../public/documents/ethanol-data',
-      'power-data': '../public/documents/power-data',
-      'feed-data': '../public/documents/feed-data'
-    };
+    const allowedCategories = ['sugar-data', 'ethanol-data', 'power-data', 'feed-data'];
+    if (!allowedCategories.includes(category)) {
+      return res.status(400).json({ error: 'Invalid category' });
+    }
     
-    const categoryPath = categoryPaths[category];
+    const categoryPath = `../public/${categoryPaths[category]}`;
     if (!categoryPath) {
       return res.status(400).json({ error: 'Invalid category' });
     }
@@ -808,58 +822,57 @@ app.get('/api/public/download/:category', (req, res) => {
 app.get('/api/download/:category/:filename', authMiddleware, (req, res) => {
   try {
     const { category, filename } = req.params;
+    console.log(`📥 Download request - Category: ${category}, Filename: ${filename}`);
     
-    const categoryPaths = {
-      // Image categories
-      'media-images': '../public/images/media',
-      'news-images': '../public/images/news',
-      'timeline-images': '../public/images/about-us',
-      'office-images': '../public/images/office',
-      'infrastructure-images': '../public/images/infrastructure',
-      'leadership-images': '../public/images/leadership',
-      'career-images': '../public/images/careers',
-      'about-images': '../public/images/about',
-      'csr-education-images': '../public/images/csr/education',
-      'csr-healthcare-images': '../public/images/csr/healthcare',
-      'csr-rural-images': '../public/images/csr/rural-development',
-      
-      // Document categories
-      'sugar-data': '../public/documents/sugar-data',
-      'ethanol-data': '../public/documents/ethanol-data',
-      'power-data': '../public/documents/power-data',
-      'feed-data': '../public/documents/feed-data',
-      'annual-reports': '../public/documents/investor-relations/annual-reports',
-      'quarterly-results': '../public/documents/investor-relations/quarterly-results',
-      'presentations': '../public/documents/investor-relations/presentations',
-      'policies': '../public/documents/investor-relations/policies',
-      'shareholding': '../public/documents/investor-relations/shareholding',
-      'csr-reports': '../public/documents/csr',
-      'general-documents': '../public/documents/general'
-    };
+    // Use global categoryPaths but prepend with ../public/ for download
+    const downloadCategoryPaths = {};
+    for (const [key, value] of Object.entries(categoryPaths)) {
+      downloadCategoryPaths[key] = `../public/${value}`;
+    }
     
-    const categoryPath = categoryPaths[category];
+    const categoryPath = downloadCategoryPaths[category];
     if (!categoryPath) {
-      return res.status(400).json({ error: 'Invalid category' });
+      console.error(`❌ Invalid category: ${category}`);
+      return res.status(400).json({ error: `Invalid category: ${category}` });
     }
     
     const filePath = path.join(__dirname, categoryPath, filename);
+    console.log(`📁 Looking for file at: ${filePath}`);
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'File not found' });
+      console.error(`❌ File not found: ${filePath}`);
+      
+      // Try to find the file in uploads directory as fallback
+      const uploadsPath = path.join(__dirname, 'uploads', filename);
+      if (fs.existsSync(uploadsPath)) {
+        console.log(`✅ Found file in uploads directory: ${uploadsPath}`);
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.sendFile(path.resolve(uploadsPath));
+        console.log(`✅ Download successful from uploads: ${filename}`);
+        return;
+      }
+      
+      return res.status(404).json({ error: `File not found: ${filename}` });
     }
+    
+    // Get file stats
+    const stats = fs.statSync(filePath);
+    console.log(`📊 File size: ${(stats.size / 1024).toFixed(2)} KB`);
     
     // Set appropriate headers for download
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', stats.size);
     
     // Send the file
     res.sendFile(path.resolve(filePath));
-    console.log(`📥 Download: ${filename} from ${category}`);
+    console.log(`✅ Download initiated: ${filename} from ${category}`);
     
   } catch (error) {
-    console.error('Download error:', error);
-    res.status(500).json({ error: 'Download failed' });
+    console.error('❌ Download error:', error);
+    res.status(500).json({ error: `Download failed: ${error.message}` });
   }
 });
 
