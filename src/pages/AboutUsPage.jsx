@@ -8,6 +8,7 @@ import LazyImage from '@/components/LazyImage';
 import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
+import { useImages } from '@/contexts/ImageContext';
 
 const AboutUsPage = () => {
   const t = useTranslation();
@@ -70,49 +71,77 @@ const AboutUsPage = () => {
   };
 
 
-  // Use static images for leadership (no need for CMS)
+  // Get images from CMS context
+  const { getImage, images } = useImages();
+
+  // Debug: Log available leadership images
+  useEffect(() => {
+    console.log('🖼️ Available CMS images:', images);
+    console.log('🧑‍💼 Leadership categories:', {
+      'nawab-raza-image': images['nawab-raza-image'],
+      'saif-raza-image': images['saif-raza-image'],
+      'sahil-raza-image': images['sahil-raza-image'],
+      'asad-raza-image': images['asad-raza-image'],
+      'ahmed-raza-image': images['ahmed-raza-image'],
+      'fatima-raza-image': images['fatima-raza-image'],
+      'leadership-images': images['leadership-images']
+    });
+  }, [images]);
+
+  // Map leaders to their CMS image categories
+  const leaderImageCategories = [
+    'nawab-raza-image',  // Founder & Chairman
+    'saif-raza-image',   // MD
+    'sahil-raza-image',  // Director Supply Chain
+    'asad-raza-image',   // Director Operations
+    'ahmed-raza-image',  // Director Finance
+    'fatima-raza-image', // Director HR
+    'leadership-images'  // Generic board member
+  ];
+
+  // Use CMS images for leadership with static fallbacks
   const leadership = [
     {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: '/images/leadership/nawab_raza.png'
+      image: getImage('nawab-raza-image', '/images/leadership/nawab_raza.png')
     },
     {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual MD image when available
+      image: getImage('saif-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+      image: getImage('sahil-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutBoard1Name'),
       title: t('aboutBoard1Title'),
       bio: t('aboutBoard1Bio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+      image: getImage('asad-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutBoard2Name'),
       title: t('aboutBoard2Title'),
       bio: t('aboutBoard2Bio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+      image: getImage('ahmed-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutBoard3Name'),
       title: t('aboutBoard3Title'),
       bio: t('aboutBoard3Bio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+      image: getImage('fatima-raza-image', '/images/leadership/nawab_raza_chairman.jpg')
     },
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
       bio: t('aboutBoard4Bio'),
-      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+      image: getImage('leadership-images', '/images/leadership/nawab_raza_chairman.jpg')
     }
   ];
 
