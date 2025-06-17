@@ -91,21 +91,27 @@ const AboutUsPage = () => {
       image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
     },
     {
-      name: t('aboutDirector2Name'),
-      title: t('aboutDirector2Title'),
-      bio: t('aboutDirector2Bio'),
+      name: t('aboutBoard1Name'),
+      title: t('aboutBoard1Title'),
+      bio: t('aboutBoard1Bio'),
       image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
     },
     {
-      name: t('aboutDirector3Name'),
-      title: t('aboutDirector3Title'),
-      bio: t('aboutDirector3Bio'),
+      name: t('aboutBoard2Name'),
+      title: t('aboutBoard2Title'),
+      bio: t('aboutBoard2Bio'),
       image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
     },
     {
-      name: t('aboutDirector4Name'),
-      title: t('aboutDirector4Title'),
-      bio: t('aboutDirector4Bio'),
+      name: t('aboutBoard3Name'),
+      title: t('aboutBoard3Title'),
+      bio: t('aboutBoard3Bio'),
+      image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
+    },
+    {
+      name: t('aboutBoard4Name'),
+      title: t('aboutBoard4Title'),
+      bio: t('aboutBoard4Bio'),
       image: '/images/leadership/nawab_raza_chairman.jpg' // Replace with actual director image
     }
   ];
