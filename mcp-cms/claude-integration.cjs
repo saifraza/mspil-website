@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // Claude API integration for content management
 class ClaudeContentManager {
@@ -20,6 +21,17 @@ class ClaudeContentManager {
       for (const change of changes) {
         const result = await this.executeChange(change);
         results.push(result);
+      }
+      
+      // Auto-commit and push changes to trigger deployment
+      const successfulChanges = results.filter(r => r.success);
+      if (successfulChanges.length > 0) {
+        try {
+          await this.commitAndPushChanges(request, successfulChanges);
+        } catch (gitError) {
+          console.error('⚠️ Git commit/push failed:', gitError.message);
+          // Don't fail the entire operation for git issues
+        }
       }
       
       return {
@@ -397,6 +409,40 @@ class ClaudeContentManager {
         description: 'General content modification'
       }
     ];
+  }
+
+  async commitAndPushChanges(request, changes) {
+    console.log('🚀 Auto-committing changes to trigger deployment...');
+    
+    try {
+      // Change to project root directory
+      process.chdir(this.projectRoot);
+      
+      // Add all changes
+      execSync('git add .', { stdio: 'inherit' });
+      
+      // Create commit message
+      const changeDescriptions = changes.map(c => c.description || c.action).join(', ');
+      const commitMessage = `Claude: ${request}
+
+Applied changes: ${changeDescriptions}
+
+🤖 Generated with Claude AI via MCP Server
+
+Co-Authored-By: Claude <noreply@anthropic.com>`;
+      
+      // Commit changes
+      execSync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`, { stdio: 'inherit' });
+      
+      // Push to trigger deployment
+      execSync('git push origin main', { stdio: 'inherit' });
+      
+      console.log('✅ Changes committed and pushed - Railway deployment should start soon!');
+      
+    } catch (error) {
+      console.error('❌ Git operation failed:', error.message);
+      throw error;
+    }
   }
 }
 
