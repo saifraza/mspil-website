@@ -34,7 +34,38 @@ const SimpleCMS = () => {
   const [progressMessage, setProgressMessage] = useState('');
   const [dragActive, setDragActive] = useState(false);
   const [imageErrors, setImageErrors] = useState({});
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
   const { toast } = useToast();
+
+  // Helper function to get category path
+  const getCategoryPath = (category) => {
+    const categoryPaths = {
+      'media-images': 'images/media',
+      'news-images': 'images/news_media',
+      'timeline-images': 'images/about-us',
+      'office-images': 'images/office',
+      'infrastructure-images': 'images/infrastructure',
+      'leadership-images': 'images/leadership',
+      'saif-raza-image': 'images/leadership',
+      'nawab-raza-image': 'images/leadership',
+      'career-images': 'images/careers',
+      'about-images': 'images/about',
+      'csr-education-images': 'images/csr/education',
+      'csr-healthcare-images': 'images/csr/healthcare',
+      'csr-rural-images': 'images/csr/rural-development',
+      'sugar-data': 'documents/sugar-data',
+      'ethanol-data': 'documents/ethanol-data',
+      'power-data': 'documents/power-data',
+      'feed-data': 'documents/feed-data',
+      'annual-reports': 'documents/investor-relations/annual-reports',
+      'quarterly-results': 'documents/investor-relations/quarterly-results',
+      'presentations': 'documents/investor-relations/presentations',
+      'policies': 'documents/investor-relations/policies',
+      'csr-reports': 'documents/csr',
+      'general-documents': 'documents/general'
+    };
+    return categoryPaths[category] || categoryPaths['general-documents'];
+  };
 
   useEffect(() => {
     if (token) {
@@ -45,6 +76,8 @@ const SimpleCMS = () => {
 
   const verifyTokenAndFetchContent = async () => {
     try {
+      setIsLoadingContent(true);
+      console.log('Fetching content from server...');
       const response = await fetch(`${API_URL}/content`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -53,16 +86,39 @@ const SimpleCMS = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setRecentUploads(data.slice(-5).reverse() || []); // Show last 5 uploads
-        setAllFiles(data || []); // Store all files for browser
+        console.log(`Fetched ${data.length} files from server`);
+        
+        // Update both recent uploads and all files
+        if (Array.isArray(data)) {
+          // Sort by upload date and get most recent
+          const sortedData = [...data].sort((a, b) => 
+            new Date(b.uploadedAt) - new Date(a.uploadedAt)
+          );
+          
+          setRecentUploads(sortedData.slice(0, 5)); // Show last 5 uploads
+          setAllFiles(data); // Store all files for browser
+          console.log(`Updated UI with ${sortedData.slice(0, 5).length} recent uploads`);
+        }
         setIsLoggedIn(true);
+        return true; // Success
       } else if (response.status === 401) {
         // Token is invalid or expired
         handleTokenExpired();
+        return false;
+      } else {
+        console.error('Failed to fetch content:', response.status);
+        throw new Error(`Failed to fetch content: ${response.status}`);
       }
     } catch (error) {
       console.error('Token verification failed:', error);
+      // Don't log out on network errors, just throw
+      if (error.message && !error.message.includes('401')) {
+        throw error;
+      }
       handleTokenExpired();
+      return false;
+    } finally {
+      setIsLoadingContent(false);
     }
   };
 
@@ -142,6 +198,13 @@ const SimpleCMS = () => {
           title: 'Success',
           description: 'Logged in successfully'
         });
+        
+        // Fetch content after successful login
+        setTimeout(() => {
+          verifyTokenAndFetchContent().catch(error => {
+            console.error('Failed to fetch content after login:', error);
+          });
+        }, 100);
       } else {
         toast({
           title: 'Error',
@@ -387,7 +450,33 @@ const SimpleCMS = () => {
       setSelectedPlacement(null);
       setPlacementSuggestions([]);
       document.getElementById('file-input').value = '';
-      verifyTokenAndFetchContent();
+      
+      // Immediately update UI with successful uploads
+      if (successCount > 0) {
+        // Note: We don't have detailed results here, so we'll rely on server fetch
+        toast({
+          title: 'Refreshing content...',
+          description: 'Loading your uploaded files',
+        });
+      }
+      
+      // Fetch latest content with retry
+      setTimeout(() => {
+        verifyTokenAndFetchContent().catch(error => {
+          console.error('Failed to refresh content after upload:', error);
+          // Retry once after a delay
+          setTimeout(() => {
+            verifyTokenAndFetchContent().catch(err => {
+              console.error('Retry failed:', err);
+              toast({
+                title: 'Notice',
+                description: 'Files uploaded but refresh failed. Please reload the page.',
+                variant: 'default'
+              });
+            });
+          }, 2000);
+        });
+      }, 500);
 
     } catch (error) {
       toast({
@@ -540,7 +629,28 @@ const SimpleCMS = () => {
       setComment('');
       setSummary('');
       document.getElementById('file-input').value = '';
-      verifyTokenAndFetchContent();
+      
+      // Fetch updated content to show new uploads
+      if (successCount > 0) {
+        // Wait a bit for server to process, then refresh content
+        setTimeout(async () => {
+          try {
+            await verifyTokenAndFetchContent();
+            toast({
+              title: 'Content Refreshed',
+              description: 'Recent uploads are now visible',
+              duration: 2000
+            });
+          } catch (error) {
+            console.error('Failed to refresh content after upload:', error);
+            toast({
+              title: 'Notice',
+              description: 'Files uploaded successfully. Refresh the page to see them.',
+              variant: 'default'
+            });
+          }
+        }, 1000);
+      }
 
     } catch (error) {
       console.error('Overall upload error:', error);
@@ -719,10 +829,37 @@ const SimpleCMS = () => {
                 <p className="text-sm text-gray-500">AI-Powered Document Management</p>
               </div>
             </div>
-            <Button variant="outline" onClick={handleLogout} className="border-purple-200 hover:bg-purple-50">
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  verifyTokenAndFetchContent().then(() => {
+                    toast({
+                      title: 'Refreshed',
+                      description: 'Content updated successfully'
+                    });
+                  }).catch(() => {
+                    toast({
+                      title: 'Error',
+                      description: 'Failed to refresh content',
+                      variant: 'destructive'
+                    });
+                  });
+                }} 
+                className="border-purple-200 hover:bg-purple-50"
+                disabled={isLoadingContent}
+              >
+                {isLoadingContent ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
+                ) : (
+                  <>↻ Refresh</>
+                )}
+              </Button>
+              <Button variant="outline" onClick={handleLogout} className="border-purple-200 hover:bg-purple-50">
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -997,17 +1134,28 @@ const SimpleCMS = () => {
           </Card>
 
           {/* Recent Uploads */}
-          {recentUploads.length > 0 && (
+          {(recentUploads.length > 0 || isLoadingContent) && (
             <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-t-lg">
                 <CardTitle className="flex items-center space-x-2">
                   <FileText className="h-5 w-5" />
                   <span>Recent Uploads</span>
+                  {isLoadingContent && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {recentUploads.map((item) => {
+                {isLoadingContent && recentUploads.length === 0 ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mx-auto mb-4"></div>
+                      <p className="text-sm text-gray-600">Loading recent uploads...</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {recentUploads.map((item) => {
                     const isImage = item.mimeType && item.mimeType.startsWith('image/');
                     const hasError = imageErrors[item.id];
                     return (
@@ -1058,7 +1206,8 @@ const SimpleCMS = () => {
                       </div>
                     );
                   })}
-                </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

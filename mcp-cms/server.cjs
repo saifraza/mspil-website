@@ -489,9 +489,13 @@ function saveContentInfo(content) {
     if (fs.existsSync(dataPath)) {
       const fileContent = fs.readFileSync(dataPath, 'utf-8');
       existingData = JSON.parse(fileContent);
+      console.log(`📖 Read ${existingData.length} existing entries from published-content.json`);
+    } else {
+      console.log('📝 Creating new published-content.json file');
     }
   } catch (error) {
-    console.log('Creating new content file');
+    console.log('📝 Creating new content file due to error:', error.message);
+    existingData = [];
   }
   
   // Categories that should overwrite existing entries
@@ -506,12 +510,23 @@ function saveContentInfo(content) {
   
   if (overwriteCategories.includes(content.category)) {
     // Remove any existing entries with the same category
+    const before = existingData.length;
     existingData = existingData.filter(item => item.category !== content.category);
-    console.log(`🗑️ Removed old ${content.category} entries from database`);
+    const removed = before - existingData.length;
+    if (removed > 0) {
+      console.log(`🗑️ Removed ${removed} old ${content.category} entries from database`);
+    }
   }
   
   existingData.push(content);
-  fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2));
+  
+  try {
+    fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2));
+    console.log(`✅ Saved content to published-content.json (${existingData.length} total entries)`);
+  } catch (writeError) {
+    console.error('❌ Failed to write published-content.json:', writeError);
+    throw writeError;
+  }
 }
 
 // API Routes
@@ -616,8 +631,14 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
       uploadedAt: new Date().toISOString()
     };
 
-    // Save content info
-    saveContentInfo(content);
+    // Save content info with error handling
+    try {
+      saveContentInfo(content);
+      console.log(`💾 Content info saved to published-content.json`);
+    } catch (saveError) {
+      console.error('❌ Failed to save content info:', saveError);
+      // Continue with response even if save fails
+    }
 
     console.log(`✅ Upload successful: ${file.originalname} → ${copyResult.newFilename} (${category})`);
     res.json({
