@@ -166,4 +166,9 @@ async function runTests() {
     console.log('\n✅ All tests completed!');
   } catch (error) {
     console.error('\n❌ Test failed:', error.message);
- 
+    process.exit(1);
+  }
+}
+
+// Run the tests
+runTests();

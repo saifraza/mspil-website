@@ -142,4 +142,5 @@ function prepareFileForDeploy(uploadedFile) {
 
 module.exports = {
   deployViaGitHubAPI,
-  pr
+  prepareFileForDeploy
+};

@@ -67,4 +67,16 @@ GITHUB_BRANCH=main
 
 ## Troubleshooting
 
-### "
+### "Permission denied" error
+- Check GitHub deploy key has write access
+- Verify Railway has correct SSH key
+
+### Files not appearing
+- Check Railway build logs
+- Verify files were committed to GitHub
+- Wait for full rebuild to complete
+
+### Deploy button not working
+- Check browser console for errors
+- Verify CMS server has git installed
+- Check Railway logs for git errors

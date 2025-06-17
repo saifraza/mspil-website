@@ -118,28 +118,98 @@ class ClaudeContentManager {
     const content = fs.readFileSync(filePath, 'utf-8');
     let data = JSON.parse(content);
     
-    // Simple update for demonstration
     if (change.key && data[change.key]) {
       const oldValue = data[change.key];
-      // In real implementation, Claude would generate the new content
-      data[change.key] = `${oldValue} [Updated by Claude]`;
+      let newValue = oldValue;
       
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+      // Extract new content based on action type
+      if (change.action === 'extract-from-request') {
+        newValue = this.extractContentFromRequest(change.originalRequest, change.key);
+      } else if (change.action === 'extract-capacity') {
+        newValue = this.extractCapacityFromRequest(change.originalRequest, oldValue);
+      }
       
-      return {
-        success: true,
-        file: change.file,
-        key: change.key,
-        oldValue: oldValue,
-        newValue: data[change.key],
-        action: 'updated'
-      };
+      // Only update if we successfully extracted new content
+      if (newValue && newValue !== oldValue) {
+        data[change.key] = newValue;
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        
+        return {
+          success: true,
+          file: change.file,
+          key: change.key,
+          oldValue: oldValue,
+          newValue: newValue,
+          action: 'updated'
+        };
+      }
     }
     
     return {
       success: false,
-      error: `Key ${change.key} not found in ${change.file}`
+      error: `Could not extract new content or key ${change.key} not found in ${change.file}`
     };
+  }
+
+  extractContentFromRequest(request, key) {
+    const requestLower = request.toLowerCase();
+    
+    // Extract content for chairman bio updates
+    if (key === 'aboutFounderBio') {
+      // Look for patterns like "update chairman bio to [content]"
+      const patterns = [
+        /update.*chairman.*bio.*to[:\s]+(.+?)(?:\.|$)/i,
+        /change.*chairman.*bio.*to[:\s]+(.+?)(?:\.|$)/i,
+        /set.*chairman.*bio.*to[:\s]+(.+?)(?:\.|$)/i,
+        /chairman.*bio[:\s]+(.+?)(?:\.|$)/i
+      ];
+      
+      for (const pattern of patterns) {
+        const match = request.match(pattern);
+        if (match && match[1]) {
+          return match[1].trim().replace(/['"]/g, '');
+        }
+      }
+    }
+    
+    // Extract content for other bio updates
+    if (key.includes('Bio')) {
+      const patterns = [
+        /update.*bio.*to[:\s]+(.+?)(?:\.|$)/i,
+        /change.*bio.*to[:\s]+(.+?)(?:\.|$)/i,
+        /bio[:\s]+(.+?)(?:\.|$)/i
+      ];
+      
+      for (const pattern of patterns) {
+        const match = request.match(pattern);
+        if (match && match[1]) {
+          return match[1].trim().replace(/['"]/g, '');
+        }
+      }
+    }
+    
+    return null;
+  }
+
+  extractCapacityFromRequest(request, currentValue) {
+    // Look for capacity numbers in the request
+    const patterns = [
+      /capacity.*to\s*(\d+)/i,
+      /change.*capacity.*(\d+)/i,
+      /(\d+)\s*tcd/i,
+      /(\d+)\s*tons/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = request.match(pattern);
+      if (match && match[1]) {
+        const newCapacity = match[1];
+        // Replace the capacity number in the current value
+        return currentValue.replace(/\d+(\s*TCD|\s*tons)/i, `${newCapacity} TCD`);
+      }
+    }
+    
+    return null;
   }
 
   async addContent(change) {
