@@ -11,6 +11,8 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? 'https://mspil-mcp-production.up.railway.app/api' 
   : 'http://localhost:3002/api';
 
+console.log('CMS API URL:', API_URL, 'Environment:', process.env.NODE_ENV);
+
 const SimpleCMS = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('cms_token'));
@@ -345,9 +347,15 @@ const SimpleCMS = () => {
             // Show smart rename info if available
             if (result.smartRename) {
               toast({
-                title: 'File Renamed',
-                description: `${result.smartRename.original} → ${result.smartRename.smart}`,
-                duration: 3000
+                title: '✅ File Uploaded Successfully',
+                description: `${result.smartRename.original} → ${result.smartRename.smart} in ${result.smartRename.category}`,
+                duration: 5000
+              });
+            } else if (result.file) {
+              toast({
+                title: '✅ File Uploaded',
+                description: `${result.file.originalFilename} uploaded as ${result.file.filename}`,
+                duration: 5000
               });
             }
           } else if (response.status === 401) {
@@ -420,9 +428,13 @@ const SimpleCMS = () => {
     const results = [];
 
     try {
+      console.log('Starting upload for', files.length, 'files');
+      
       // Upload files one by one to maintain proper error handling
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        console.log(`Uploading file ${i + 1}/${files.length}: ${file.name}`);
+        
         const formData = new FormData();
         formData.append('file', file);
         formData.append('comment', comment || `Batch upload: ${file.name}`);
@@ -436,33 +448,82 @@ const SimpleCMS = () => {
             },
             body: formData
           });
+          
+          console.log('Upload response status:', response.status);
 
-          const data = await response.json();
+          let data;
+          try {
+            data = await response.json();
+            console.log('Upload response data:', data);
+          } catch (jsonError) {
+            console.error('Failed to parse response JSON:', jsonError);
+            throw new Error('Invalid response from server');
+          }
 
           if (response.ok) {
             successCount++;
-            results.push({ file: file.name, status: 'success' });
+            results.push({ 
+              file: file.name, 
+              status: 'success',
+              uploadedAs: data.file?.filename || data.smartRename?.smart,
+              category: data.file?.category || data.smartRename?.category,
+              message: data.message
+            });
+            
+            // Show individual file upload success with renamed filename
+            if (data.smartRename) {
+              toast({
+                title: '✅ File Uploaded',
+                description: `${data.smartRename.original} → ${data.smartRename.smart} in ${data.smartRename.category}`,
+                duration: 5000
+              });
+            }
           } else {
             failCount++;
-            results.push({ file: file.name, status: 'error', error: data.error });
+            const errorMessage = data.error || `Upload failed with status ${response.status}`;
+            results.push({ file: file.name, status: 'error', error: errorMessage });
+            
+            // Show error toast for failed upload
+            toast({
+              title: '❌ Upload Failed',
+              description: `${file.name}: ${errorMessage}`,
+              variant: 'destructive',
+              duration: 5000
+            });
           }
         } catch (error) {
           failCount++;
           console.error('Upload error for', file.name, ':', error);
           results.push({ file: file.name, status: 'error', error: error.message });
+          
+          // Show error toast for individual file
+          toast({
+            title: '❌ Upload Failed',
+            description: `${file.name}: ${error.message}`,
+            variant: 'destructive',
+            duration: 5000
+          });
         }
       }
 
       // Show results
       if (successCount > 0 && failCount === 0) {
-        toast({
-          title: 'Success',
-          description: `All ${successCount} files uploaded successfully!`
-        });
+        // Don't show summary toast if individual toasts were shown
+        if (files.length === 1) {
+          // Single file upload - individual toast already shown
+        } else {
+          // Multiple files - show summary
+          toast({
+            title: 'All Files Uploaded Successfully',
+            description: `${successCount} files uploaded and renamed successfully!`,
+            duration: 5000
+          });
+        }
       } else if (successCount > 0 && failCount > 0) {
         toast({
           title: 'Partial Success',
-          description: `${successCount} files uploaded, ${failCount} failed`
+          description: `${successCount} files uploaded, ${failCount} failed. Check individual notifications for details.`,
+          variant: 'default'
         });
       } else {
         const firstError = results.find(r => r.status === 'error')?.error || 'Unknown error';
@@ -482,13 +543,16 @@ const SimpleCMS = () => {
       verifyTokenAndFetchContent();
 
     } catch (error) {
+      console.error('Overall upload error:', error);
       toast({
-        title: 'Error',
-        description: 'Upload error: ' + error.message,
-        variant: 'destructive'
+        title: 'Upload Error',
+        description: 'Upload failed: ' + error.message,
+        variant: 'destructive',
+        duration: 5000
       });
     } finally {
       setUploading(false);
+      console.log('Upload process completed. Success:', successCount, 'Failed:', failCount);
     }
   };
 
