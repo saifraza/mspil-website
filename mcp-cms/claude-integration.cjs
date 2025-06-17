@@ -23,14 +23,15 @@ class ClaudeContentManager {
         results.push(result);
       }
       
-      // Auto-commit and push changes to trigger deployment
+      // Auto-commit and push changes to trigger deployment (if possible)
       const successfulChanges = results.filter(r => r.success);
       if (successfulChanges.length > 0) {
         try {
-          await this.commitAndPushChanges(request, successfulChanges);
-        } catch (gitError) {
-          console.error('⚠️ Git commit/push failed:', gitError.message);
-          // Don't fail the entire operation for git issues
+          await this.triggerDeployment(request, successfulChanges);
+        } catch (deployError) {
+          console.error('⚠️ Auto-deployment failed:', deployError.message);
+          console.log('📝 Changes saved successfully but manual deployment needed');
+          // Don't fail the entire operation for deployment issues
         }
       }
       
@@ -411,36 +412,72 @@ class ClaudeContentManager {
     ];
   }
 
-  async commitAndPushChanges(request, changes) {
-    console.log('🚀 Auto-committing changes to trigger deployment...');
+  async triggerDeployment(request, changes) {
+    console.log('🚀 Attempting to trigger deployment...');
+    
+    // Create a deployment marker file that could be used for webhooks/monitoring
+    const deploymentInfo = {
+      timestamp: new Date().toISOString(),
+      request: request,
+      changes: changes.map(c => ({
+        description: c.description || c.action,
+        file: c.file || 'multiple files',
+        success: c.success
+      })),
+      user: 'Claude AI',
+      needsDeployment: true
+    };
     
     try {
-      // Change to project root directory
-      process.chdir(this.projectRoot);
+      // Write deployment marker (this could be picked up by a monitoring service)
+      const markerPath = path.join(this.projectRoot, 'DEPLOYMENT_NEEDED.json');
+      fs.writeFileSync(markerPath, JSON.stringify(deploymentInfo, null, 2));
+      console.log('📝 Created deployment marker file');
       
-      // Add all changes
-      execSync('git add .', { stdio: 'inherit' });
-      
-      // Create commit message
-      const changeDescriptions = changes.map(c => c.description || c.action).join(', ');
-      const commitMessage = `Claude: ${request}
+      // Try git operations if possible (but don't fail if git is not available)
+      try {
+        console.log('🔄 Checking if git is available...');
+        
+        // Change to project root directory
+        process.chdir(this.projectRoot);
+        
+        // Check if we're in a git repository
+        execSync('git status', { stdio: 'pipe' });
+        console.log('✅ Git repository detected');
+        
+        // Add all changes
+        execSync('git add .', { stdio: 'pipe' });
+        
+        // Create commit message
+        const changeDescriptions = changes.map(c => c.description || c.action).join(', ');
+        const commitMessage = `Claude: ${request}
 
 Applied changes: ${changeDescriptions}
 
 🤖 Generated with Claude AI via MCP Server
 
 Co-Authored-By: Claude <noreply@anthropic.com>`;
-      
-      // Commit changes
-      execSync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`, { stdio: 'inherit' });
-      
-      // Push to trigger deployment
-      execSync('git push origin main', { stdio: 'inherit' });
-      
-      console.log('✅ Changes committed and pushed - Railway deployment should start soon!');
+        
+        // Commit changes
+        execSync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`, { stdio: 'pipe' });
+        console.log('✅ Changes committed locally');
+        
+        // Try to push (this might fail on Railway due to permissions)
+        try {
+          execSync('git push origin main', { stdio: 'pipe' });
+          console.log('✅ Changes pushed - Railway deployment should start soon!');
+        } catch (pushError) {
+          console.log('⚠️ Git push failed (expected on Railway) - changes are committed locally');
+          throw new Error('Manual deployment needed: Changes saved but push failed due to server permissions');
+        }
+        
+      } catch (gitError) {
+        console.log('⚠️ Git operations not available on this server');
+        throw new Error('Manual deployment needed: Changes saved but git not available');
+      }
       
     } catch (error) {
-      console.error('❌ Git operation failed:', error.message);
+      console.error('❌ Deployment trigger failed:', error.message);
       throw error;
     }
   }

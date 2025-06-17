@@ -1140,7 +1140,8 @@ app.post('/api/claude/change-content', authMiddleware, async (req, res) => {
         success: true,
         message: result.message,
         changes: result.changes,
-        requestAnalysis: result.requestAnalysis
+        requestAnalysis: result.requestAnalysis,
+        deploymentNote: "Changes saved successfully. If you don't see changes on the website in 5 minutes, you may need to manually trigger a Railway deployment."
       });
     } else {
       res.status(500).json({
