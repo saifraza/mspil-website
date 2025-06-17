@@ -1116,18 +1116,82 @@ function generateBasicSummary(text) {
   return `Document contains ${wordCount} words (${charCount} characters). Preview: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`;
 }
 
-// Manual deploy endpoint - temporarily disabled
+// Get deployment instructions and download links
 app.post('/api/deploy', authMiddleware, async (req, res) => {
   try {
-    console.log('📱 Manual deploy requested by:', req.user.username);
+    console.log('📱 Deploy instructions requested by:', req.user.username);
+    
+    // Get recent uploads from published-content.json
+    const dataPath = path.join(__dirname, 'published-content.json');
+    let recentFiles = [];
+    let instructions = [];
+    
+    if (fs.existsSync(dataPath)) {
+      const content = fs.readFileSync(dataPath, 'utf-8');
+      const allContent = JSON.parse(content);
+      
+      // Get files from last 24 hours
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      recentFiles = allContent.filter(item => new Date(item.uploadedAt) > oneDayAgo);
+      
+      // Generate download URLs and git commands
+      const baseUrl = req.protocol + '://' + req.get('host');
+      
+      instructions = recentFiles.map(file => {
+        const categoryPaths = {
+          'saif-raza-image': 'public/images/leadership',
+          'nawab-raza-image': 'public/images/leadership', 
+          'sahil-raza-image': 'public/images/leadership',
+          'leadership-images': 'public/images/leadership',
+          'media-images': 'public/images/media',
+          'infrastructure-images': 'public/images/infrastructure'
+        };
+        
+        const targetPath = categoryPaths[file.category] || 'public/images/general';
+        const downloadUrl = `${baseUrl}/api/download/${file.category}/${file.filename}`;
+        
+        return {
+          filename: file.filename,
+          category: file.category,
+          downloadUrl: downloadUrl,
+          targetPath: `${targetPath}/${file.filename}`,
+          gitCommand: `# Download and add ${file.filename}
+curl "${downloadUrl}" -H "Authorization: Bearer YOUR_TOKEN" --output "${targetPath}/${file.filename}"
+git add "${targetPath}/${file.filename}"`
+        };
+      });
+    }
+    
+    if (recentFiles.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No recent files to deploy',
+        filesCount: 0,
+        instructions: []
+      });
+    }
+    
+    // Generate complete git commands
+    const allGitCommands = instructions.map(i => i.gitCommand).join('\n');
+    const commitCommand = `git commit -m "Add ${recentFiles.length} uploaded file(s) from CMS"
+git push origin main`;
     
     res.json({
-      success: false,
-      message: 'GitHub API deployment temporarily disabled due to Railway deployment issues. Please download files manually and add to git locally.',
-      error: 'Feature temporarily disabled'
+      success: true,
+      message: `Found ${recentFiles.length} recent file(s) ready for deployment`,
+      filesCount: recentFiles.length,
+      instructions: instructions,
+      completeCommands: `${allGitCommands}\n${commitCommand}`,
+      quickSteps: [
+        "1. Copy the download URLs below",
+        "2. Download each file to the specified path", 
+        "3. Run the git commands to commit and push",
+        "4. Railway will auto-deploy in ~2 minutes"
+      ]
     });
+    
   } catch (error) {
-    console.error('Deploy error:', error);
+    console.error('Deploy instructions error:', error);
     res.status(500).json({ error: error.message });
   }
 });

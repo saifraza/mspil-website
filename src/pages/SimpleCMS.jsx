@@ -858,8 +858,6 @@ const SimpleCMS = () => {
               <Button 
                 variant="outline" 
                 onClick={async () => {
-                  if (!confirm('Deploy all uploaded files to production? This will push to GitHub and trigger a rebuild.')) return;
-                  
                   try {
                     const response = await fetch(`${API_URL}/deploy`, {
                       method: 'POST',
@@ -867,22 +865,51 @@ const SimpleCMS = () => {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                       },
-                      body: JSON.stringify({ files: [] })
+                      body: JSON.stringify({})
                     });
                     
                     const result = await response.json();
-                    if (result.success) {
+                    if (result.success && result.filesCount > 0) {
+                      // Show deployment instructions in a copyable format
+                      const instructions = result.instructions.map(file => 
+                        `# ${file.filename} (${file.category})\nDownload: ${file.downloadUrl}\nSave to: ${file.targetPath}`
+                      ).join('\n\n');
+                      
+                      const fullInstructions = `Recent files ready for deployment:\n\n${instructions}\n\nComplete git commands:\n${result.completeCommands}`;
+                      
+                      // Create a modal or alert with instructions
+                      const modal = document.createElement('div');
+                      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;display:flex;align-items:center;justify-content:center;';
+                      modal.innerHTML = `
+                        <div style="background:white;padding:20px;border-radius:8px;max-width:800px;max-height:80%;overflow:auto;">
+                          <h3 style="margin:0 0 15px 0;">📋 Deployment Instructions</h3>
+                          <p>${result.message}</p>
+                          <textarea style="width:100%;height:300px;font-family:monospace;font-size:12px;" readonly>${fullInstructions}</textarea>
+                          <div style="margin-top:15px;text-align:right;">
+                            <button onclick="navigator.clipboard.writeText('${fullInstructions.replace(/'/g, "\\'")}').then(() => alert('Copied to clipboard!'))" style="margin-right:10px;padding:8px 16px;background:#059669;color:white;border:none;border-radius:4px;cursor:pointer;">Copy All</button>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="padding:8px 16px;background:#dc2626;color:white;border:none;border-radius:4px;cursor:pointer;">Close</button>
+                          </div>
+                        </div>
+                      `;
+                      document.body.appendChild(modal);
+                      
                       toast({
-                        title: '🚀 Deployment Started',
-                        description: 'Files pushed to GitHub. Railway will rebuild automatically.',
+                        title: '📋 Deployment Instructions Ready',
+                        description: `Found ${result.filesCount} files. Check the popup for download links and git commands.`,
                         duration: 5000
                       });
+                    } else if (result.success && result.filesCount === 0) {
+                      toast({
+                        title: 'No Files to Deploy',
+                        description: 'No files uploaded in the last 24 hours.',
+                        duration: 3000
+                      });
                     } else {
-                      throw new Error(result.error);
+                      throw new Error(result.error || 'Unknown error');
                     }
                   } catch (error) {
                     toast({
-                      title: 'Deployment Failed',
+                      title: 'Error Getting Instructions',
                       description: error.message,
                       variant: 'destructive'
                     });
@@ -891,7 +918,7 @@ const SimpleCMS = () => {
                 className="border-green-200 hover:bg-green-50"
               >
                 <GitBranch className="h-4 w-4 mr-2" />
-                Deploy
+                Get Deploy Commands
               </Button>
               <Button variant="outline" onClick={handleLogout} className="border-purple-200 hover:bg-purple-50">
                 <LogOut className="h-4 w-4 mr-2" />
