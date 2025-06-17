@@ -79,7 +79,22 @@ class ClaudeContentManager {
         file: 'src/locales/en.json',
         section: 'contact',
         action: 'update-contact-info',
+        originalRequest: request,
         description: 'Update contact information'
+      });
+    }
+    
+    // Handle email changes in JSX files
+    if (requestLower.includes('change') && requestLower.includes('email')) {
+      changes.push({
+        type: 'email-update',
+        files: [
+          'src/components/Footer.jsx',
+          'src/components/sections/ContactUsSection.jsx'
+        ],
+        action: 'update-email',
+        originalRequest: request,
+        description: 'Update email addresses in components'
       });
     }
     
@@ -101,6 +116,8 @@ class ClaudeContentManager {
         return await this.updateContent(change);
       case 'content-add':
         return await this.addContent(change);
+      case 'email-update':
+        return await this.updateEmailInFiles(change);
       case 'general-search':
         return await this.searchContent(change);
       default:
@@ -219,6 +236,95 @@ class ClaudeContentManager {
       action: 'content-added',
       description: change.description
     };
+  }
+
+  async updateEmailInFiles(change) {
+    const results = [];
+    const emailPattern = this.extractEmailChangeFromRequest(change.originalRequest);
+    
+    if (!emailPattern) {
+      return {
+        success: false,
+        error: 'Could not extract email change pattern from request'
+      };
+    }
+    
+    const { oldEmail, newEmail } = emailPattern;
+    
+    for (const filePath of change.files) {
+      const fullPath = path.join(this.projectRoot, filePath);
+      
+      if (!fs.existsSync(fullPath)) {
+        results.push({
+          file: filePath,
+          success: false,
+          error: 'File not found'
+        });
+        continue;
+      }
+      
+      try {
+        let content = fs.readFileSync(fullPath, 'utf-8');
+        const originalContent = content;
+        
+        // Replace all instances of the old email with new email
+        content = content.replace(new RegExp(oldEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), newEmail);
+        
+        if (content !== originalContent) {
+          fs.writeFileSync(fullPath, content);
+          results.push({
+            file: filePath,
+            success: true,
+            oldEmail: oldEmail,
+            newEmail: newEmail,
+            action: 'email-updated'
+          });
+        } else {
+          results.push({
+            file: filePath,
+            success: false,
+            error: 'Email not found in file'
+          });
+        }
+      } catch (error) {
+        results.push({
+          file: filePath,
+          success: false,
+          error: error.message
+        });
+      }
+    }
+    
+    const successCount = results.filter(r => r.success).length;
+    
+    return {
+      success: successCount > 0,
+      results: results,
+      message: `Updated email in ${successCount} file(s)`,
+      action: 'email-updated'
+    };
+  }
+
+  extractEmailChangeFromRequest(request) {
+    // Look for patterns like "change email X to Y" or "change X to Y"
+    const patterns = [
+      /change\s+email\s+([^\s]+@[^\s]+)\s+to\s+([^\s]+@[^\s]+)/i,
+      /change\s+([^\s]+@[^\s]+)\s+to\s+([^\s]+@[^\s]+)/i,
+      /update\s+email\s+from\s+([^\s]+@[^\s]+)\s+to\s+([^\s]+@[^\s]+)/i,
+      /replace\s+([^\s]+@[^\s]+)\s+with\s+([^\s]+@[^\s]+)/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = request.match(pattern);
+      if (match && match[1] && match[2]) {
+        return {
+          oldEmail: match[1],
+          newEmail: match[2]
+        };
+      }
+    }
+    
+    return null;
   }
 
   async searchContent(change) {
