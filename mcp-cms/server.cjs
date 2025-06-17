@@ -11,6 +11,7 @@ const pdfParse = require('pdf-parse');
 const Tesseract = require('tesseract.js');
 const OpenAI = require('openai');
 const { generateSuggestions } = require('./ai-suggestions.cjs');
+const { handleGitDeploy } = require('./git-auto-deploy.cjs');
 
 // Create Express app
 const app = express();
@@ -415,6 +416,24 @@ function copyFileToPublic(file, category, comment) {
     
   console.log(`📁 Base path for public files: ${basePath}`);
   console.log(`🚂 Railway environment: ${process.env.RAILWAY_ENVIRONMENT}`);
+  console.log(`📍 Current directory: ${__dirname}`);
+  console.log(`✅ Base path exists: ${fs.existsSync(basePath)}`);
+  
+  // Additional debugging
+  if (!fs.existsSync(basePath)) {
+    console.error(`❌ ERROR: Base path does not exist: ${basePath}`);
+    console.log(`🔍 Looking for alternative paths...`);
+    const alternativePaths = [
+      path.join(__dirname, '..', 'public'),
+      path.join(__dirname, '..', '..', 'public'),
+      path.join(process.cwd(), 'public'),
+      path.join(process.cwd(), '..', 'public')
+    ];
+    
+    alternativePaths.forEach(altPath => {
+      console.log(`  - ${altPath}: ${fs.existsSync(altPath) ? '✅ EXISTS' : '❌ NOT FOUND'}`);
+    });
+  }
   
   // Use global categoryPaths mapping
   
@@ -477,7 +496,31 @@ function copyFileToPublic(file, category, comment) {
     
     // Copy file to public directory
     const sourcePath = file.path;
+    
+    // First check if source file exists and has content
+    if (!fs.existsSync(sourcePath)) {
+      throw new Error(`Source file does not exist: ${sourcePath}`);
+    }
+    
+    const sourceStats = fs.statSync(sourcePath);
+    if (sourceStats.size === 0) {
+      throw new Error(`Source file is empty: ${sourcePath}`);
+    }
+    
+    console.log(`📋 Copying file from ${sourcePath} to ${targetPath}`);
     fs.copyFileSync(sourcePath, targetPath);
+    
+    // Verify the copy was successful
+    if (!fs.existsSync(targetPath)) {
+      throw new Error(`Failed to copy file to: ${targetPath}`);
+    }
+    
+    const targetStats = fs.statSync(targetPath);
+    if (targetStats.size !== sourceStats.size) {
+      throw new Error(`File copy size mismatch. Source: ${sourceStats.size}, Target: ${targetStats.size}`);
+    }
+    
+    console.log(`✅ File successfully copied to public directory: ${targetPath}`);
     
     // Also rename the file in uploads directory to match smart filename
     const uploadsPath = path.join(uploadsDir, finalFilename);
@@ -665,6 +708,20 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
     }
 
     console.log(`✅ Upload successful: ${file.originalname} → ${copyResult.newFilename} (${category})`);
+    
+    // Auto-deploy to GitHub if enabled
+    if (process.env.ENABLE_AUTO_DEPLOY === 'true') {
+      console.log('🚀 Starting auto-deploy to GitHub...');
+      setTimeout(async () => {
+        try {
+          const deployResult = await handleGitDeploy([content]);
+          console.log('✅ Auto-deploy completed:', deployResult.message);
+        } catch (deployError) {
+          console.error('❌ Auto-deploy failed:', deployError);
+        }
+      }, 3000); // Wait 3 seconds for file to be written
+    }
+    
     res.json({
       success: true,
       file: content,
@@ -673,7 +730,8 @@ app.post('/api/upload', authMiddleware, upload.single('file'), (req, res) => {
         original: file.originalname,
         smart: copyResult.newFilename,
         category: category
-      }
+      },
+      autoDeploy: process.env.ENABLE_AUTO_DEPLOY === 'true'
     });
 
   } catch (error) {
@@ -1064,6 +1122,34 @@ function generateBasicSummary(text) {
   
   return `Document contains ${wordCount} words (${charCount} characters). Preview: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`;
 }
+
+// Manual deploy endpoint
+app.post('/api/deploy', authMiddleware, async (req, res) => {
+  try {
+    console.log('📱 Manual deploy requested by:', req.user.username);
+    
+    const { files } = req.body;
+    const deployModule = require('./git-auto-deploy.cjs');
+    
+    const result = await deployModule.gitAutoDeploy(files || []);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: result.message,
+        details: result.details
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: result.message
+      });
+    }
+  } catch (error) {
+    console.error('Deploy error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Start server
 const HOST = '0.0.0.0'; // Bind to all interfaces for Railway

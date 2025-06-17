@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, FileText, LogOut, Check, X, Download, ImageOff } from 'lucide-react';
+import { Upload, FileText, LogOut, Check, X, Download, ImageOff, GitBranch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -854,6 +854,44 @@ const SimpleCMS = () => {
                 ) : (
                   <>↻ Refresh</>
                 )}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={async () => {
+                  if (!confirm('Deploy all uploaded files to production? This will push to GitHub and trigger a rebuild.')) return;
+                  
+                  try {
+                    const response = await fetch(`${API_URL}/deploy`, {
+                      method: 'POST',
+                      headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ files: [] })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                      toast({
+                        title: '🚀 Deployment Started',
+                        description: 'Files pushed to GitHub. Railway will rebuild automatically.',
+                        duration: 5000
+                      });
+                    } else {
+                      throw new Error(result.error);
+                    }
+                  } catch (error) {
+                    toast({
+                      title: 'Deployment Failed',
+                      description: error.message,
+                      variant: 'destructive'
+                    });
+                  }
+                }}
+                className="border-green-200 hover:bg-green-50"
+              >
+                <GitBranch className="h-4 w-4 mr-2" />
+                Deploy
               </Button>
               <Button variant="outline" onClick={handleLogout} className="border-purple-200 hover:bg-purple-50">
                 <LogOut className="h-4 w-4 mr-2" />
