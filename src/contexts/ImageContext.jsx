@@ -20,8 +20,7 @@ export const ImageProvider = ({ children }) => {
       let allContent = [];
       
       // Check if user wants to force production images
-      const forceProduction = true; // Temporarily hardcoded to force production
-      // const forceProduction = process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
+      const forceProduction = process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
       
       try {
         // First, try local server (only if not forced to production)
@@ -64,10 +63,15 @@ export const ImageProvider = ({ children }) => {
                 headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json'
-                }
+                },
+                mode: 'cors' // Explicitly set CORS mode
               });
               
               console.log(`📊 Response status: ${productionResponse.status} from ${baseUrl}`);
+              console.log(`📊 Response headers:`, {
+                'content-type': productionResponse.headers.get('content-type'),
+                'access-control-allow-origin': productionResponse.headers.get('access-control-allow-origin')
+              });
               
               if (productionResponse.ok) {
                 const productionContent = await productionResponse.json();
@@ -108,9 +112,17 @@ export const ImageProvider = ({ children }) => {
                 }
               } else {
                 console.log(`❌ HTTP ${productionResponse.status} from ${baseUrl}:`, productionResponse.statusText);
+                // Try to get error details
+                try {
+                  const errorText = await productionResponse.text();
+                  console.log(`❌ Error response body:`, errorText);
+                } catch (e) {
+                  console.log(`❌ Could not read error response body`);
+                }
               }
             } catch (urlError) {
               console.log(`❌ Network error from ${baseUrl}:`, urlError.message);
+              console.log(`❌ Full error details:`, urlError);
             }
           }
           
@@ -144,8 +156,13 @@ export const ImageProvider = ({ children }) => {
         
         setImages(groupedImages);
         console.log('🖼️ All images grouped by category:', Object.keys(groupedImages));
+        console.log('📊 Image counts by category:', Object.entries(groupedImages).map(([cat, imgs]) => `${cat}: ${imgs.length}`));
+        
+        // Log available CMS images to console for debugging
+        console.log('Available CMS images:', groupedImages);
       } catch (error) {
         console.log('❌ Could not fetch images from any server:', error);
+        console.error('Full error stack:', error.stack);
       } finally {
         setLoading(false);
       }
