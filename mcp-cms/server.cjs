@@ -1034,4 +1034,195 @@ app.post('/api/ai-insights', authMiddleware, upload.single('file'), async (req, 
         progress = 100;
         console.log(`📊 Progress: ${progress}% - AI summary generated: ${aiSummary.length} characters`);
       } catch (aiError) {
-        console.lo
+        console.log('❌ OpenAI failed:', aiError.message);
+        progress = 80;
+        console.log(`📊 Progress: ${progress}% - Fallback to basic summary...`);
+        aiSummary = generateBasicSummary(extractedText);
+        progress = 100;
+      }
+    } else {
+      progress = 100;
+      aiSummary = `Document analysis: ${file.originalname} - ${(file.size / 1024).toFixed(1)}KB file uploaded successfully.`;
+    }
+
+    // Clean up uploaded file
+    fs.unlinkSync(filePath);
+    
+    res.json({
+      success: true,
+      summary: aiSummary,
+      extractedText: extractedText.substring(0, 500), // First 500 chars for preview
+      hasText: extractedText.length > 20,
+      filename: file.originalname,
+      progress: 100
+    });
+    
+  } catch (error) {
+    console.error('AI insights error:', error);
+    res.status(500).json({ error: 'Failed to generate AI insights' });
+  }
+});
+
+// Helper function to generate AI summary using OpenAI
+async function generateOpenAISummary(text) {
+  try {
+    if (!openai) {
+      throw new Error('OpenAI not configured');
+    }
+    
+    // Truncate text if too long (OpenAI has token limits)
+    const truncatedText = text.length > 8000 ? text.substring(0, 8000) + '...' : text;
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional document analyzer. Create concise, informative summaries that highlight key points, important data, dates, and actionable insights. Focus on business-relevant information."
+        },
+        {
+          role: "user",
+          content: `Please analyze this document and provide a comprehensive summary highlighting:
+1. Main topic and purpose
+2. Key findings or data points
+3. Important dates, numbers, or percentages
+4. Conclusions or recommendations
+
+Document content:
+${truncatedText}`
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.3
+    });
+
+    return completion.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+    throw error;
+  }
+}
+
+// Helper function to generate basic summary
+function generateBasicSummary(text) {
+  if (!text || text.trim().length < 20) {
+    return 'Document uploaded successfully. Text content not available for analysis.';
+  }
+  
+  const words = text.trim().split(/\s+/);
+  const wordCount = words.length;
+  const charCount = text.length;
+  
+  return `Document contains ${wordCount} words (${charCount} characters). Preview: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`;
+}
+
+// Get deployment instructions and download links
+app.post('/api/deploy', authMiddleware, async (req, res) => {
+  try {
+    console.log('📱 Deploy instructions requested by:', req.user.username);
+    
+    // Get recent uploads from published-content.json
+    const dataPath = path.join(__dirname, 'published-content.json');
+    let recentFiles = [];
+    let instructions = [];
+    
+    if (fs.existsSync(dataPath)) {
+      const content = fs.readFileSync(dataPath, 'utf-8');
+      const allContent = JSON.parse(content);
+      
+      // Get files from last 24 hours
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      recentFiles = allContent.filter(item => new Date(item.uploadedAt) > oneDayAgo);
+      
+      // Generate download URLs and git commands
+      const baseUrl = req.protocol + '://' + req.get('host');
+      
+      instructions = recentFiles.map(file => {
+        const categoryPaths = {
+          'saif-raza-image': 'public/images/leadership',
+          'nawab-raza-image': 'public/images/leadership', 
+          'sahil-raza-image': 'public/images/leadership',
+          'leadership-images': 'public/images/leadership',
+          'media-images': 'public/images/media',
+          'infrastructure-images': 'public/images/infrastructure'
+        };
+        
+        const targetPath = categoryPaths[file.category] || 'public/images/general';
+        const downloadUrl = `${baseUrl}/api/download/${file.category}/${file.filename}`;
+        
+        return {
+          filename: file.filename,
+          category: file.category,
+          downloadUrl: downloadUrl,
+          targetPath: `${targetPath}/${file.filename}`,
+          gitCommand: `# Download and add ${file.filename}
+curl "${downloadUrl}" -H "Authorization: Bearer YOUR_TOKEN" --output "${targetPath}/${file.filename}"
+git add "${targetPath}/${file.filename}"`
+        };
+      });
+    }
+    
+    if (recentFiles.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No recent files to deploy',
+        filesCount: 0,
+        instructions: []
+      });
+    }
+    
+    // Generate complete git commands
+    const allGitCommands = instructions.map(i => i.gitCommand).join('\n');
+    const commitCommand = `git commit -m "Add ${recentFiles.length} uploaded file(s) from CMS"
+git push origin main`;
+    
+    res.json({
+      success: true,
+      message: `Found ${recentFiles.length} recent file(s) ready for deployment`,
+      filesCount: recentFiles.length,
+      instructions: instructions,
+      completeCommands: `${allGitCommands}\n${commitCommand}`,
+      quickSteps: [
+        "1. Copy the download URLs below",
+        "2. Download each file to the specified path", 
+        "3. Run the git commands to commit and push",
+        "4. Railway will auto-deploy in ~2 minutes"
+      ]
+    });
+    
+  } catch (error) {
+    console.error('Deploy instructions error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Start server
+const HOST = '0.0.0.0'; // Bind to all interfaces for Railway
+app.listen(PORT, HOST, () => {
+  console.log(`
+🚀 MCP CMS Server Started!
+==========================
+URL: http://${HOST}:${PORT}
+Health: http://${HOST}:${PORT}/health
+Environment: ${process.env.NODE_ENV || 'development'}
+Version: 1.1.0 (Fixed syntax error)
+
+Login Credentials:
+- admin / admin123
+- editor / editor123
+
+Ready to accept uploads!
+==========================
+  `);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('Server shutting down...');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('Server shutting down...');
+  process.exit(0);
+});
