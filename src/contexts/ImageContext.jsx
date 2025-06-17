@@ -19,10 +19,20 @@ export const ImageProvider = ({ children }) => {
     const fetchAllImages = async () => {
       let allContent = [];
       
-      // Always use production CMS for images in production
+      // Temporarily disable CMS image fetching due to server issues
+      const disableCMS = true; // TODO: Re-enable when CMS is stable
       const forceProduction = process.env.NODE_ENV === 'production' || process.env.REACT_APP_FORCE_PRODUCTION_IMAGES === 'true';
       
       try {
+        // Skip CMS fetching if disabled
+        if (disableCMS) {
+          console.log('🚫 CMS image fetching disabled - using static images only');
+          setImages({});
+          setActiveServerUrl(null);
+          setIsLoading(false);
+          return;
+        }
+        
         // First, try local server (only if not forced to production)
         if (process.env.NODE_ENV !== 'production' && !forceProduction) {
           console.log('🔍 Trying to fetch images from local server...');

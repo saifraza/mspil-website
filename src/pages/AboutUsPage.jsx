@@ -99,49 +99,49 @@ const AboutUsPage = () => {
     'leadership-images'  // Generic board member
   ];
 
-  // Use CMS images with static fallbacks
+  // Use static images for now (CMS has issues)
   const leadership = [
     {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
-      image: getImage('nawab-raza-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png'
     },
     {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: getImage('saif-raza-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Saif image is added
     },
     {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: getImage('sahil-raza-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Sahil image is added
     },
     {
       name: t('aboutBoard1Name'),
       title: t('aboutBoard1Title'),
       bio: t('aboutBoard1Bio'),
-      image: getImage('ranganathan-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Ranganathan image is added
     },
     {
       name: t('aboutBoard2Name'),
       title: t('aboutBoard2Title'),
       bio: t('aboutBoard2Bio'),
-      image: getImage('mohan-tiwari-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Mohan image is added
     },
     {
       name: t('aboutBoard3Name'),
       title: t('aboutBoard3Title'),
       bio: t('aboutBoard3Bio'),
-      image: getImage('rajan-dubey-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Rajan image is added
     },
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
       bio: t('aboutBoard4Bio'),
-      image: getImage('chandrakant-patil-image', '/images/leadership/nawab_raza.png')
+      image: '/images/leadership/nawab_raza.png' // Fallback until Chandrakant image is added
     }
   ];
 
