@@ -281,11 +281,7 @@ const AutoScrollingGallery = ({ images, businessName }) => {
   }, [isAutoScrolling, images]);
 
   return (
-    <div className="mt-6">
-      <h4 className="text-lg font-semibold text-primary mb-4">
-        {t('facilityImages') || 'Facility Images'}
-      </h4>
-      
+    <div>
       {/* Image gallery */}
       <div className="relative">
         <div 
@@ -460,21 +456,24 @@ const OurBusinessesSection = () => {
                       <CardDescription className="text-lg text-primary font-semibold">{t(business.dataKey)}</CardDescription>
                     </CardHeader>
                     <CardContent className="p-6">
+                      {/* Image Gallery Section at the top */}
+                      {businessImageGalleries[business.id] && (
+                        <div className="mb-8">
+                          <AutoScrollingGallery 
+                            images={businessImageGalleries[business.id]} 
+                            businessName={t(business.nameKey)}
+                          />
+                        </div>
+                      )}
+                      
                       <div className="grid md:grid-cols-2 gap-8 items-start">
-                        {/* Column 1: Business Details & Download Button */}
-                        <div className="prose dark:prose-invert max-w-none flex flex-col justify-between h-full">
-                          <div>
-                            <p className="text-foreground/80 leading-relaxed mb-6">
-                              {t(business.detailsKey)}
-                            </p>
-                          </div>
-                          <div className="mt-auto space-y-3">
-                            <Button asChild variant="secondary" className="w-fit">
-                              <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
-                                <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
-                              </a>
-                            </Button>
-                          </div>
+                        {/* Column 1: Download Button */}
+                        <div className="flex flex-col justify-start">
+                          <Button asChild variant="secondary" className="w-fit">
+                            <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
+                              <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
+                            </a>
+                          </Button>
                         </div>
 
                         {/* Column 2: Manufacturing Cycle */}
@@ -584,16 +583,6 @@ const OurBusinessesSection = () => {
                           </div>
                         )}
                       </div>
-                      
-                      {/* Image Gallery Section */}
-                      {businessImageGalleries[business.id] && (
-                        <div className="mt-8 col-span-full">
-                          <AutoScrollingGallery 
-                            images={businessImageGalleries[business.id]} 
-                            businessName={t(business.nameKey)}
-                          />
-                        </div>
-                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
