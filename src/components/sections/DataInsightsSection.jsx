@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { LineChart, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, Line } from 'recharts';
+import { LineChartLazy, BarChartLazy } from '@/components/LazyChart';
 import { TrendingUp, BarChartBig, Leaf, Loader2 } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
@@ -71,20 +71,12 @@ const DataInsightsSection = () => {
                 <CardDescription className={chartDescClass}>
                   {t('insightsTurnoverChartDesc')}
                 </CardDescription>
-                {loadingCharts ? renderChartPlaceholder() : (
-                  <div style={{ width: '100%', height: chartContainerHeight }}>
-                    <ResponsiveContainer>
-                      <LineChart data={turnoverDataDb} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-                        <XAxis dataKey="year" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                        <YAxis tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                        <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--primary))', color: 'hsl(var(--foreground))' }} itemStyle={{ color: 'hsl(var(--foreground))' }} />
-                        <Legend wrapperStyle={{ fontSize: "14px" }} />
-                        <Line type="monotone" dataKey="turnover" stroke="hsl(var(--primary))" strokeWidth={2} activeDot={{ r: 8 }} name={t('insightsTurnoverLegend') || "Turnover (Cr)"} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
+                <LineChartLazy 
+                  data={turnoverDataDb} 
+                  dataKey="turnover" 
+                  stroke="hsl(var(--primary))" 
+                  name={t('insightsTurnoverLegend') || "Turnover (Cr)"} 
+                />
               </CardContent>
             </Card>
           </motion.div>
@@ -99,20 +91,12 @@ const DataInsightsSection = () => {
                 <CardDescription className={chartDescClass}>
                   {t('insightsProductionChartDesc')}
                 </CardDescription>
-                {loadingCharts ? renderChartPlaceholder() : (
-                  <div style={{ width: '100%', height: chartContainerHeight }}>
-                    <ResponsiveContainer>
-                      <BarChart data={productionDataDb} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-                        <XAxis dataKey="year" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                        <YAxis tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                        <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--primary))', color: 'hsl(var(--foreground))' }} itemStyle={{ color: 'hsl(var(--foreground))' }} />
-                        <Legend wrapperStyle={{ fontSize: "14px" }} />
-                        <Bar dataKey="crushing" fill="hsl(var(--primary))" name={t('insightsProductionLegend') || "Crushing (Lakh Tons)"} radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
+                <BarChartLazy 
+                  data={productionDataDb} 
+                  dataKey="crushing" 
+                  fill="hsl(var(--primary))" 
+                  name={t('insightsProductionLegend') || "Crushing (Lakh Tons)"} 
+                />
               </CardContent>
             </Card>
           </motion.div>

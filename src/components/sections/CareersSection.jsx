@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Briefcase, Users, Sparkles, ChevronRight, ImageOff } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import LazyImage from '@/components/LazyImage';
 
 // Quick fix for getImage function
 const getImage = (category, fallback, index) => fallback;
@@ -72,7 +73,7 @@ const CareersSection = () => {
               {t('careersCultureDesc2')}
             </p>
             {cultureImage ? (
-              <img  alt={t(cultureImageAltKey)} className="w-full h-64 object-cover rounded-lg mt-6 shadow-md" src={cultureImage} />
+              <LazyImage alt={t(cultureImageAltKey)} className="w-full h-64 object-cover rounded-lg mt-6 shadow-md" src={cultureImage} />
             ) : (
               <div className="w-full h-64 bg-muted rounded-lg mt-6 shadow-md flex items-center justify-center">
                 <ImageOff className="w-16 h-16 text-muted-foreground" />
@@ -117,7 +118,7 @@ const CareersSection = () => {
                 <Card className="p-6 bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/30 dark:to-teal-900/30 border-primary/20">
                   <CardContent className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 p-0">
                     {testimonial.imageUrl ? (
-                      <img  alt={t(testimonial.imageAltKey)} className="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-primary" src={testimonial.imageUrl} />
+                      <LazyImage alt={t(testimonial.imageAltKey)} className="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-primary" src={testimonial.imageUrl} />
                     ) : (
                       <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center flex-shrink-0 border-2 border-primary">
                         <ImageOff className="w-10 h-10 text-muted-foreground" />

@@ -55,14 +55,24 @@ const AboutUsSection = () => {
       side: 'right'
     },
     {
-      year: '2023',
-      titleKey: 'aboutHistory2023Title',
-      descriptionKey: 'aboutHistory2023Desc',
-      imageAltKey: 'aboutHistory2023Alt',
-      imagePath: 'about-us/2023_ethanol_plant.jpg',
-      imageUrl: '/images/about-us/2023_ethanol_plant.jpg',
+      year: '2024',
+      titleKey: 'aboutHistory2024Title',
+      descriptionKey: 'aboutHistory2024Desc',
+      imageAltKey: 'aboutHistory2024Alt',
+      imagePath: 'about-us/2024_future.jpg',
+      imageUrl: '/images/about-us/2024_future.jpg',
       icon: <Droplets className="w-8 h-8 text-primary" />,
       side: 'left'
+    },
+    {
+      year: '2024',
+      titleKey: 'aboutHistory2024Title',
+      descriptionKey: 'aboutHistory2024Desc',
+      imageAltKey: 'aboutHistory2024Alt',
+      imagePath: 'about-us/2024_ethanol_expansion.jpg',
+      imageUrl: '/images/about-us/2024_ethanol_expansion.jpg',
+      icon: <Droplets className="w-8 h-8 text-primary" />,
+      side: 'right'
     }
   ], []);
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import LazyImage from '@/components/LazyImage';
 
 const companyLogoUrl = "/images/company_logo.png";
 const companyName = "Mahakaushal Sugar & Power Industries Ltd.";
@@ -16,7 +17,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div>
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <img src={companyLogoUrl} alt={`${companyName} Logo`} className="h-10 w-auto" />
+              <LazyImage src={companyLogoUrl} alt={`${companyName} Logo`} className="h-10 w-auto" />
               <span className="font-bold text-lg text-foreground">{companyName}</span>
             </Link>
             <p className="text-sm">
