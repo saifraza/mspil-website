@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, Sun, Moon, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageContext, useTranslation } from '@/contexts/LanguageContext';
@@ -10,12 +10,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || 'dark';
-    }
-    return 'dark';
-  });
+  // Dark theme only - removed theme toggle
 
   const { setLanguage } = useContext(LanguageContext);
   const t = useTranslation();
@@ -73,14 +68,7 @@ const Navbar = () => {
 
   const simpleNavLinks = navStructure.filter(item => !item.hasDropdown);
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  // Dark theme is always active
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,9 +81,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+  // Theme toggle removed - dark theme only
 
   const toggleLanguage = () => {
     setLanguage(prevLang => (prevLang === 'en' ? 'hi' : 'en'));
@@ -114,7 +100,7 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className={`fixed top-8 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 dark:bg-bio-green-900/95 backdrop-blur-md shadow-lg'
+          ? 'bg-bio-green-900/95 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -197,15 +183,6 @@ const Navbar = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={toggleTheme} 
-              className="ml-2 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
-            >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-              <span className="sr-only">{t('toggleTheme')}</span>
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
               onClick={toggleLanguage} 
               className="ml-1 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
             >
@@ -215,14 +192,6 @@ const Navbar = () => {
           </div>
 
           <div className="lg:hidden flex items-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={toggleTheme} 
-              className="mr-1 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
-            >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </Button>
             <Button 
               variant="ghost" 
               size="icon" 

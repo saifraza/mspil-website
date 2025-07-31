@@ -74,9 +74,9 @@ const HeroSection = () => {
       },
     ],
     stats: [
-      { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag className="w-6 h-6 text-white" /> },
-      { id: 2, value: 800, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets className="w-6 h-6 text-white" />, subtext: '350 → 800' },
-      { id: 3, value: 24, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap className="w-6 h-6 text-white" />, subtext: '14 MW Export' },
+      { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag /> },
+      { id: 2, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets /> },
+      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: '14 MW Export' },
     ]
   }), []);
 
@@ -87,7 +87,7 @@ const HeroSection = () => {
   }, [heroData.backgroundVideoPath, heroData.videoPosterPath]);
 
   return (
-    <section ref={heroRef} className={`relative min-h-screen flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
+    <section ref={heroRef} className={`relative h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
       {/* Enhanced animated gradient background */}
       {/* <AnimatedGradient /> */}
       
@@ -241,7 +241,7 @@ const HeroSection = () => {
               }
             }
           }}
-          className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-16"
+          className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4"
         >
           {heroData.ctaButtons.map((button, index) => (
             <motion.div
@@ -276,7 +276,7 @@ const HeroSection = () => {
 
         {/* Enhanced Key Metrics with Glass Morphism */}
         <motion.div 
-          className="relative bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl rounded-3xl p-5 max-w-4xl mx-auto border border-white/30 shadow-2xl overflow-hidden"
+          className="relative bg-white/10 backdrop-blur-md rounded-2xl p-3 max-w-2xl mx-auto border border-white/20 shadow-lg overflow-hidden mt-6 mb-8"
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 
@@ -291,26 +291,9 @@ const HeroSection = () => {
             }
           }}
         >
-          {/* Animated background pattern */}
-          <motion.div
-            className="absolute inset-0 opacity-30"
-            animate={{
-              backgroundImage: [
-                'radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
-                'radial-gradient(circle at 100% 100%, rgba(132, 204, 22, 0.1) 0%, transparent 50%)',
-                'radial-gradient(circle at 0% 100%, rgba(163, 230, 53, 0.1) 0%, transparent 50%)',
-                'radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
-              ]
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
           
           <motion.h3 
-            className="text-white/90 text-center text-xl font-bold mb-6 relative z-10"
+            className="text-white/80 text-center text-sm font-semibold mb-3 relative z-10 uppercase tracking-wider"
             variants={{
               hidden: { opacity: 0, y: -20 },
               visible: { opacity: 1, y: 0 }
@@ -318,11 +301,11 @@ const HeroSection = () => {
           >
             {t('heroMetricsTitle') || 'Our Operational Excellence'}
           </motion.h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+          <div className="grid grid-cols-3 gap-2 md:gap-3 relative z-10">
             {heroData.stats.map((stat, index) => (
               <motion.div 
                 key={stat.id}
-                className="group relative flex items-center justify-center space-x-4 bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl rounded-2xl p-4 hover:bg-white/35 dark:hover:bg-gray-800/35 transition-all duration-300 border border-white/40 hover:border-white/60 shadow-xl hover:shadow-2xl overflow-hidden"
+                className="group relative flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl p-2 hover:bg-white/20 transition-all duration-300 border border-white/10"
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.8 },
                   visible: { 
@@ -336,39 +319,19 @@ const HeroSection = () => {
                     }
                   }
                 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.02 }}
               >
-                {/* Animated background gradient */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-bio-green-400/10 to-eco-lime-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  animate={{
-                    backgroundPosition: ['0% 0%', '100% 100%'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                  style={{ backgroundSize: '200% 200%' }}
-                />
                 <div className="flex-shrink-0 relative z-10">
-                  <motion.div
-                    className="p-3 bg-white/15 rounded-full backdrop-blur-md"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {stat.icon}
-                  </motion.div>
+                  {React.cloneElement(stat.icon, { className: "w-5 h-5 text-white/80" })}
                 </div>
-                <div className="text-center relative z-10">
+                <div className="text-left relative z-10 flex-1">
                   <AnimatedCounter 
                     to={stat.value} 
                     suffix={stat.suffix}
-                    className="text-3xl md:text-4xl font-bold text-white/95 block drop-shadow-lg"
+                    className="text-xl md:text-2xl font-bold text-white/90 block"
                   />
                   <motion.p 
-                    className="text-white/90 text-sm font-semibold mt-1"
+                    className="text-white/70 text-xs"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 + index * 0.1 }}

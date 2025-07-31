@@ -25,9 +25,9 @@ const InvestorDisclaimerPage = lazy(() => import('@/pages/InvestorDisclaimerPage
 
 // Loading component with bio-energy theme
 const LoadingSpinner = () => (
-  <div className="flex justify-center items-center h-screen bg-gradient-to-br from-bio-green-50 to-eco-lime-50">
+  <div className="flex justify-center items-center h-screen bg-gradient-to-br from-bio-green-900 to-bio-green-800">
     <div className="relative">
-      <div className="w-20 h-20 border-4 border-bio-green-200 rounded-full animate-spin border-t-bio-green-600"></div>
+      <div className="w-20 h-20 border-4 border-bio-green-700 rounded-full animate-spin border-t-bio-green-400"></div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-10 h-10 bg-bio-green-500 rounded-full animate-pulse"></div>
       </div>
@@ -38,6 +38,11 @@ const LoadingSpinner = () => (
 function App() {
   // Monitor Core Web Vitals for performance
   useWebVitals();
+  
+  // Always use dark theme
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
   
   return (
     <ErrorBoundary>
