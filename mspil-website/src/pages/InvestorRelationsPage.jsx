@@ -15,9 +15,10 @@ import {
   Mail,
   Phone,
   MapPin,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from 'lucide-react';
-// Using static content instead of components
+import { shareholdingData, investmentData } from '@/constants/financialData';
 
 const InvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -105,11 +106,13 @@ const InvestorRelationsPage = () => {
       {/* Quick Links Section */}
       <section className="py-12 border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
               { title: 'Annual Reports', icon: FileText, tab: 'financial-info', section: 'annual-reports' },
               { title: 'Financial Results', icon: TrendingUp, tab: 'financial-info', section: 'financial-results' },
               { title: 'Shareholding Pattern', icon: Users, tab: 'shareholding', section: 'shareholding' },
+              { title: 'Investment Terms', icon: Building, tab: 'shareholding', section: 'investment-terms' },
+              { title: 'Post-IPO Structure', icon: BarChart3, tab: 'shareholding', section: 'post-ipo-shareholding' },
               { title: 'Corporate Governance', icon: Shield, tab: 'governance', section: 'governance' }
             ].map((item, index) => (
               <motion.button
@@ -222,7 +225,7 @@ const InvestorRelationsPage = () => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Shareholding Pattern</h2>
                 <Card>
                   <CardHeader>
-                    <CardTitle>As on March 31, 2024</CardTitle>
+                    <CardTitle>As on {shareholdingData.current.date}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -230,17 +233,17 @@ const InvestorRelationsPage = () => {
                         <div>
                           <h3 className="font-semibold mb-4">Shareholding Distribution</h3>
                           <div className="space-y-3">
+                            {shareholdingData.current.distribution.map((item, index) => (
+                              <div key={index} className="flex justify-between">
+                                <span>{item.category}</span>
+                                <span className="font-medium">{item.percentage}%</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-4 pt-4 border-t">
                             <div className="flex justify-between">
-                              <span>Promoters & Promoter Group</span>
-                              <span className="font-medium">68.45%</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Public - Institutions</span>
-                              <span className="font-medium">15.23%</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Public - Non-Institutions</span>
-                              <span className="font-medium">16.32%</span>
+                              <span className="font-semibold">Total Shares</span>
+                              <span className="font-medium">{shareholdingData.current.totalShares} {shareholdingData.current.shareValue}</span>
                             </div>
                           </div>
                         </div>
@@ -249,15 +252,15 @@ const InvestorRelationsPage = () => {
                           <div className="space-y-3">
                             <div className="flex justify-between">
                               <span>BSE Code</span>
-                              <span className="font-medium">XXXXXX</span>
+                              <span className="font-medium">{shareholdingData.stockInfo.bseCode}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>NSE Symbol</span>
-                              <span className="font-medium">MSPIL</span>
+                              <span className="font-medium">{shareholdingData.stockInfo.nseSymbol}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>ISIN</span>
-                              <span className="font-medium">INE123456789</span>
+                              <span className="font-medium">{shareholdingData.stockInfo.isin}</span>
                             </div>
                           </div>
                         </div>
@@ -272,6 +275,115 @@ const InvestorRelationsPage = () => {
                         <Download className="w-4 h-4 mr-2" />
                         Download Detailed Pattern
                       </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Investment Terms Section */}
+              <div id="investment-terms" className="mt-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Investment Terms & Structure</h2>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pre-IPO Investment Opportunity</CardTitle>
+                    <CardDescription>Strategic investment terms for qualified investors</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="font-semibold mb-4">Investment Details</h3>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span>Minimum Investment</span>
+                            <span className="font-medium">{investmentData.minimumInvestment}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Instrument Type</span>
+                            <span className="font-medium">{investmentData.instrumentType}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Lock-in Period</span>
+                            <span className="font-medium">{investmentData.lockInPeriod}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Board Representation</span>
+                            <span className="font-medium">{investmentData.boardRepresentation}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-4">Exit Strategy</h3>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span>Exit Route</span>
+                            <span className="font-medium">{investmentData.exitStrategy}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Timeline</span>
+                            <span className="font-medium">{investmentData.exitTimeline}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Pre-IPO Valuation</span>
+                            <span className="font-medium">{investmentData.valuation.preIPO}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Current Market Cap</span>
+                            <span className="font-medium">{investmentData.valuation.currentMarketCap}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Post-IPO Shareholding Pattern */}
+              <div id="post-ipo-shareholding" className="mt-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Post-IPO Shareholding Pattern</h2>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Expected Shareholding After IPO</CardTitle>
+                    <CardDescription>Projected shareholding distribution post public issue</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 className="font-semibold mb-4">Post-IPO Distribution</h3>
+                          <div className="space-y-3">
+                            {shareholdingData.postIPO.distribution.map((item, index) => (
+                              <div key={index} className="flex justify-between">
+                                <span>{item.category}</span>
+                                <span className="font-medium">{item.percentage}%</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-4 pt-4 border-t">
+                            <div className="flex justify-between">
+                              <span className="font-semibold">Total Shares Post-IPO</span>
+                              <span className="font-medium">{shareholdingData.postIPO.totalShares} {shareholdingData.postIPO.shareValue}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-semibold">New Shares Issued</span>
+                              <span className="font-medium">{shareholdingData.postIPO.newSharesIssued} {shareholdingData.postIPO.shareValue}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold mb-4">IPO Details</h3>
+                          <div className="bg-primary/5 dark:bg-primary/10 p-4 rounded-lg">
+                            <p className="text-sm mb-2">
+                              <strong>Fresh Issue:</strong> {shareholdingData.postIPO.newSharesIssued} Crore shares
+                            </p>
+                            <p className="text-sm mb-2">
+                              <strong>Promoter Dilution:</strong> From {shareholdingData.current.distribution[0].percentage}% to {shareholdingData.postIPO.distribution[0].percentage}%
+                            </p>
+                            <p className="text-sm">
+                              <strong>Public Float:</strong> {shareholdingData.postIPO.distribution.find(d => d.category === 'Public').percentage}%
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LineChartLazy } from '@/components/LazyChart';
@@ -20,113 +20,63 @@ import {
   Building2,
   Timer
 } from 'lucide-react';
+import { 
+  revenueData, 
+  ethanolData, 
+  profitabilityData, 
+  segmentsData, 
+  returnsData, 
+  capitalData, 
+  efficiencyData, 
+  capacityData,
+  investmentData,
+  kpiData
+} from '@/constants/financialData';
+
 const ComprehensiveDataInsightsSection = () => {
-  
-  // Revenue data from financial model
-  const [turnoverDataDb, setTurnoverDataDb] = useState([
-    { year: 'FY25', turnover: 300 },
-    { year: 'FY26', turnover: 811.08 },
-    { year: 'FY27', turnover: 1310.56 },
-    { year: 'FY28', turnover: 1378.40 },
-    { year: 'FY29', turnover: 1462.27 },
-    { year: 'FY30', turnover: 1564.91 }
-  ]);
-  
-  // Ethanol production data
-  const [ethanolProductionData, setEthanolProductionData] = useState([
-    { year: 'FY25', production: 0, revenue: 0 },
-    { year: 'FY26', production: 30, revenue: 215.58 },
-    { year: 'FY27', production: 123, revenue: 883.74 },
-    { year: 'FY28', production: 123, revenue: 883.74 },
-    { year: 'FY29', production: 123, revenue: 883.74 },
-    { year: 'FY30', production: 123, revenue: 924.61 }
-  ]);
-  
-  // EBITDA and PAT data
-  const [profitabilityData, setProfitabilityData] = useState([
-    { year: 'FY26', ebitda: 171.82, pat: 76.45 },
-    { year: 'FY27', ebitda: 296.13, pat: 170.13 },
-    { year: 'FY28', ebitda: 372.92, pat: 246.99 },
-    { year: 'FY29', ebitda: 406.12, pat: 276.34 },
-    { year: 'FY30', ebitda: 434.30, pat: 301.45 }
-  ]);
-  
-  // Business segment revenue breakdown
-  const [segmentRevenueData, setSegmentRevenueData] = useState([
-    { year: 'FY26', sugar: 407.48, ethanol: 215.58, ddgs: 41.46, power: 146.56 },
-    { year: 'FY27', sugar: 261.59, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
-    { year: 'FY28', sugar: 274.67, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
-    { year: 'FY29', sugar: 291.19, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
-    { year: 'FY30', sugar: 408.02, ethanol: 924.61, ddgs: 177.94, power: 54.34 }
-  ]);
-  
-  // Return ratios data
-  const [returnRatiosData, setReturnRatiosData] = useState([
-    { year: 'FY26', roe: 27.0, roce: 15.5 },
-    { year: 'FY27', roe: 38.5, roce: 41.2 },
-    { year: 'FY28', roe: 46.0, roce: 49.0 },
-    { year: 'FY29', roe: 37.9, roce: 42.5 },
-    { year: 'FY30', roe: 30.9, roce: 37.2 }
-  ]);
-  
-  // Debt reduction data
-  const [debtData, setDebtData] = useState([
-    { year: 'FY26', debt: 310, equity: 283 },
-    { year: 'FY27', debt: 235, equity: 441 },
-    { year: 'FY28', debt: 144, equity: 536 },
-    { year: 'FY29', debt: 90, equity: 729 },
-    { year: 'FY30', debt: 45, equity: 975 }
-  ]);
-  
-  // Operational efficiency metrics
-  const [efficiencyData, setEfficiencyData] = useState([
-    { metric: 'Sugar Recovery', value: 11, industry: 10, unit: '%' },
-    { metric: 'Ethanol Yield', value: 407, industry: 380, unit: 'L/MT' },
-    { metric: 'Plant Utilization', value: 85, industry: 75, unit: '%' },
-    { metric: 'Power Efficiency', value: 92, industry: 85, unit: '%' }
-  ]);
-  
-  // Capacity utilization data
-  const [capacityUtilization, setCapacityUtilization] = useState([
-    { segment: 'Sugar Mill', capacity: 8000, utilization: 85, unit: 'TCD' },
-    { segment: 'Ethanol Plant', capacity: 410, utilization: 82, unit: 'KLPD' },
-    { segment: 'Power Plant', capacity: 9.66, utilization: 90, unit: 'MW' },
-    { segment: 'DDGS', capacity: 300, utilization: 80, unit: 'TPD' }
-  ]);
+  // Using centralized data from financialData.js
+  const turnoverDataDb = revenueData.projections;
+  const ethanolProductionData = ethanolData.production;
+  const profitabilityDataChart = profitabilityData.margins;
+  const segmentRevenueData = segmentsData.revenue;
+  const returnRatiosData = returnsData.ratios;
+  const debtData = capitalData.debtEquity;
+  const efficiencyMetrics = efficiencyData.metrics;
+  const capacityUtilization = capacityData.current;
   
   // Key performance metrics
   const keyMetrics = useMemo(() => [
     { 
       icon: DollarSign, 
       titleKey: 'Revenue CAGR', 
-      value: '39.1%', 
-      descKey: '5-Year Growth Rate',
+      value: kpiData.revenueCagr.value, 
+      descKey: `${kpiData.revenueCagr.period} Growth Rate`,
       color: 'text-green-600',
-      trend: '+5.2x'
+      trend: kpiData.revenueCagr.trend
     },
     { 
       icon: Percent, 
       titleKey: 'Peak ROCE', 
-      value: '49.0%', 
-      descKey: 'Return on Capital (FY28)',
+      value: kpiData.peakROCE.value, 
+      descKey: `Return on Capital (${kpiData.peakROCE.year})`,
       color: 'text-blue-600',
-      trend: '+33.5pp'
+      trend: kpiData.peakROCE.trend
     },
     { 
       icon: Activity, 
       titleKey: 'EBITDA Margin', 
-      value: '27.8%', 
-      descKey: 'By FY30',
+      value: kpiData.ebitdaMargin.value, 
+      descKey: `By ${kpiData.ebitdaMargin.year}`,
       color: 'text-purple-600',
-      trend: '+6.6pp'
+      trend: kpiData.ebitdaMargin.trend
     },
     { 
       icon: Target, 
       titleKey: 'Sugar Recovery', 
-      value: '11%', 
-      descKey: 'vs 10% Industry',
+      value: kpiData.sugarRecovery.value, 
+      descKey: `vs ${kpiData.sugarRecovery.benchmark} Industry`,
       color: 'text-orange-600',
-      trend: '+10%'
+      trend: kpiData.sugarRecovery.trend
     }
   ], []);
   
@@ -135,28 +85,28 @@ const ComprehensiveDataInsightsSection = () => {
     { 
       icon: Droplets,
       title: 'Annual Capacity',
-      value: '12.3 Cr L',
-      desc: '410 KLPD Plant',
+      value: ethanolData.capacity.annual,
+      desc: `${ethanolData.capacity.daily} Plant`,
       color: 'text-cyan-600'
     },
     { 
       icon: Wheat,
       title: 'Raw Material',
-      value: '900 TPD',
+      value: ethanolData.metrics.rawMaterial,
       desc: 'Maize Consumption',
       color: 'text-amber-600'
     },
     { 
       icon: Gauge,
       title: 'Conversion Rate',
-      value: '407 L/MT',
+      value: ethanolData.metrics.conversionRate,
       desc: 'Ethanol Yield',
       color: 'text-emerald-600'
     },
     { 
       icon: Timer,
       title: 'Operation Days',
-      value: '300 Days',
+      value: ethanolData.metrics.operationDays,
       desc: 'Annual Running',
       color: 'text-indigo-600'
     }
@@ -326,7 +276,7 @@ const ComprehensiveDataInsightsSection = () => {
                   EBITDA and PAT expansion over 5 years
                 </CardDescription>
                 <EnhancedLineChartLazy 
-                  data={profitabilityData}
+                  data={profitabilityDataChart}
                   dataKeys={['ebitda', 'pat']}
                   colors={['#3b82f6', '#10b981']}
                   names={['EBITDA (₹ Cr)', 'PAT (₹ Cr)']}
@@ -368,7 +318,7 @@ const ComprehensiveDataInsightsSection = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {efficiencyData.map((item, index) => (
+                {efficiencyMetrics.map((item, index) => (
                   <div key={index} className="text-center">
                     <h4 className="font-semibold mb-2">{item.metric}</h4>
                     <div className="relative h-32 flex items-end justify-center gap-2">
@@ -451,17 +401,17 @@ const ComprehensiveDataInsightsSection = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-4">
                   <h4 className="font-semibold mb-2 text-lg">Growth Story</h4>
-                  <p className="text-3xl font-bold mb-2 text-primary">5.2x</p>
+                  <p className="text-3xl font-bold mb-2 text-primary">{revenueData.growthMultiple}</p>
                   <p className="text-sm text-muted-foreground">Revenue growth in 5 years</p>
                 </div>
                 <div className="text-center p-4">
                   <h4 className="font-semibold mb-2 text-lg">Valuation</h4>
-                  <p className="text-3xl font-bold mb-2 text-primary">₹820 Cr</p>
+                  <p className="text-3xl font-bold mb-2 text-primary">{investmentData.valuation.preIPO}</p>
                   <p className="text-sm text-muted-foreground">Pre-IPO opportunity</p>
                 </div>
                 <div className="text-center p-4">
                   <h4 className="font-semibold mb-2 text-lg">Exit Timeline</h4>
-                  <p className="text-3xl font-bold mb-2 text-primary">15 Months</p>
+                  <p className="text-3xl font-bold mb-2 text-primary">{investmentData.exitTimeline}</p>
                   <p className="text-sm text-muted-foreground">Planned IPO listing</p>
                 </div>
               </div>
