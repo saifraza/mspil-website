@@ -17,6 +17,9 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+// Quick fix for getImage function
+const getImage = (category, fallback, index) => fallback;
+
 const CSRPage = () => {
   const t = useTranslation();
   

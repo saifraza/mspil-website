@@ -17,6 +17,19 @@
     /* Adjust 40s to control speed. Higher value = slower scroll. */
   }
 
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+
   .scrollbar-hide {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */

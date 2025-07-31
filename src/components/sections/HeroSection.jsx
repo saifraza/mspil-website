@@ -209,6 +209,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
+          
           <motion.h3 
             className="text-white text-center text-lg font-semibold mb-6"
             initial={{ opacity: 0 }}

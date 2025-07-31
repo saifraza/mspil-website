@@ -20,7 +20,7 @@ const AboutUsSection = () => {
       descriptionKey: 'aboutHistory2005Desc',
       imageAltKey: 'aboutHistory2005Alt',
       imagePath: 'about-us/2005_inception.jpg',
-      imageUrl: getImage('timeline-images', '/images/about-us/2005_inception.jpg', 0),
+      imageUrl: '/images/about-us/2005_inception.jpg',
       icon: <CalendarDays className="w-8 h-8 text-primary" />,
       side: 'left'
     },
@@ -30,7 +30,7 @@ const AboutUsSection = () => {
       descriptionKey: 'aboutHistory2010Desc',
       imageAltKey: 'aboutHistory2010Alt',
       imagePath: 'about-us/2010_expansion.jpg',
-      imageUrl: getImage('timeline-images', '/images/about-us/2010_expansion.jpg', 1),
+      imageUrl: '/images/about-us/2010_expansion.jpg',
       icon: <Building className="w-8 h-8 text-primary" />,
       side: 'right'
     },
@@ -40,7 +40,7 @@ const AboutUsSection = () => {
       descriptionKey: 'aboutHistory2016Desc',
       imageAltKey: 'aboutHistory2016Alt',
       imagePath: 'about-us/2016_cogeneration.jpg',
-      imageUrl: getImage('timeline-images', '/images/about-us/2016_cogeneration.jpg', 2),
+      imageUrl: '/images/about-us/2016_cogeneration.jpg',
       icon: <Zap className="w-8 h-8 text-primary" />,
       side: 'left'
     },
@@ -50,7 +50,7 @@ const AboutUsSection = () => {
       descriptionKey: 'aboutHistory2018Desc',
       imageAltKey: 'aboutHistory2018Alt',
       imagePath: 'about-us/2018_sugar_capacity.jpg',
-      imageUrl: getImage('timeline-images', '/images/about-us/2018_sugar_capacity.jpg', 3),
+      imageUrl: '/images/about-us/2018_sugar_capacity.jpg',
       icon: <Factory className="w-8 h-8 text-primary" />,
       side: 'right'
     },
@@ -60,7 +60,7 @@ const AboutUsSection = () => {
       descriptionKey: 'aboutHistory2023Desc',
       imageAltKey: 'aboutHistory2023Alt',
       imagePath: 'about-us/2023_ethanol_plant.jpg',
-      imageUrl: getImage('timeline-images', '/images/about-us/2023_ethanol_plant.jpg', 4),
+      imageUrl: '/images/about-us/2023_ethanol_plant.jpg',
       icon: <Droplets className="w-8 h-8 text-primary" />,
       side: 'left'
     }

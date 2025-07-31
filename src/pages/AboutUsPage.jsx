@@ -73,19 +73,7 @@ const AboutUsPage = () => {
   // Get images from CMS context
   
 
-  // Debug: Log available leadership images
-  useEffect(() => {
-    console.log('🖼️ Available CMS images:', images);
-    console.log('🧑‍💼 Leadership categories:', {
-      'nawab-raza-image': images['nawab-raza-image'],
-      'saif-raza-image': images['saif-raza-image'],
-      'sahil-raza-image': images['sahil-raza-image'],
-      'asad-raza-image': images['asad-raza-image'],
-      'ahmed-raza-image': images['ahmed-raza-image'],
-      'fatima-raza-image': images['fatima-raza-image'],
-      'leadership-images': images['leadership-images']
-    });
-  }, [images]);
+  // Using static images for leadership team
 
   // Map leaders to their CMS image categories
   const leaderImageCategories = [

@@ -8,6 +8,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Briefcase, Users, Sparkles, ChevronRight, ImageOff } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
+// Quick fix for getImage function
+const getImage = (category, fallback, index) => fallback;
+
 const CareersSection = () => {
   const t = useTranslation();
   

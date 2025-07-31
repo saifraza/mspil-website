@@ -318,10 +318,10 @@ const CoreBusinessArea = () => {
           transition={{ duration: 0.4, delay: 0.2 }}
         >
           {[
-            { label: 'Years of Excellence', value: '50+' },
+            { label: 'Years of Excellence', value: '20+' },
             { label: 'Business Verticals', value: '4' },
             { label: 'Annual Production', value: '500K MT' },
-            { label: 'Green Energy', value: '100 MW' }
+            { label: 'Green Energy', value: '24 MW' }
           ].map((stat, index) => (
             <motion.div
               key={index}
