@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -107,6 +107,30 @@ const businessImageGalleries = {
   ],
   ethanol: [
     {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-1.jpg',
+      altKey: 'ethanolFacility1Alt'
+    },
+    {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-2.jpg',
+      altKey: 'ethanolFacility2Alt'
+    },
+    {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-3.jpg',
+      altKey: 'ethanolFacility3Alt'
+    },
+    {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-4.jpg',
+      altKey: 'ethanolFacility4Alt'
+    },
+    {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-5.jpg',
+      altKey: 'ethanolFacility5Alt'
+    },
+    {
+      srcUrl: '/images/infrastructure/ethanol/ethanol-facility-6.jpg',
+      altKey: 'ethanolFacility6Alt'
+    },
+    {
       srcUrl: '/images/infrastructure/ethanol-plant.jpg',
       altKey: 'ethanolPlantFacilityAlt'
     },
@@ -196,6 +220,124 @@ const lineVariants = {
       ease: "easeInOut",
     },
   }),
+};
+
+// Auto-scrolling image gallery component
+const AutoScrollingGallery = ({ images, businessName }) => {
+  const scrollContainerRef = useRef(null);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const t = useTranslation();
+
+  useEffect(() => {
+    if (!isAutoScrolling || !scrollContainerRef.current || images.length === 0) return;
+
+    const container = scrollContainerRef.current;
+    let currentIndex = 0;
+    let scrollTimeout;
+
+    const scrollToImage = (index) => {
+      const imageWidth = 320; // w-80 (320px) + gap
+      const targetScroll = index * imageWidth;
+      
+      container.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    };
+
+    const autoScroll = () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      scrollToImage(currentIndex);
+      setActiveIndex(currentIndex);
+      scrollTimeout = setTimeout(autoScroll, 3000); // 3 seconds per image
+    };
+
+    scrollTimeout = setTimeout(autoScroll, 2000); // Initial delay
+
+    const handleUserInteraction = () => {
+      setIsAutoScrolling(false);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
+
+    container.addEventListener('mouseenter', handleUserInteraction);
+    container.addEventListener('touchstart', handleUserInteraction);
+    
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const imageWidth = 320;
+      const newIndex = Math.round(scrollLeft / imageWidth);
+      setActiveIndex(newIndex);
+    };
+    
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      container.removeEventListener('mouseenter', handleUserInteraction);
+      container.removeEventListener('touchstart', handleUserInteraction);
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [isAutoScrolling, images]);
+
+  return (
+    <div className="mt-6">
+      <h4 className="text-lg font-semibold text-primary mb-4">
+        {t('facilityImages') || 'Facility Images'}
+      </h4>
+      
+      {/* Image gallery */}
+      <div className="relative">
+        <div 
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+        >
+          {images.map((image, index) => (
+            <motion.div
+              key={index}
+              className="flex-shrink-0 w-80 snap-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <div className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <LazyImage
+                  src={image.srcUrl}
+                  alt={t(image.altKey) || `${businessName} facility ${index + 1}`}
+                  className="w-full h-60 object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                  <p className="text-white text-sm font-medium">
+                    {t(image.altKey) || `${businessName} Facility`}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* Progress indicators */}
+        <div className="flex justify-center items-center space-x-2 mt-4">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                const container = scrollContainerRef.current;
+                if (container) {
+                  container.scrollLeft = index * 320;
+                  setIsAutoScrolling(false);
+                }
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === activeIndex ? 'w-8 bg-primary' : 'w-2 bg-primary/30 hover:bg-primary/50'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const OurBusinessesSection = () => {
@@ -327,21 +469,11 @@ const OurBusinessesSection = () => {
                             </p>
                           </div>
                           <div className="mt-auto space-y-3">
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              <Button 
-                                variant="outline" 
-                                className="flex-1 sm:flex-none"
-                                onClick={() => openGallery(business.id, business.nameKey)}
-                              >
-                                <Camera className="mr-2 h-4 w-4" />
-                                {t('viewFacilityImages') || 'View Facility Images'}
-                              </Button>
-                              <Button asChild variant="secondary" className="flex-1 sm:flex-none">
-                                <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
-                                  <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
-                                </a>
-                              </Button>
-                            </div>
+                            <Button asChild variant="secondary" className="w-fit">
+                              <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
+                                <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
+                              </a>
+                            </Button>
                           </div>
                         </div>
 
@@ -452,6 +584,16 @@ const OurBusinessesSection = () => {
                           </div>
                         )}
                       </div>
+                      
+                      {/* Image Gallery Section */}
+                      {businessImageGalleries[business.id] && (
+                        <div className="mt-8 col-span-full">
+                          <AutoScrollingGallery 
+                            images={businessImageGalleries[business.id]} 
+                            businessName={t(business.nameKey)}
+                          />
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
