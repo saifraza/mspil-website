@@ -168,7 +168,7 @@ const AboutUsSection = () => {
   };
 
   return (
-    <section id="about" className="section-padding relative overflow-hidden">
+    <section id="about" className="section-padding relative overflow-hidden bg-transparent">
       {/* Parallax background */}
       <motion.div 
         className="absolute inset-0 z-0 opacity-10"
@@ -180,7 +180,7 @@ const AboutUsSection = () => {
       />
       
       {/* Content overlay */}
-      <div className="absolute inset-0 bg-background/90 dark:bg-gray-900/95 z-0"></div>
+      <div className="absolute inset-0 bg-white/5 dark:bg-gray-900/5 backdrop-blur-sm z-0"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div {...fadeInProps} className="text-center mb-16">
@@ -202,7 +202,7 @@ const AboutUsSection = () => {
             {/* Scroll hint animation */}
             {showScrollHint && (
               <motion.div 
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-3 shadow-lg"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/30"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ 
                   opacity: [0, 1, 1, 0],
@@ -228,7 +228,7 @@ const AboutUsSection = () => {
                   setShowScrollHint(false);
                 }
               }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-2 shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors hidden md:block"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-2 shadow-lg hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all hidden md:block border border-white/30"
             >
               <ChevronLeft className="w-5 h-5 text-primary" />
             </button>
@@ -242,7 +242,7 @@ const AboutUsSection = () => {
                   setShowScrollHint(false);
                 }
               }}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-2 shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors hidden md:block"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-2 shadow-lg hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all hidden md:block border border-white/30"
             >
               <ChevronRight className="w-5 h-5 text-primary" />
             </button>
@@ -266,7 +266,7 @@ const AboutUsSection = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   >
-                    <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass dark:glass-dark">
+                    <Card className={`h-full ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden`}>
                       <div className="aspect-video bg-muted relative overflow-hidden">
                         {event.imageUrl ? (
                           <motion.img 
@@ -354,7 +354,7 @@ const AboutUsSection = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
               >
-                <Card className="text-center h-full hover:shadow-xl transition-all duration-300 glass dark:glass-dark">
+                <Card className={`text-center h-full hover:shadow-xl transition-all duration-300 ${cardBackgrounds.glass}`}>
                   <CardHeader>
                     <div className="flex justify-center">{value.icon}</div>
                     <CardTitle className="text-xl">{t(value.titleKey)}</CardTitle>

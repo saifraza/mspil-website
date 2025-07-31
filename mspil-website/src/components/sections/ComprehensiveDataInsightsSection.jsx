@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { cardBackgrounds, sectionBackgrounds } from '@/utils/backgroundStyles';
 import { LineChartLazy } from '@/components/LazyChart';
 import { EnhancedLineChartLazy, EnhancedBarChartLazy } from '@/components/EnhancedLazyChart';
 import { 
@@ -119,13 +120,13 @@ const ComprehensiveDataInsightsSection = () => {
     transition: { duration: 0.6 }
   };
   
-  const chartCardClass = "shadow-lg hover:shadow-xl transition-shadow duration-300 border-primary/10 bg-white dark:bg-gray-800";
+  const chartCardClass = `${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`;
   const chartHeaderClass = "items-center text-center pb-2";
   const chartTitleClass = "mt-2 text-2xl font-semibold text-primary";
   const chartDescClass = "text-sm text-foreground/70 mb-4 min-h-[40px]";
 
   return (
-    <section id="insights" className="py-12">
+    <section id="insights" className="py-8 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div {...fadeInProps} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Performance & Impact Metrics</h2>
@@ -138,7 +139,7 @@ const ComprehensiveDataInsightsSection = () => {
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.1 }} className="mb-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {keyMetrics.map((metric, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <metric.icon className={`w-8 h-8 ${metric.color}`} />
@@ -211,7 +212,7 @@ const ComprehensiveDataInsightsSection = () => {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 {ethanolMetrics.map((metric, index) => (
-                  <div key={index} className="text-center p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div key={index} className="text-center p-4 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-lg hover:bg-white/40 dark:hover:bg-gray-800/40 transition-all border border-white/20">
                     <metric.icon className={`w-8 h-8 ${metric.color} mx-auto mb-2`} />
                     <p className={`text-2xl font-bold ${metric.color}`}>{metric.value}</p>
                     <h4 className="font-medium text-sm">{metric.title}</h4>

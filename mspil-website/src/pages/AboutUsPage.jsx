@@ -136,13 +136,13 @@ const AboutUsPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-bio-green-50 to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-bio-green-900">
+    <div className={`min-h-screen ${pageBackgrounds.primary}`}>
       {/* Existing About Us Section */}
       <AboutUsSection />
 
 
       {/* Leadership Profiles */}
-      <section id="leadership" className="section-padding">
+      <section id="leadership" className="section-padding bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
@@ -164,13 +164,14 @@ const AboutUsPage = () => {
                 {/* Large Image Section */}
                 <div className="flex-shrink-0 w-full lg:w-1/3">
                   <div className="relative w-80 h-80 mx-auto">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/40 rounded-2xl blur-xl"></div>
                     <LazyImage
                       src={leader.image}
                       alt={leader.name}
-                      className="w-full h-full rounded-2xl object-cover border-4 border-primary/20 shadow-2xl"
+                      className="relative z-10 w-full h-full rounded-2xl object-cover border-2 border-white/30 shadow-2xl"
                       fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
                     />
-                    <div className="absolute bottom-4 right-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                    <div className="absolute bottom-4 right-4 w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/30">
                       <User className="w-8 h-8 text-white" />
                     </div>
                   </div>
@@ -194,7 +195,7 @@ const AboutUsPage = () => {
                   </div>
 
                   <div className="pt-4">
-                    <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+                    <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                       <CardContent className="p-6">
                         <h4 className="text-xl font-semibold text-primary mb-3">Key Responsibilities</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/70">

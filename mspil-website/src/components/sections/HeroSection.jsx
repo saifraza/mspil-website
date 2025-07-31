@@ -202,7 +202,7 @@ const HeroSection = () => {
             poster={videoPosterUrl}
             className="w-full h-full object-cover"
             initial={{ opacity: 0 }}
-            animate={{ opacity: isVideoLoaded ? 0.8 : 0 }}
+            animate={{ opacity: isVideoLoaded ? 0.5 : 0 }}
             transition={{ duration: 1 }}
             onLoadedData={() => setIsVideoLoaded(true)}
             aria-label={t(heroData.videoAltKey) || "Background video of company operations"}
@@ -211,7 +211,7 @@ const HeroSection = () => {
             {t('heroVideoNotSupported') || 'Your browser does not support the video tag.'}
           </motion.video>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent dark:from-background/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/10 via-transparent to-eco-lime-900/10"></div>
       </motion.div>
       
@@ -328,7 +328,7 @@ const HeroSection = () => {
 
         {/* Enhanced Key Metrics with Glass Morphism */}
         <motion.div 
-          className="relative bg-gradient-to-br from-white/5 via-white/2 to-transparent backdrop-blur-sm rounded-3xl p-6 max-w-5xl mx-auto border border-white/20 shadow-xl overflow-hidden"
+          className="relative bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl rounded-3xl p-5 max-w-4xl mx-auto border border-white/30 shadow-2xl overflow-hidden"
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 
@@ -368,13 +368,13 @@ const HeroSection = () => {
               visible: { opacity: 1, y: 0 }
             }}
           >
-            {t('heroMetricsTitle') || 'Our Production Capacity'}
+            {t('heroMetricsTitle') || 'Our Operational Excellence'}
           </motion.h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
             {heroData.stats.map((stat, index) => (
               <motion.div 
                 key={stat.id}
-                className="group relative flex items-center justify-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl p-5 hover:bg-white/15 transition-all duration-300 border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl overflow-hidden"
+                className="group relative flex items-center justify-center space-x-4 bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl rounded-2xl p-4 hover:bg-white/35 dark:hover:bg-gray-800/35 transition-all duration-300 border border-white/40 hover:border-white/60 shadow-xl hover:shadow-2xl overflow-hidden"
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.8 },
                   visible: { 

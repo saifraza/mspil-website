@@ -15,19 +15,22 @@ export const pageBackgrounds = {
   hero: 'bg-gradient-to-br from-bio-green-100 via-eco-lime-50 to-bio-green-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900'
 };
 
-// Section backgrounds - consistent alternating patterns
+// Section backgrounds - consistent alternating patterns with glass morphism
 export const sectionBackgrounds = {
-  // Primary section (odd sections)
-  primary: 'bg-background dark:bg-gray-900',
+  // Primary section (odd sections) - transparent for video visibility
+  primary: 'bg-transparent',
   
-  // Secondary section (even sections)
-  secondary: 'bg-muted/30 dark:bg-gray-800/50',
+  // Secondary section (even sections) - subtle glass effect
+  secondary: 'bg-black/5 dark:bg-white/5 backdrop-blur-sm',
   
-  // Accent section - for important sections
-  accent: 'bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5',
+  // Glass section - standard glass morphism
+  glass: 'bg-white/10 dark:bg-gray-800/10 backdrop-blur-md',
   
-  // CTA section - for call-to-action areas
-  cta: 'bg-gradient-to-r from-primary to-primary/90 dark:from-primary/80 dark:to-primary/70',
+  // Accent section - for important sections with glass
+  accent: 'bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm',
+  
+  // CTA section - for call-to-action areas with glass overlay
+  cta: 'bg-gradient-to-r from-primary/80 to-primary/60 backdrop-blur-md',
   
   // Transparent - for overlay sections
   transparent: 'bg-transparent'
@@ -35,23 +38,26 @@ export const sectionBackgrounds = {
 
 // Card backgrounds - consistent card styles
 export const cardBackgrounds = {
-  // Default card
-  default: 'bg-card dark:bg-gray-800',
+  // Default card - now with glass morphism
+  default: 'bg-white/60 dark:bg-gray-800/60 backdrop-blur-md border border-white/20',
   
-  // Elevated card
-  elevated: 'bg-card shadow-lg dark:bg-gray-800',
+  // Elevated card with stronger glass effect
+  elevated: 'bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg shadow-xl border border-white/30',
   
-  // Muted card
-  muted: 'bg-muted/50 dark:bg-gray-800/50',
+  // Muted card with subtle glass
+  muted: 'bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-white/10',
   
-  // Glass morphism card
-  glass: 'bg-white/70 dark:bg-gray-800/70 backdrop-blur-md',
+  // Glass morphism card - standard
+  glass: 'bg-white/50 dark:bg-gray-800/50 backdrop-blur-md border border-white/20',
   
-  // Primary tinted card
-  primary: 'bg-primary/5 dark:bg-primary/10',
+  // Strong glass effect
+  glassStrong: 'bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl border border-white/40',
   
-  // Gradient card
-  gradient: 'bg-gradient-to-br from-white to-muted dark:from-gray-800 dark:to-gray-900'
+  // Primary tinted card with glass
+  primary: 'bg-primary/10 backdrop-blur-sm border border-primary/20',
+  
+  // Gradient card with glass overlay
+  gradient: 'bg-gradient-to-br from-white/60 to-white/30 dark:from-gray-800/60 dark:to-gray-900/30 backdrop-blur-md border border-white/20'
 };
 
 // Component backgrounds - for smaller components

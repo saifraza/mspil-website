@@ -117,7 +117,7 @@ const SustainabilitySection = () => {
       titleKey: 'sustainabilityZeroWasteTitle',
       descriptionKey: 'sustainabilityZeroWasteDesc',
       icon: <Recycle className="w-10 h-10 text-primary" />,
-      color: 'from-green-500/20 to-emerald-500/20',
+      color: 'from-green-500/10 to-emerald-500/10',
       stats: { value: 98, label: 'Waste Recycled' }
     },
     { 
@@ -125,7 +125,7 @@ const SustainabilitySection = () => {
       titleKey: 'sustainabilityRenewableTitle',
       descriptionKey: 'sustainabilityRenewableDesc',
       icon: <Sun className="w-10 h-10 text-primary" />,
-      color: 'from-yellow-500/20 to-orange-500/20',
+      color: 'from-yellow-500/10 to-orange-500/10',
       stats: { value: 100, label: 'Renewable Energy' }
     },
     { 
@@ -133,7 +133,7 @@ const SustainabilitySection = () => {
       titleKey: 'sustainabilityESGTitle',
       descriptionKey: 'sustainabilityESGDesc',
       icon: <CheckCircle className="w-10 h-10 text-primary" />,
-      color: 'from-blue-500/20 to-indigo-500/20',
+      color: 'from-blue-500/10 to-indigo-500/10',
       stats: { value: 85, label: 'ESG Score' }
     }
   ];
@@ -146,7 +146,7 @@ const SustainabilitySection = () => {
   ];
 
   return (
-    <section id="sustainability" className="section-padding relative overflow-hidden">
+    <section id="sustainability" className="py-8 relative overflow-hidden bg-transparent">
       {/* Animated background leaves */}
       {[...Array(5)].map((_, i) => (
         <AnimatedLeaf key={i} delay={i * 2} duration={15 + i * 2} />
@@ -167,7 +167,7 @@ const SustainabilitySection = () => {
               {...fadeInProps}
               transition={{ delay: index * 0.2 }}
             >
-              <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden glass dark:glass-dark">
+              <Card className={`h-full hover:shadow-xl transition-all duration-300 overflow-hidden ${cardBackgrounds.glass}`}>
                 <div className={`h-full bg-gradient-to-br ${feature.color}`}>
                   <CardHeader>
                     <motion.div
@@ -195,7 +195,7 @@ const SustainabilitySection = () => {
         </div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }}>
-          <Card className="shadow-xl glass dark:glass-dark">
+          <Card className={`shadow-xl ${cardBackgrounds.elevated}`}>
             <CardHeader className="text-center">
               <motion.div
                 animate={{ 
@@ -227,7 +227,7 @@ const SustainabilitySection = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className="glass dark:glass-dark hover:shadow-lg rounded-lg p-4 border border-white/20 transition-all duration-300"
+                    className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md hover:shadow-lg rounded-lg p-4 border border-white/30 transition-all duration-300 hover:bg-white/40 dark:hover:bg-gray-800/40"
                   >
                     <motion.div 
                       className="flex justify-center mb-2 text-primary"
