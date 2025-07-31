@@ -136,19 +136,19 @@ const AboutUsPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-bio-green-50 to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-bio-green-900">
       {/* Existing About Us Section */}
       <AboutUsSection />
 
 
       {/* Leadership Profiles */}
-      <section id="leadership" className="py-16 bg-white dark:bg-gray-900">
+      <section id="leadership" className="section-padding">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
               {t('aboutLeadershipTitle')}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto">
               {t('aboutLeadershipSubtitle')}
             </p>
           </motion.div>
@@ -179,7 +179,7 @@ const AboutUsPage = () => {
                 {/* Detailed Content Section */}
                 <div className="flex-1 space-y-6 text-center lg:text-left">
                   <div>
-                    <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                    <h3 className="text-3xl md:text-4xl font-bold text-primary mb-3">
                       {leader.name}
                     </h3>
                     <p className="text-2xl text-primary font-semibold mb-6">
@@ -188,16 +188,16 @@ const AboutUsPage = () => {
                   </div>
                   
                   <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                    <p className="text-lg leading-relaxed text-foreground/80">
                       {leader.bio}
                     </p>
                   </div>
 
                   <div className="pt-4">
-                    <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                    <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
                       <CardContent className="p-6">
                         <h4 className="text-xl font-semibold text-primary mb-3">Key Responsibilities</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/70">
                           {index === 0 && (
                             <>
                               <div>• Strategic Leadership & Vision</div>

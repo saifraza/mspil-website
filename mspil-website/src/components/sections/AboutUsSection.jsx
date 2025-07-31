@@ -168,7 +168,7 @@ const AboutUsSection = () => {
   };
 
   return (
-    <section id="about" className={`section-padding relative overflow-hidden ${sectionBackgrounds.primary}`}>
+    <section id="about" className="section-padding relative overflow-hidden">
       {/* Parallax background */}
       <motion.div 
         className="absolute inset-0 z-0 opacity-10"
@@ -184,7 +184,7 @@ const AboutUsSection = () => {
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div {...fadeInProps} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">{t('aboutTitle')}</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">{t('aboutTitle')}</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('aboutSubtitle')}
           </p>
@@ -196,7 +196,7 @@ const AboutUsSection = () => {
           transition={{ ...fadeInProps.transition, delay: 0.1 }} 
           className="mb-20 overflow-hidden"
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">{t('aboutHistoryTitle') || 'Our Journey Through Time'}</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-primary text-center mb-12">{t('aboutHistoryTitle') || 'Our Journey Through Time'}</h3>
           
           <div className="relative">
             {/* Scroll hint animation */}
@@ -266,7 +266,7 @@ const AboutUsSection = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   >
-                    <Card className={`h-full shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 hover:border-primary/30 ${cardBackgrounds.elevated}`}>
+                    <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                       <div className="aspect-video bg-muted relative overflow-hidden">
                         {event.imageUrl ? (
                           <motion.img 
@@ -344,7 +344,7 @@ const AboutUsSection = () => {
           transition={{ ...fadeInProps.transition, delay: 0.4 }} 
           className="mb-20"
         >
-          <h3 className="text-3xl font-semibold text-foreground text-center mb-10">{t('aboutCoreValuesTitle')}</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-primary text-center mb-10">{t('aboutCoreValuesTitle')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {coreValues.map((value, index) => (
               <motion.div 
@@ -354,7 +354,7 @@ const AboutUsSection = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
               >
-                <Card className={`text-center h-full hover:shadow-lg transition-shadow ${cardBackgrounds.default}`}>
+                <Card className="text-center h-full hover:shadow-xl transition-all duration-300">
                   <CardHeader>
                     <div className="flex justify-center">{value.icon}</div>
                     <CardTitle className="text-xl">{t(value.titleKey)}</CardTitle>
