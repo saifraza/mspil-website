@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingBag, Droplets, Zap, Wheat } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 import { cn } from '@/lib/utils';
 import { useThrottle } from '@/hooks/useThrottle';
 
@@ -51,7 +50,7 @@ const businessData = [
 
 const CoreBusinessArea = () => {
   const t = useTranslation();
-  const { getImage } = useImages();
+  
   const scrollContainerRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -278,7 +277,7 @@ const CoreBusinessArea = () => {
                             'power': 'power-images',
                             'feed': 'feed-images'
                           };
-                          const imageUrl = getImage(imageCategories[business.id], business.image, 0);
+                          const imageUrl = /images/placeholder.jpg;
                           
                           return imageUrl ? (
                             <img 

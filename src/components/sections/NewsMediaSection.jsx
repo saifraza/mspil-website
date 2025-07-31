@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Newspaper, CalendarDays, Video, Image as ImageIcon, Linkedin, Twitter, ImageOff, X, ChevronLeft, ChevronRight, TrendingUp, Clock, Eye } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 
 // News ticker component
 const NewsTicker = ({ items }) => {
@@ -140,7 +139,6 @@ const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) =>
 
 const NewsMediaSection = () => {
   const t = useTranslation();
-  const { getImage, getCategoryImages } = useImages();
   const [galleryItemsWithUrls, setGalleryItemsWithUrls] = useState([]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -194,8 +192,8 @@ const NewsMediaSection = () => {
       const staticItems = initialGalleryItems.map((item, index) => {
         let imageUrl = '';
         if (item.imagePath) {
-          // Try to get from CMS first, fallback to local path
-          imageUrl = getImage('news-images', `/images/${item.imagePath}`, index) || `/images/${item.imagePath}`;
+          // Use static image path
+          imageUrl = `/images/${item.imagePath}`;
         }
         return { ...item, imageUrl: imageUrl };
       });

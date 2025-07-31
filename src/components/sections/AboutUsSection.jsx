@@ -3,11 +3,10 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Zap, Users, Target, Award, Clock, CalendarDays, Factory, Droplets } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 
 const AboutUsSection = () => {
   const t = useTranslation();
-  const { getImage } = useImages();
+  
   const [companyHistoryWithImages, setCompanyHistoryWithImages] = useState([]);
 
   // Parallax effect

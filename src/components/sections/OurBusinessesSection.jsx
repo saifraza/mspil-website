@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Droplets, Zap, Wheat, Download, Package, Truck, ClipboardCheck, Pipette, Layers, Waves, Sparkles, Fan, PackageCheck, Archive, FlaskConical, Flame, Recycle, Warehouse, Send, Boxes, CloudSnow, Gauge, Snowflake, Network, Tractor, Shuffle, Disc3, ShoppingBasket, Camera, Image } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 import LazyImage from '@/components/LazyImage';
 import ImageGalleryModal from '@/components/ImageGalleryModal';
 import { useLocation } from 'react-router-dom';
@@ -201,7 +200,6 @@ const lineVariants = {
 
 const OurBusinessesSection = () => {
   const t = useTranslation();
-  const { getCategoryImages } = useImages();
   const location = useLocation();
   const [processedBusinessesData, setProcessedBusinessesData] = useState([]);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
@@ -210,21 +208,10 @@ const OurBusinessesSection = () => {
   const [activeTab, setActiveTab] = useState('sugar');
 
   const openGallery = (businessId, businessNameKey) => {
-    // Combine static images with uploaded images from CMS
+    // Use static images only
     const staticImages = businessImageGalleries[businessId] || [];
-    const uploadedImages = getCategoryImages(`${businessId}-images`);
     
-    // Convert uploaded images to the format expected by gallery
-    const convertedUploadedImages = uploadedImages.map(img => ({
-      srcUrl: img.url,
-      altKey: `${businessId}UploadedImageAlt`,
-      isUploaded: true
-    }));
-    
-    // Combine both sets of images
-    const allImages = [...convertedUploadedImages, ...staticImages];
-    
-    setCurrentGalleryImages(allImages);
+    setCurrentGalleryImages(staticImages);
     setCurrentBusinessName(t(businessNameKey));
     setIsGalleryOpen(true);
   };

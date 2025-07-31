@@ -8,7 +8,6 @@ import LazyImage from '@/components/LazyImage';
 import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
-import { useImages } from '@/contexts/ImageContext';
 
 const AboutUsPage = () => {
   const t = useTranslation();
@@ -72,7 +71,7 @@ const AboutUsPage = () => {
 
 
   // Get images from CMS context
-  const { getImage, images } = useImages();
+  
 
   // Debug: Log available leadership images
   useEffect(() => {

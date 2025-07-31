@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# MSPIL One-Command Deployment Script
+# MSPIL Static Website Deployment Script
 # Usage: ./deploy.sh "commit message"
 
 set -e  # Exit on any error
 
-echo "🚀 Starting MSPIL Deployment..."
+echo "🚀 Starting MSPIL Static Website Deployment..."
 
 # Check if commit message provided
 if [ -z "$1" ]; then
@@ -17,6 +17,10 @@ fi
 COMMIT_MSG="$1"
 
 echo "📝 Commit message: $COMMIT_MSG"
+
+# Run build to ensure everything compiles
+echo "🔧 Building website..."
+npm run build
 
 # Stage all changes
 echo "📦 Staging all changes..."
@@ -34,14 +38,14 @@ git push origin main
 
 echo "✅ Deployment initiated!"
 echo ""
-echo "🔄 Auto-deployments triggered:"
-echo "   • Railway (frontend) - https://mspil.in"
-echo "   • Railway (CMS server) - https://mspil-mcp-production.up.railway.app"
+echo "🔄 Railway auto-deployment triggered:"
+echo "   • Static Website: https://mspil.in"
 echo ""
-echo "⏳ Wait 2-3 minutes for deployments to complete"
-echo "🎯 Your CMS will be available for content management"
+echo "⏳ Wait 2-3 minutes for deployment to complete"
+echo "📊 Website features:"
+echo "   ✓ Fast static site loading"
+echo "   ✓ Inline document viewing (PDF, Excel, Word)"
+echo "   ✓ No backend dependencies"
+echo "   ✓ Enhanced security"
 echo ""
-echo "🔗 Quick Links:"
-echo "   • Website: https://mspil.in"
-echo "   • CMS: https://mspil.in/simple-cms (login with admin/admin123)"
-echo "   • CMS Health: https://mspil-mcp-production.up.railway.app/health"
+echo "🔗 Website: https://mspil.in"

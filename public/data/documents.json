@@ -1,0 +1,143 @@
+{
+  "investorRelations": {
+    "annualReports": [
+      {
+        "title": "Annual Report 2023-24",
+        "filename": "annual_report_2023_24.pdf.txt",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2023_24.pdf.txt",
+        "date": "2024-03-31",
+        "type": "pdf",
+        "category": "Annual Reports",
+        "description": "Comprehensive annual report covering financial performance, business operations, and strategic initiatives for FY 2023-24"
+      }
+    ],
+    "quarterlyResults": [
+      {
+        "title": "Q1 FY2024 Results",
+        "filename": "q1_fy2024_results.pdf.txt",
+        "url": "/documents/investor-relations/quarterly-results/q1_fy2024_results.pdf.txt",
+        "date": "2024-06-30",
+        "type": "pdf",
+        "category": "Quarterly Results",
+        "description": "First quarter financial results and performance metrics for fiscal year 2024"
+      }
+    ],
+    "presentations": [
+      {
+        "title": "Investor Presentation December 2024",
+        "filename": "investor_presentation_dec2024.pptx.txt",
+        "url": "/documents/investor-relations/presentations/investor_presentation_dec2024.pptx.txt",
+        "date": "2024-12-15",
+        "type": "presentation",
+        "category": "Presentations",
+        "description": "Latest investor presentation highlighting company performance, growth strategy, and market outlook"
+      }
+    ],
+    "policies": [
+      {
+        "title": "Corporate Governance Policy",
+        "filename": "corporate_governance_policy.pdf.txt",
+        "url": "/documents/investor-relations/policies/corporate_governance_policy.pdf.txt",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Corporate governance framework, board structure, and compliance policies"
+      }
+    ]
+  },
+  "businessData": {
+    "sugar": [
+      {
+        "title": "Sugar Production Q1 2024",
+        "filename": "sugar_production_q1_2024.csv",
+        "url": "/documents/sugar-data/sugar_production_q1_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Sugar Data",
+        "description": "Detailed sugar production metrics, capacity utilization, and quality parameters for Q1 2024"
+      }
+    ],
+    "ethanol": [
+      {
+        "title": "Ethanol Production Q1 2024",
+        "filename": "ethanol_production_q1_2024.csv",
+        "url": "/documents/ethanol-data/ethanol_production_q1_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Ethanol Data",
+        "description": "Ethanol production volumes, efficiency metrics, and quality specifications for Q1 2024"
+      },
+      {
+        "title": "Ethanol Production Sample 2024",
+        "filename": "ethanol_production_sample_2024.csv",
+        "url": "/documents/ethanol-data/ethanol_production_sample_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Ethanol Data",
+        "description": "Sample ethanol production data showcasing daily production trends and operational efficiency"
+      }
+    ],
+    "power": [
+      {
+        "title": "Power Generation Q1 2024",
+        "filename": "power_generation_q1_2024.csv",
+        "url": "/documents/power-data/power_generation_q1_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Power Data",
+        "description": "Power generation statistics, grid export data, and renewable energy contributions for Q1 2024"
+      },
+      {
+        "title": "Power Generation Sample 2024",
+        "filename": "power_generation_sample_2024.csv",
+        "url": "/documents/power-data/power_generation_sample_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Power Data",
+        "description": "Sample power generation data highlighting daily production patterns and efficiency metrics"
+      }
+    ],
+    "feed": [
+      {
+        "title": "Feed Production Q1 2024",
+        "filename": "feed_production_q1_2024.csv",
+        "url": "/documents/feed-data/feed_production_q1_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Feed Data",
+        "description": "DDGS (Dried Distillers Grains) production data, nutritional analysis, and market distribution for Q1 2024"
+      },
+      {
+        "title": "Feed Production Sample 2024",
+        "filename": "feed_production_sample_2024.csv",
+        "url": "/documents/feed-data/feed_production_sample_2024.csv",
+        "date": "2024-06-30",
+        "type": "csv",
+        "category": "Feed Data",
+        "description": "Sample feed production data showing quality parameters and production efficiency trends"
+      }
+    ]
+  },
+  "csr": [
+    {
+      "title": "CSR Report 2023-24",
+      "filename": "csr_report_2023_24.pdf.txt",
+      "url": "/documents/csr/csr_report_2023_24.pdf.txt",
+      "date": "2024-03-31",
+      "type": "pdf",
+      "category": "CSR Reports",
+      "description": "Comprehensive Corporate Social Responsibility report showcasing community development, environmental initiatives, and social impact programs"
+    }
+  ],
+  "general": [
+    {
+      "title": "Company Brochure 2024",
+      "filename": "company_brochure_2024.pdf.txt",
+      "url": "/documents/general/company_brochure_2024.pdf.txt",
+      "date": "2024-01-15",
+      "type": "pdf",
+      "category": "Company Information",
+      "description": "Corporate brochure highlighting company overview, business segments, achievements, and strategic vision"
+    }
+  ]
+}

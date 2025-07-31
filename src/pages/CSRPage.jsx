@@ -14,13 +14,12 @@ import {
   Sprout
 } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const CSRPage = () => {
   const t = useTranslation();
-  const { getImage } = useImages();
+  
 
   const fadeInProps = {
     initial: { opacity: 0, y: 20 },

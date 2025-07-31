@@ -4,26 +4,23 @@ import Layout from '@/components/Layout';
 import ScrollToTop from '@/components/ScrollToTop';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { ImageProvider } from '@/contexts/ImageContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
-// Direct imports to debug issues
-import HomePage from '@/pages/HomePage';
-import AboutUsPage from '@/pages/AboutUsPage';
-import OurBusinessesPage from '@/pages/OurBusinessesPage';
-import SustainabilityPage from '@/pages/SustainabilityPage';
-import DataInsightsPage from '@/pages/DataInsightsPage';
-import InvestorRelationsPage from '@/pages/InvestorRelationsPage';
-import NewsMediaPage from '@/pages/NewsMediaPage';
-import CareersPage from '@/pages/CareersPage';
-import ContactUsPage from '@/pages/ContactUsPage';
-import CSRPage from '@/pages/CSRPage';
-import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
-import TermsOfServicePage from '@/pages/TermsOfServicePage';
-import InvestorDisclaimerPage from '@/pages/InvestorDisclaimerPage';
+// Lazy load pages for better performance
+const HomePage = lazy(() => import('@/pages/HomePage'));
+const AboutUsPage = lazy(() => import('@/pages/AboutUsPage'));
+const OurBusinessesPage = lazy(() => import('@/pages/OurBusinessesPage'));
+const SustainabilityPage = lazy(() => import('@/pages/SustainabilityPage'));
+const DataInsightsPage = lazy(() => import('@/pages/DataInsightsPage'));
+const InvestorRelationsPage = lazy(() => import('@/pages/InvestorRelationsPage'));
+const NewsMediaPage = lazy(() => import('@/pages/NewsMediaPage'));
+const CareersPage = lazy(() => import('@/pages/CareersPage'));
+const ContactUsPage = lazy(() => import('@/pages/ContactUsPage'));
+const CSRPage = lazy(() => import('@/pages/CSRPage'));
+const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
+const InvestorDisclaimerPage = lazy(() => import('@/pages/InvestorDisclaimerPage'));
 
-// CMS Pages
-import SimpleCMS from '@/pages/SimpleCMS';
 
 // Loading component with bio-energy theme
 const LoadingSpinner = () => (
@@ -41,8 +38,7 @@ function App() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <ImageProvider>
-          <Router>
+        <Router>
           <ScrollToTop />
           <Layout>
             <Suspense fallback={<LoadingSpinner />}>
@@ -60,15 +56,11 @@ function App() {
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                 <Route path="/investor-disclaimer" element={<InvestorDisclaimerPage />} />
-                
-                {/* CMS Routes */}
-                <Route path="/simple-cms" element={<SimpleCMS />} />
               </Routes>
             </Suspense>
           </Layout>
           <Toaster />
-          </Router>
-        </ImageProvider>
+        </Router>
       </LanguageProvider>
     </ErrorBoundary>
   );

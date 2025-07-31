@@ -7,11 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Briefcase, Users, Sparkles, ChevronRight, ImageOff } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 
 const CareersSection = () => {
   const t = useTranslation();
-  const { getImage } = useImages();
+  
   const [cultureImage, setCultureImage] = useState('');
   const [testimonialsWithImages, setTestimonialsWithImages] = useState([]);
 

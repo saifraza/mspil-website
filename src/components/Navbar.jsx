@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, Sun, Moon, Globe, Settings, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, Globe, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageContext, useTranslation } from '@/contexts/LanguageContext';
@@ -212,17 +212,6 @@ const Navbar = () => {
               <Globe size={20} />
               <span className="sr-only">{t('toggleLanguage')}</span>
             </Button>
-            <Link to="/simple-cms">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="ml-1 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
-                title="CMS Login"
-              >
-                <Settings size={20} />
-                <span className="sr-only">CMS Login</span>
-              </Button>
-            </Link>
           </div>
 
           <div className="lg:hidden flex items-center">
@@ -242,16 +231,6 @@ const Navbar = () => {
             >
               <Globe size={20} />
             </Button>
-            <Link to="/simple-cms">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="mr-1 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
-                title="CMS Login"
-              >
-                <Settings size={20} />
-              </Button>
-            </Link>
             <Button 
               variant="ghost" 
               size="icon" 
@@ -305,16 +284,6 @@ const Navbar = () => {
                 </Link>
               )
             ))}
-            <Link
-              to="/simple-cms"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800 hover:text-bio-green-700 dark:hover:text-bio-green-300 border-t border-gray-200 dark:border-gray-700 mt-2 pt-4"
-            >
-              <div className="flex items-center space-x-2">
-                <Settings size={18} />
-                <span>CMS Login</span>
-              </div>
-            </Link>
           </div>
         </motion.div>
       )}

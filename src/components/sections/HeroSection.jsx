@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import { TrendingUp, BarChart2, Leaf as LeafIcon, Zap, Droplets, ShoppingBag } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
-import { useImages } from '@/contexts/ImageContext';
 import { Link } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -33,7 +32,7 @@ const FloatingParticle = ({ delay = 0 }) => {
 
 const HeroSection = () => {
   const t = useTranslation();
-  // const { getImage, getCategoryImages } = useImages(); // Not needed for static files
+  //  // Not needed for static files
   const prefersReducedMotion = useReducedMotion();
   const [backgroundVideoUrl, setBackgroundVideoUrl] = useState('');
   const [videoPosterUrl, setVideoPosterUrl] = useState('');
