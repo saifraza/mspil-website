@@ -3,7 +3,7 @@ import SustainabilitySection from '@/components/sections/SustainabilitySection';
 
 const SustainabilityPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-bio-green-50 to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-bio-green-900">
       <SustainabilitySection />
     </div>
   );

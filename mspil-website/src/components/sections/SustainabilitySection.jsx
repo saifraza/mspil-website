@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GlassCard, FeatureCard, AnimatedCard, CardContent, CardHeader, CardTitle } from '@/components/ui/animated-card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { GlassCard, FeatureCard, AnimatedCard } from '@/components/ui/animated-card';
 import { Leaf, Recycle, BarChart3, CheckCircle, Droplets, Wind, Sun } from 'lucide-react';
 import AnimatedCounter from '@/components/AnimatedCounter';
 // Removed AutoPublishedContent - using static content now
@@ -145,16 +146,16 @@ const SustainabilitySection = () => {
   ];
 
   return (
-    <section id="sustainability" className={`py-16 relative overflow-hidden ${sectionBackgrounds.primary}`}>
+    <section id="sustainability" className="section-padding relative overflow-hidden">
       {/* Animated background leaves */}
       {[...Array(5)].map((_, i) => (
         <AnimatedLeaf key={i} delay={i * 2} duration={15 + i * 2} />
       ))}
       
-      <div className="container mx-auto px-4">
-        <motion.div {...fadeInProps} className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">{t('sustainabilitySectionTitle')}</h2>
-          <p className="text-muted-foreground max-w-3xl mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div {...fadeInProps} className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">{t('sustainabilitySectionTitle')}</h2>
+          <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('sustainabilitySectionSubtitle')}
           </p>
         </motion.div>
@@ -165,45 +166,37 @@ const SustainabilitySection = () => {
               key={feature.id}
               {...fadeInProps}
               transition={{ delay: index * 0.2 }}
-              className={`relative group`}
-              onMouseEnter={() => {}}
-              onMouseLeave={() => {}}
             >
-              <div className={`h-full rounded-2xl p-6 bg-gradient-to-br ${feature.color} border border-primary/10 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02]`}>
-                <motion.div
-                  className="mb-4"
-                  whileHover={{ scale: 1.1, rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {feature.icon}
-                </motion.div>
-                <h3 className="text-xl font-semibold mb-3">{t(feature.titleKey)}</h3>
-                <p className="text-muted-foreground">{t(feature.descriptionKey)}</p>
-                <div className="mt-4 flex items-center">
-                  <span className="text-3xl font-bold text-primary mr-2">
-                    <AnimatedCounter to={feature.stats.value} />%
-                  </span>
-                  <span className="text-sm text-muted-foreground">{feature.stats.label}</span>
+              <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <div className={`h-full bg-gradient-to-br ${feature.color}`}>
+                  <CardHeader>
+                    <motion.div
+                      className="mb-4"
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {feature.icon}
+                    </motion.div>
+                    <CardTitle className="text-xl">{t(feature.titleKey)}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-4">{t(feature.descriptionKey)}</CardDescription>
+                    <div className="flex items-center">
+                      <span className="text-3xl font-bold text-primary mr-2">
+                        <AnimatedCounter to={feature.stats.value} />%
+                      </span>
+                      <span className="text-sm text-muted-foreground">{feature.stats.label}</span>
+                    </div>
+                  </CardContent>
                 </div>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }}>
-          <GlassCard className="shadow-2xl" blur="lg" opacity="20">
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              animate={{
-                x: ['-100%', '100%'],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                repeatDelay: 2,
-              }}
-            />
-            <CardHeader className="text-center relative z-10">
+          <Card className="shadow-xl">
+            <CardHeader className="text-center">
               <motion.div
                 animate={{ 
                   rotate: [0, 360],
@@ -220,11 +213,11 @@ const SustainabilitySection = () => {
               <CardTitle className="text-2xl md:text-3xl">
                 {t('sustainabilityDashboardTitle') || 'Interactive Sustainability Dashboard'}
               </CardTitle>
-              <p className="text-muted-foreground mt-2">
+              <CardDescription className="text-lg mt-2">
                 {t('sustainabilityDashboardSubtitle') || 'Visualizing our environmental impact and progress.'}
-              </p>
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-center relative z-10">
+            <CardContent className="text-center">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-6">
                 {impactMetrics.map((metric, index) => (
                   <motion.div
@@ -234,7 +227,7 @@ const SustainabilitySection = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className={`${cardBackgrounds.glass} rounded-lg p-4 border border-primary/20`}
+                    className="bg-card hover:shadow-lg rounded-lg p-4 border transition-all duration-300"
                   >
                     <motion.div 
                       className="flex justify-center mb-2 text-primary"
@@ -278,12 +271,12 @@ const SustainabilitySection = () => {
                 </div>
               </motion.div>
             </CardContent>
-          </GlassCard>
+          </Card>
         </motion.div>
       </div>
 
       {/* CSR Reports & Sustainability Documents */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -291,10 +284,10 @@ const SustainabilitySection = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
             CSR Reports & Sustainability Documents
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
             Access our latest CSR reports, sustainability initiatives, and environmental impact assessments.
           </p>
         </motion.div>
