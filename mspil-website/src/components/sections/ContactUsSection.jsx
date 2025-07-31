@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AnimatedCard, GlassCard, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Phone, MapPin, MessageSquare, User, Building } from 'lucide-react'; // User for General, Building for Investor/HR
+import EnhancedContactForm from '@/components/EnhancedContactForm';
 
 const ContactUsSection = () => {
   const fadeInProps = {
@@ -70,7 +71,7 @@ const ContactUsSection = () => {
             <h3 className="text-2xl font-semibold text-foreground mb-6">Get in Touch</h3>
             <div className="space-y-6">
               {contactDetails.map((detail, index) => (
-                <Card key={index} className="shadow-sm">
+                <AnimatedCard key={index} variant="slide" delay={index * 0.1} className="shadow-sm hover:shadow-lg transition-shadow">
                   <CardHeader className="flex flex-row items-center space-x-4 pb-2">
                     {detail.icon}
                     <CardTitle className="text-xl">{detail.type}</CardTitle>
@@ -92,49 +93,28 @@ const ContactUsSection = () => {
                     {detail.email && <p className="flex items-center text-sm text-muted-foreground mb-1"><Mail size={15} className="mr-2 shrink-0"/> <a href={`mailto:${detail.email}`} className="hover:text-primary">{detail.email}</a></p>}
                     {detail.description && <p className="text-sm text-muted-foreground italic mt-2">{detail.description}</p>}
                   </CardContent>
-                </Card>
+                </AnimatedCard>
               ))}
             </div>
           </motion.div>
 
           <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.4 }}>
-            <Card className="shadow-xl p-6 sm:p-8">
+            <GlassCard className="shadow-xl p-6 sm:p-8" blur="md" opacity="10">
               <CardHeader className="text-center p-0 mb-6">
-                <MessageSquare className="w-12 h-12 text-primary mx-auto mb-3"/>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
+                  <MessageSquare className="w-12 h-12 text-primary mx-auto mb-3"/>
+                </motion.div>
                 <CardTitle className="text-2xl md:text-3xl">Send Us a Message</CardTitle>
                 <CardDescription className="mt-2">Fill out the form and we'll get back to you shortly.</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
-                <form className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="contact-name">Full Name</Label>
-                      <Input id="contact-name" type="text" placeholder="Your Name" />
-                    </div>
-                    <div>
-                      <Label htmlFor="contact-email">Email Address</Label>
-                      <Input id="contact-email" type="email" placeholder="your.email@example.com" />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="contact-inquiry-type">Type of Inquiry</Label>
-                    <select id="contact-inquiry-type" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                      <option>General Inquiry</option>
-                      <option>Company Secretary / Compliance</option>
-                      <option>Finance</option>
-                      <option>Technical / Projects</option>
-                      <option>Product Information</option>
-                      <option>Partnerships</option>
-                    </select>
-                  </div>
-                  <div>
-                    <Label htmlFor="contact-message">Message</Label>
-                    <Textarea id="contact-message" placeholder="Your message..." rows={5} />
-                  </div>
-                  <Button type="submit" className="w-full" size="lg">Send Message</Button>
-                </form>
+                <EnhancedContactForm />
               </CardContent>
-            </Card>
+            </GlassCard>
           </motion.div>
         </div>
         

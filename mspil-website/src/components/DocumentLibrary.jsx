@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import DocumentViewer from '@/components/DocumentViewer';
+import EnhancedDocumentViewer from '@/components/EnhancedDocumentViewer';
 
 const DocumentLibrary = ({ category = 'all' }) => {
   const [documents, setDocuments] = useState({});
@@ -257,8 +257,8 @@ const DocumentLibrary = ({ category = 'all' }) => {
         </TabsContent>
       </Tabs>
 
-      {/* Document Viewer Modal */}
-      <DocumentViewer
+      {/* Enhanced Document Viewer Modal */}
+      <EnhancedDocumentViewer
         document={selectedDocument}
         isOpen={viewerOpen}
         onClose={() => {

@@ -149,7 +149,7 @@ const EnhancedInvestorRelationsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
       {/* Hero Section with Investment Opportunity */}
       <section className="relative py-20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

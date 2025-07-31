@@ -15,7 +15,7 @@ const InvestorDisclaimerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
       {/* Header */}
       <section className="relative py-16 bg-orange-50 dark:bg-orange-900/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

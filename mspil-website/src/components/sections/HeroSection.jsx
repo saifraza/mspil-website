@@ -1,30 +1,69 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import AnimatedCounter from '@/components/AnimatedCounter';
-import { TrendingUp, BarChart2, Leaf as LeafIcon, Zap, Droplets, ShoppingBag } from 'lucide-react';
+import { TrendingUp, BarChart2, Leaf as LeafIcon, Zap, Droplets, ShoppingBag, Factory, Sprout, Wind } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { pageBackgrounds } from '@/utils/backgroundStyles';
 
-// Floating particle component
-const FloatingParticle = ({ delay = 0 }) => {
+// Enhanced floating particle component with varied sizes and opacity
+const FloatingParticle = ({ delay = 0, type = 'dot' }) => {
   const randomX = Math.random() * 100;
   const randomDuration = 15 + Math.random() * 20;
+  const randomSize = 0.5 + Math.random() * 1.5;
+  
+  const particleTypes = {
+    dot: 'w-2 h-2 bg-gradient-to-r from-bio-green-400/30 to-eco-lime-400/20 rounded-full',
+    leaf: 'w-4 h-4 text-bio-green-400/30',
+    sprout: 'w-3 h-3 text-eco-lime-400/25'
+  };
   
   return (
     <motion.div
-      className="absolute w-2 h-2 bg-primary/20 rounded-full"
-      initial={{ x: `${randomX}vw`, y: '110vh' }}
+      className={`absolute ${type === 'dot' ? particleTypes.dot : ''}`}
+      initial={{ 
+        x: `${randomX}vw`, 
+        y: '110vh',
+        scale: randomSize,
+        rotate: 0
+      }}
       animate={{
         y: '-10vh',
         x: [`${randomX}vw`, `${randomX + (Math.random() - 0.5) * 20}vw`],
+        rotate: type !== 'dot' ? 360 : 0
       }}
       transition={{
         duration: randomDuration,
         delay: delay,
         repeat: Infinity,
         ease: "linear",
+      }}
+    >
+      {type === 'leaf' && <LeafIcon className="w-full h-full" />}
+      {type === 'sprout' && <Sprout className="w-full h-full" />}
+    </motion.div>
+  );
+};
+
+// Animated gradient background
+const AnimatedGradient = () => {
+  return (
+    <motion.div
+      className="absolute inset-0 opacity-90"
+      animate={{
+        background: [
+          'linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(132, 204, 22, 0.9) 50%, rgba(163, 230, 53, 0.85) 100%)',
+          'linear-gradient(135deg, rgba(132, 204, 22, 0.95) 0%, rgba(163, 230, 53, 0.9) 50%, rgba(34, 197, 94, 0.85) 100%)',
+          'linear-gradient(135deg, rgba(163, 230, 53, 0.95) 0%, rgba(34, 197, 94, 0.9) 50%, rgba(132, 204, 22, 0.85) 100%)',
+          'linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(132, 204, 22, 0.9) 50%, rgba(163, 230, 53, 0.85) 100%)',
+        ]
+      }}
+      transition={{
+        duration: 10,
+        repeat: Infinity,
+        ease: "linear"
       }}
     />
   );
@@ -36,6 +75,14 @@ const HeroSection = () => {
   const prefersReducedMotion = useReducedMotion();
   const [backgroundVideoUrl, setBackgroundVideoUrl] = useState('');
   const [videoPosterUrl, setVideoPosterUrl] = useState('');
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const heroData = useMemo(() => ({
     taglinePart1Key: "heroTagline1",
@@ -78,60 +125,125 @@ const HeroSection = () => {
   }, [heroData.backgroundVideoPath, heroData.videoPosterPath]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-100 via-teal-50 to-blue-100 dark:from-green-900 dark:via-teal-800 dark:to-blue-900 pt-20">
-      {/* Animated gradient background */}
-      <motion.div
-        className="absolute inset-0 opacity-30"
-        animate={{
-          background: [
-            'radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.3) 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.3) 0%, transparent 50%)',
-            'radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
-            'radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.3) 0%, transparent 50%)',
-          ],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
+    <section ref={heroRef} className={`relative min-h-screen flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
+      {/* Enhanced animated gradient background */}
+      <AnimatedGradient />
       
-      {/* Floating particles - reduced for performance */}
+      {/* Additional ambient glow effects */}
+      <motion.div
+        className="absolute inset-0 overflow-hidden"
+        style={{ y, opacity }}
+      >
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-bio-green-400/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [-50, 50, -50],
+            y: [-30, 30, -30],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-eco-lime-400/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            x: [50, -50, 50],
+            y: [30, -30, 30],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </motion.div>
+      
+      {/* Enhanced floating particles with variety */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <FloatingParticle key={i} delay={i * 1.5} />
+          {[...Array(5)].map((_, i) => (
+            <FloatingParticle key={`dot-${i}`} delay={i * 1.5} type="dot" />
+          ))}
+          {[...Array(3)].map((_, i) => (
+            <FloatingParticle key={`leaf-${i}`} delay={i * 2 + 0.5} type="leaf" />
+          ))}
+          {[...Array(2)].map((_, i) => (
+            <FloatingParticle key={`sprout-${i}`} delay={i * 3 + 1} type="sprout" />
           ))}
         </div>
       )}
       
-      <div className="absolute inset-0 z-0">
-        {backgroundVideoUrl ? (
-          <video
+      <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
+        <AnimatePresence mode="wait">
+          {!isVideoLoaded && videoPosterUrl && (
+            <motion.img
+              key="poster"
+              src={videoPosterUrl}
+              alt={t(heroData.videoAltKey) || "Company operations poster image"}
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 0.5, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+            />
+          )}
+        </AnimatePresence>
+        {backgroundVideoUrl && (
+          <motion.video
             key={backgroundVideoUrl}
             autoPlay
             loop
             muted
             playsInline
             poster={videoPosterUrl}
-            className="w-full h-full object-cover opacity-50 dark:opacity-30"
+            className="w-full h-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isVideoLoaded ? 0.5 : 0 }}
+            transition={{ duration: 1 }}
+            onLoadedData={() => setIsVideoLoaded(true)}
             aria-label={t(heroData.videoAltKey) || "Background video of company operations"}
           >
             <source src={backgroundVideoUrl} type="video/mp4" />
             {t('heroVideoNotSupported') || 'Your browser does not support the video tag.'}
-          </video>
-        ) : (
-          videoPosterUrl && <img src={videoPosterUrl} alt={t(heroData.videoAltKey) || "Company operations poster image"} className="w-full h-full object-cover opacity-50 dark:opacity-30" />
+          </motion.video>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent dark:from-background/90"></div>
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent dark:from-background/95"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/20 via-transparent to-eco-lime-900/20"></div>
+      </motion.div>
       
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-12 md:py-16">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+              },
+            },
+          }}
+        >
         <motion.h1
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
+          variants={{
+            hidden: { opacity: 0, y: 30, scale: 0.8 },
+            visible: { 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 10,
+              }
+            }
+          }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6"
         >
           <motion.span 
@@ -170,14 +282,26 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { 
+              opacity: 1, 
+              y: 0,
+              transition: {
+                duration: 0.6,
+                staggerChildren: 0.1
+              }
+            }
+          }}
           className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-16"
         >
           {heroData.ctaButtons.map((button, index) => (
             <motion.div
               key={index}
+              variants={{
+                hidden: { opacity: 0, scale: 0.8 },
+                visible: { opacity: 1, scale: 1 }
+              }}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400 }}
@@ -202,48 +326,112 @@ const HeroSection = () => {
           ))}
         </motion.div>
 
-        {/* Key Metrics Overlay */}
+        {/* Enhanced Key Metrics with Glass Morphism */}
         <motion.div 
-          className="bg-black/20 backdrop-blur-sm rounded-2xl p-6 max-w-6xl mx-auto border border-white/20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          className="relative bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-md rounded-3xl p-8 max-w-6xl mx-auto border border-white/30 shadow-2xl overflow-hidden"
+          variants={{
+            hidden: { opacity: 0, y: 50, scale: 0.9 },
+            visible: { 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              transition: {
+                duration: 0.8,
+                type: "spring",
+                stiffness: 100
+              }
+            }
+          }}
         >
+          {/* Animated background pattern */}
+          <motion.div
+            className="absolute inset-0 opacity-30"
+            animate={{
+              backgroundImage: [
+                'radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
+                'radial-gradient(circle at 100% 100%, rgba(132, 204, 22, 0.1) 0%, transparent 50%)',
+                'radial-gradient(circle at 0% 100%, rgba(163, 230, 53, 0.1) 0%, transparent 50%)',
+                'radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)',
+              ]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
           
           <motion.h3 
-            className="text-white text-center text-lg font-semibold mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            className="text-white text-center text-xl font-bold mb-8 relative z-10"
+            variants={{
+              hidden: { opacity: 0, y: -20 },
+              visible: { opacity: 1, y: 0 }
+            }}
           >
-            {t('heroMetricsTitle')}
+            {t('heroMetricsTitle') || 'Our Production Capacity'}
           </motion.h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
             {heroData.stats.map((stat, index) => (
               <motion.div 
                 key={stat.id}
-                className="flex items-center justify-center space-x-4 bg-white/10 rounded-xl p-4 hover:bg-white/20 transition-all"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 1 + index * 0.2 }}
-                whileHover={{ scale: 1.05 }}
+                className="group relative flex items-center justify-center space-x-4 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm rounded-2xl p-6 hover:from-white/30 hover:to-white/10 transition-all duration-300 border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl overflow-hidden"
+                variants={{
+                  hidden: { opacity: 0, y: 30, scale: 0.8 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1,
+                    transition: {
+                      delay: index * 0.1,
+                      type: "spring",
+                      stiffness: 100
+                    }
+                  }
+                }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="flex-shrink-0">
-                  {stat.icon}
+                {/* Animated background gradient */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-bio-green-400/10 to-eco-lime-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  animate={{
+                    backgroundPosition: ['0% 0%', '100% 100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                  style={{ backgroundSize: '200% 200%' }}
+                />
+                <div className="flex-shrink-0 relative z-10">
+                  <motion.div
+                    className="p-3 bg-white/20 rounded-full backdrop-blur-sm"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {stat.icon}
+                  </motion.div>
                 </div>
-                <div className="text-center">
+                <div className="text-center relative z-10">
                   <AnimatedCounter 
                     to={stat.value} 
                     suffix={stat.suffix}
-                    className="text-2xl md:text-3xl font-bold text-white block"
+                    className="text-3xl md:text-4xl font-bold text-white block drop-shadow-lg"
                   />
-                  <p className="text-white/90 text-sm font-medium">
+                  <motion.p 
+                    className="text-white/90 text-sm font-semibold mt-1"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                  >
                     {t(stat.labelKey)}
-                  </p>
+                  </motion.p>
                 </div>
               </motion.div>
             ))}
           </div>
+        </motion.div>
         </motion.div>
       </div>
     </section>

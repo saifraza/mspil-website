@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AnimatedCard, FeatureCard, GlassCard, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -85,7 +85,7 @@ const CareersSection = () => {
             <h3 className="text-2xl font-semibold text-foreground mb-6 flex items-center"><Briefcase className="mr-3 w-7 h-7 text-primary"/>{t('careersOpeningsTitle')}</h3>
             <div className="space-y-4">
               {jobOpenings.length > 0 ? jobOpenings.map((job, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow">
+                <AnimatedCard key={index} variant="slide" delay={index * 0.1} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start">
                       <div>
@@ -95,7 +95,7 @@ const CareersSection = () => {
                       <Button variant="ghost" size="sm" className="text-primary hover:text-primary">{t('careersApplyButton')} <ChevronRight className="w-4 h-4 ml-1"/></Button>
                     </div>
                   </CardContent>
-                </Card>
+                </AnimatedCard>
               )) : (
                 <p className="text-muted-foreground">{t('careersNoOpenings')}</p>
               )}
@@ -115,7 +115,7 @@ const CareersSection = () => {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.5, delay: 0.1 * index }}
               >
-                <Card className="p-6 bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/30 dark:to-teal-900/30 border-primary/20">
+                <GlassCard className="p-6" blur="md" opacity="15">
                   <CardContent className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 p-0">
                     {testimonial.imageUrl ? (
                       <LazyImage alt={t(testimonial.imageAltKey)} className="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-primary" src={testimonial.imageUrl} />
@@ -129,14 +129,14 @@ const CareersSection = () => {
                       <p className="mt-3 font-semibold text-primary">- {t(testimonial.authorKey)}</p>
                     </div>
                   </CardContent>
-                </Card>
+                </GlassCard>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
-          <Card className="max-w-2xl mx-auto shadow-xl p-6 sm:p-8">
+          <AnimatedCard variant="scale" className="max-w-2xl mx-auto shadow-xl p-6 sm:p-8">
             <CardHeader className="text-center p-0 mb-6">
               <Users className="w-12 h-12 text-primary mx-auto mb-3"/>
               <CardTitle className="text-2xl md:text-3xl">{t('careersWorkWithUsTitle')}</CardTitle>
@@ -165,7 +165,7 @@ const CareersSection = () => {
                 <Button type="submit" className="w-full" size="lg">{t('formSubmitButton')}</Button>
               </form>
             </CardContent>
-          </Card>
+          </AnimatedCard>
         </motion.div>
       </div>
     </section>

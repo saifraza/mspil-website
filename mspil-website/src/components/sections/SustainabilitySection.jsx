@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassCard, FeatureCard, AnimatedCard, CardContent, CardHeader, CardTitle } from '@/components/ui/animated-card';
 import { Leaf, Recycle, BarChart3, CheckCircle, Droplets, Wind, Sun } from 'lucide-react';
 import AnimatedCounter from '@/components/AnimatedCounter';
 // Removed AutoPublishedContent - using static content now
 import { useTranslation } from '@/contexts/LanguageContext';
+import { sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 // Animated leaf component
 const AnimatedLeaf = ({ delay = 0, duration = 10 }) => {
@@ -144,7 +145,7 @@ const SustainabilitySection = () => {
   ];
 
   return (
-    <section id="sustainability" className="py-16 relative overflow-hidden">
+    <section id="sustainability" className={`py-16 relative overflow-hidden ${sectionBackgrounds.primary}`}>
       {/* Animated background leaves */}
       {[...Array(5)].map((_, i) => (
         <AnimatedLeaf key={i} delay={i * 2} duration={15 + i * 2} />
@@ -190,7 +191,7 @@ const SustainabilitySection = () => {
         </div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }}>
-          <Card className="shadow-2xl bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/50 dark:to-teal-900/50 border-primary/30 relative overflow-hidden">
+          <GlassCard className="shadow-2xl" blur="lg" opacity="20">
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
               animate={{
@@ -233,7 +234,7 @@ const SustainabilitySection = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className="bg-background/50 backdrop-blur-sm rounded-lg p-4 border border-primary/20"
+                    className={`${cardBackgrounds.glass} rounded-lg p-4 border border-primary/20`}
                   >
                     <motion.div 
                       className="flex justify-center mb-2 text-primary"
@@ -277,7 +278,7 @@ const SustainabilitySection = () => {
                 </div>
               </motion.div>
             </CardContent>
-          </Card>
+          </GlassCard>
         </motion.div>
       </div>
 

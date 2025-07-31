@@ -117,7 +117,7 @@ const CSRPage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

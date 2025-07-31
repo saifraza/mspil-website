@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Zap, Users, Target, Award, Clock, CalendarDays, Factory, Droplets, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import { sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 const AboutUsSection = () => {
   const t = useTranslation();
@@ -167,7 +168,7 @@ const AboutUsSection = () => {
   };
 
   return (
-    <section id="about" className="section-padding relative overflow-hidden">
+    <section id="about" className={`section-padding relative overflow-hidden ${sectionBackgrounds.primary}`}>
       {/* Parallax background */}
       <motion.div 
         className="absolute inset-0 z-0 opacity-10"
@@ -179,7 +180,7 @@ const AboutUsSection = () => {
       />
       
       {/* Content overlay */}
-      <div className="absolute inset-0 bg-background/90 dark:bg-muted/95 z-0"></div>
+      <div className="absolute inset-0 bg-background/90 dark:bg-gray-900/95 z-0"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div {...fadeInProps} className="text-center mb-16">
@@ -265,7 +266,7 @@ const AboutUsSection = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   >
-                    <Card className="h-full shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 hover:border-primary/30">
+                    <Card className={`h-full shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 hover:border-primary/30 ${cardBackgrounds.elevated}`}>
                       <div className="aspect-video bg-muted relative overflow-hidden">
                         {event.imageUrl ? (
                           <motion.img 
@@ -353,7 +354,7 @@ const AboutUsSection = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
               >
-                <Card className="text-center h-full hover:shadow-lg transition-shadow">
+                <Card className={`text-center h-full hover:shadow-lg transition-shadow ${cardBackgrounds.default}`}>
                   <CardHeader>
                     <div className="flex justify-center">{value.icon}</div>
                     <CardTitle className="text-xl">{t(value.titleKey)}</CardTitle>

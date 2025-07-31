@@ -18,6 +18,7 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import HeroSection from '@/components/sections/HeroSection';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 const HomePage = () => {
   const t = useTranslation();
@@ -90,12 +91,12 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen ${pageBackgrounds.primary}`}>
       {/* Hero Banner */}
       <HeroSection />
       
       {/* About MSPIL Short Section */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className={`py-16 ${sectionBackgrounds.primary}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
@@ -115,7 +116,7 @@ const HomePage = () => {
       </section>
 
       {/* Investor Highlights */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className={`py-16 ${sectionBackgrounds.secondary}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -133,7 +134,7 @@ const HomePage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+                <Card className={`hover:shadow-lg transition-shadow cursor-pointer group ${cardBackgrounds.elevated}`}>
                   <Link to={item.link}>
                     <CardHeader className="text-center">
                       <item.icon className="w-12 h-12 text-primary mx-auto mb-4" />
@@ -159,7 +160,7 @@ const HomePage = () => {
       </section>
 
       {/* Recent News & Announcements */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className={`py-16 ${sectionBackgrounds.primary}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="flex items-center justify-between mb-12">
             <div>
@@ -182,7 +183,7 @@ const HomePage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-shadow h-full">
+                <Card className={`hover:shadow-lg transition-shadow h-full ${cardBackgrounds.elevated}`}>
                   <CardHeader>
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
                       <Calendar className="w-4 h-4" />
@@ -212,7 +213,7 @@ const HomePage = () => {
           {/* News Ticker */}
           <motion.div 
             {...fadeInProps}
-            className="mt-8 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+            className={`mt-8 ${cardBackgrounds.primary} rounded-lg p-4`}
           >
             <div className="overflow-hidden">
               <motion.div
@@ -240,7 +241,7 @@ const HomePage = () => {
       </section>
 
       {/* CSR Impact Snapshot */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20">
+      <section className={`py-16 ${sectionBackgrounds.accent}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -284,7 +285,7 @@ const HomePage = () => {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-primary/80">
+      <section className={`py-20 ${sectionBackgrounds.cta}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">

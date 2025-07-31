@@ -8,6 +8,7 @@ import LazyImage from '@/components/LazyImage';
 import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
+import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 const AboutUsPage = () => {
   const t = useTranslation();
@@ -135,7 +136,7 @@ const AboutUsPage = () => {
 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
       {/* Existing About Us Section */}
       <AboutUsSection />
 

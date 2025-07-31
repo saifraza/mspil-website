@@ -2,26 +2,28 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LineChartLazy, BarChartLazy } from '@/components/LazyChart';
-import { TrendingUp, BarChartBig, Leaf, Loader2, Droplets, Zap, Wheat, Factory } from 'lucide-react';
+import AdvancedChartCard from '@/components/AdvancedCharts';
+import { TrendingUp, BarChartBig, Leaf, Loader2, Droplets, Zap, Wheat, Factory, DollarSign, Package } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const DataInsightsSection = () => {
   const t = useTranslation();
   const [turnoverDataDb, setTurnoverDataDb] = useState([
-    { year: '2024-25', turnover: 305.00, note: 'Sugar only' },
-    { year: '2025-26', turnover: 811.08, note: 'Ethanol plant operational' },
-    { year: '2026-27', turnover: 1310.56, note: 'Full ethanol capacity' },
-    { year: '2027-28', turnover: 1378.40, note: 'Steady growth' },
-    { year: '2028-29', turnover: 1462.27, note: 'Market expansion' },
-    { year: '2029-30', turnover: 1564.91, note: 'Peak performance' }
+    { year: '2024-25', turnover: 305.00, revenue: 305.00, profit: 45.75, trend: 0, note: 'Sugar only' },
+    { year: '2025-26', turnover: 811.08, revenue: 811.08, profit: 121.66, trend: 165.8, note: 'Ethanol plant operational' },
+    { year: '2026-27', turnover: 1310.56, revenue: 1310.56, profit: 196.58, trend: 61.5, note: 'Full ethanol capacity' },
+    { year: '2027-28', turnover: 1378.40, revenue: 1378.40, profit: 206.76, trend: 5.2, note: 'Steady growth' },
+    { year: '2028-29', turnover: 1462.27, revenue: 1462.27, profit: 219.34, trend: 6.1, note: 'Market expansion' },
+    { year: '2029-30', turnover: 1564.91, revenue: 1564.91, profit: 234.74, trend: 7.0, note: 'Peak performance' }
   ]);
   const [productionDataDb, setProductionDataDb] = useState([
-    { year: '2024-25', crushing: 5.5 },
-    { year: '2025-26', crushing: 8.5 },
-    { year: '2026-27', crushing: 9.6 },
-    { year: '2027-28', crushing: 10.8 },
-    { year: '2028-29', crushing: 12.0 },
-    { year: '2029-30', crushing: 13.2 }
+    { year: '2024-25', crushing: 5.5, sugar: 5.5, ethanol: 0, power: 14, ddgs: 0 },
+    { year: '2025-26', crushing: 8.5, sugar: 8.5, ethanol: 5.0, power: 18, ddgs: 3.0 },
+    { year: '2026-27', crushing: 9.6, sugar: 9.0, ethanol: 8.5, power: 20, ddgs: 5.1 },
+    { year: '2027-28', crushing: 10.8, sugar: 9.5, ethanol: 10.0, power: 22, ddgs: 6.0 },
+    { year: '2028-29', crushing: 12.0, sugar: 10.0, ethanol: 10.5, power: 24, ddgs: 6.3 },
+    { year: '2029-30', crushing: 13.2, sugar: 10.5, ethanol: 11.0, power: 24, ddgs: 6.6 }
   ]);
   
   const [ethanolProductionData] = useState([
@@ -80,109 +82,107 @@ const DataInsightsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }}>
-            <Card className={chartCardClass}>
-              <CardHeader className={chartHeaderClass}>
-                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-bio-green-100 to-eco-lime-100 dark:from-bio-green-800 dark:to-bio-green-900 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-8 h-8 text-bio-green-600 dark:text-bio-green-400" />
-                </div>
-                <CardTitle className={chartTitleClass}>{t('insightsTurnoverChartTitle')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className={chartDescClass}>
-                  {t('insightsTurnoverChartDesc')}
-                </CardDescription>
-                <div className="mb-4 p-4 bg-bio-green-100 dark:bg-bio-green-900/30 rounded-lg border border-bio-green-200 dark:border-bio-green-800">
-                  <p className="text-sm font-medium text-bio-green-800 dark:text-bio-green-200 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4" />
-                    Major growth from 2025-26 due to ethanol plant (350 KLPD) becoming operational
-                  </p>
-                </div>
-                <LineChartLazy 
-                  data={turnoverDataDb} 
-                  dataKey="turnover" 
-                  stroke="#059669" 
-                  name={t('insightsTurnoverLegend') || "Turnover (Cr)"} 
-                />
-              </CardContent>
-            </Card>
+        {/* Financial Performance Overview */}
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }} className="mb-8">
+          <AdvancedChartCard
+            title={t('insightsTurnoverChartTitle') || "Financial Performance Projection"}
+            description={t('insightsTurnoverChartDesc') || "Revenue and profit growth trajectory"}
+            data={turnoverDataDb}
+            dataKeys={['revenue', 'profit']}
+            colors={['#059669', '#f59e0b']}
+            names={['Revenue (₹ Cr)', 'Profit (₹ Cr)']}
+            defaultChartType="line"
+            showControls={true}
+          />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mt-4 p-4 bg-gradient-to-r from-bio-green-100 to-eco-lime-100 dark:from-bio-green-900/30 dark:to-eco-lime-900/30 rounded-lg border border-bio-green-200 dark:border-bio-green-800"
+          >
+            <p className="text-sm font-medium text-bio-green-800 dark:text-bio-green-200 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Major growth from 2025-26 due to ethanol plant (350 KLPD) becoming operational
+            </p>
           </motion.div>
+        </motion.div>
 
-          <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }}>
-            <Card className={chartCardClass}>
-              <CardHeader className={chartHeaderClass}>
-                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-bio-green-100 to-eco-lime-100 dark:from-bio-green-800 dark:to-bio-green-900 rounded-full flex items-center justify-center">
-                  <BarChartBig className="w-8 h-8 text-bio-green-600 dark:text-bio-green-400" />
-                </div>
-                <CardTitle className={chartTitleClass}>{t('insightsProductionChartTitle')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className={chartDescClass}>
-                  {t('insightsProductionChartDesc')}
-                </CardDescription>
-                <BarChartLazy 
-                  data={productionDataDb} 
-                  dataKey="crushing" 
-                  fill="#10b981" 
-                  name={t('insightsProductionLegend') || "Crushing (Lakh Tons)"} 
-                />
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+        {/* Comprehensive Production Overview */}
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }} className="mb-8">
+          <AdvancedChartCard
+            title="Integrated Production Dashboard"
+            description="All business segments production capacity and growth projections"
+            data={productionDataDb}
+            dataKeys={['sugar', 'ethanol', 'power', 'ddgs']}
+            colors={['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6']}
+            names={['Sugar (Lakh Tons)', 'Ethanol (Cr Liters)', 'Power (MW)', 'DDGS (10k Tons)']}
+            defaultChartType="bar"
+            showControls={true}
+          />
+        </motion.div>
 
-        {/* Ethanol and Sugar Production Charts */}
-        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.4 }}>
-            <Card className={chartCardClass}>
-              <CardHeader className={chartHeaderClass}>
-                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-bio-green-100 to-eco-lime-100 dark:from-bio-green-800 dark:to-bio-green-900 rounded-full flex items-center justify-center">
-                  <Droplets className="w-8 h-8 text-bio-green-600 dark:text-bio-green-400" />
-                </div>
-                <CardTitle className={chartTitleClass}>Ethanol Production Ramp-up</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className={chartDescClass}>
-                  Annual ethanol production growth from 0 to 11 Crore Liters
-                </CardDescription>
-                <div className="mb-4 p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg border border-amber-200 dark:border-amber-800">
-                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                    ⚡ Plant commissioning in 2025-26, reaching full capacity by 2027-28
-                  </p>
-                </div>
-                <LineChartLazy 
-                  data={ethanolProductionData} 
-                  dataKey="production" 
-                  stroke="#10b981" 
-                  name="Ethanol Production (Cr Liters)" 
-                />
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }}>
-            <Card className={chartCardClass}>
-              <CardHeader className={chartHeaderClass}>
-                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-bio-green-100 to-eco-lime-100 dark:from-bio-green-800 dark:to-bio-green-900 rounded-full flex items-center justify-center">
-                  <Factory className="w-8 h-8 text-bio-green-600 dark:text-bio-green-400" />
-                </div>
-                <CardTitle className={chartTitleClass}>Sugar Production Growth</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className={chartDescClass}>
-                  Sugar production capacity utilization and efficiency improvements
-                </CardDescription>
-                <BarChartLazy 
-                  data={sugarProductionData} 
-                  dataKey="production" 
-                  fill="#f59e0b" 
-                  name="Sugar Production (Lakh Tons)" 
-                />
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+        {/* Individual Production Analysis */}
+        <Tabs defaultValue="ethanol" className="mb-8">
+          <TabsList className="grid w-full grid-cols-2 md:w-[400px] mx-auto">
+            <TabsTrigger value="ethanol" className="gap-2">
+              <Droplets className="h-4 w-4" />
+              Ethanol Production
+            </TabsTrigger>
+            <TabsTrigger value="sugar" className="gap-2">
+              <Factory className="h-4 w-4" />
+              Sugar Production
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="ethanol">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AdvancedChartCard
+                title="Ethanol Production Ramp-up"
+                description="Annual ethanol production growth from 0 to 11 Crore Liters"
+                data={ethanolProductionData}
+                dataKeys={['production']}
+                colors={['#10b981']}
+                names={['Ethanol Production (Cr Liters)']}
+                defaultChartType="line"
+                showControls={false}
+              />
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-4 p-4 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 rounded-lg border border-amber-200 dark:border-amber-800"
+              >
+                <p className="text-sm font-medium text-amber-800 dark:text-amber-200 flex items-center gap-2">
+                  <Zap className="h-4 w-4" />
+                  Plant commissioning in 2025-26, reaching full capacity by 2027-28
+                </p>
+              </motion.div>
+            </motion.div>
+          </TabsContent>
+          
+          <TabsContent value="sugar">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AdvancedChartCard
+                title="Sugar Production Growth"
+                description="Sugar production capacity utilization and efficiency improvements"
+                data={sugarProductionData}
+                dataKeys={['production']}
+                colors={['#f59e0b']}
+                names={['Sugar Production (Lakh Tons)']}
+                defaultChartType="bar"
+                showControls={false}
+              />
+            </motion.div>
+          </TabsContent>
+        </Tabs>
         
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }} className="text-center mt-12">
             <Card className={`${chartCardClass} p-6`}>

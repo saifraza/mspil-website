@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card3D, GradientCard, FeatureCard, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Droplets, Zap, Wheat, Download, Package, Truck, ClipboardCheck, Pipette, Layers, Waves, Sparkles, Fan, PackageCheck, Archive, FlaskConical, Flame, Recycle, Warehouse, Send, Boxes, CloudSnow, Gauge, Snowflake, Network, Tractor, Shuffle, Disc3, ShoppingBasket, Camera, Image } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 import LazyImage from '@/components/LazyImage';
 import ImageGalleryModal from '@/components/ImageGalleryModal';
 import { useLocation } from 'react-router-dom';
+import { sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 // Document paths are now handled locally
 
 const initialBusinessesData = [
@@ -421,7 +422,7 @@ const OurBusinessesSection = () => {
   }, [t]);
 
   return (
-    <section id="businesses" className="section-padding bg-muted/30 dark:bg-background">
+    <section id="businesses" className={`section-padding ${sectionBackgrounds.secondary}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -459,9 +460,15 @@ const OurBusinessesSection = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Card className="shadow-xl border-primary/20 overflow-hidden">
-                    <CardHeader className="items-center text-center p-6 bg-gradient-to-br from-primary/5 via-transparent to-transparent dark:from-primary/10">
-                      {business.iconElement ? React.cloneElement(business.iconElement, { className: "w-16 h-16 text-primary mb-4" }) : null}
+                  <Card3D className="shadow-xl" maxTilt={10}>
+                    <CardHeader className={`items-center text-center p-6 ${cardBackgrounds.primary}`}>
+                      <motion.div
+                        className="mx-auto mb-4"
+                        whileHover={{ rotate: 360, scale: 1.2 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {business.iconElement ? React.cloneElement(business.iconElement, { className: "w-16 h-16 text-primary" }) : null}
+                      </motion.div>
                       <CardTitle className="text-3xl md:text-4xl">{t(business.nameKey)}</CardTitle>
                       <CardDescription className="text-lg text-primary font-semibold">{t(business.dataKey)}</CardDescription>
                     </CardHeader>
@@ -601,7 +608,7 @@ const OurBusinessesSection = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
+                  </Card3D>
                 </motion.div>
               </TabsContent>
             ))}

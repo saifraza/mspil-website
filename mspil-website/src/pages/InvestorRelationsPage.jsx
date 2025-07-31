@@ -19,6 +19,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { shareholdingData, investmentData } from '@/constants/financialData';
+import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 const InvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -82,7 +83,7 @@ const InvestorRelationsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
       {/* Hero Section */}
       <section className="relative py-20 bg-primary/5 dark:bg-primary/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -588,7 +589,7 @@ const InvestorRelationsPage = () => {
       </section>
 
       {/* Stock Exchange Announcements Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-bio-green-50/30 dark:bg-bio-green-900/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Latest Announcements</h2>
           <Card>

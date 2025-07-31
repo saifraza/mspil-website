@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 import LazyImage from '@/components/LazyImage';
+import { sectionBackgrounds } from '@/utils/backgroundStyles';
 
 const companyLogoUrl = "/images/company_logo.png";
 const companyName = "Mahakaushal Sugar & Power Industries Ltd.";
@@ -12,7 +13,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-muted text-muted-foreground">
+    <footer className={`${sectionBackgrounds.secondary} text-muted-foreground`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div>
