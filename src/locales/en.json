@@ -202,6 +202,12 @@
   "ethanolDistilleryAlt": "Ethanol Distillery Operations",
   "ethanolPlant2023Alt": "Modern Ethanol Plant Expansion 2023",
   "ethanolPlantExpansionAlt": "Ethanol Plant Infrastructure Expansion",
+  "ethanolFacility1Alt": "Cooling Tower",
+  "ethanolFacility2Alt": "Ethanol Distillation",
+  "ethanolFacility3Alt": "MSDH", 
+  "ethanolFacility4Alt": "Milling and 10000 Ton Silo",
+  "ethanolFacility5Alt": "Ethanol Storage",
+  "ethanolFacility6Alt": "Grain Unloading",
   
   "powerPlantFacilityAlt": "Power Generation Plant Facility",
   "powerGenerationUnitAlt": "Power Generation and Distribution Unit",

@@ -129,22 +129,6 @@ const businessImageGalleries = {
     {
       srcUrl: '/images/infrastructure/ethanol/ethanol-facility-6.jpg',
       altKey: 'ethanolFacility6Alt'
-    },
-    {
-      srcUrl: '/images/infrastructure/ethanol-plant.jpg',
-      altKey: 'ethanolPlantFacilityAlt'
-    },
-    {
-      srcUrl: '/images/infrastructure/ethanol_plant.jpg',
-      altKey: 'ethanolDistilleryAlt'
-    },
-    {
-      srcUrl: '/images/infrastructure/2023_ethanol_plant.jpg',
-      altKey: 'ethanolPlant2023Alt'
-    },
-    {
-      srcUrl: '/images/about-us/2023_ethanol_plant.jpg',
-      altKey: 'ethanolPlantExpansionAlt'
     }
   ],
   power: [
@@ -237,7 +221,7 @@ const AutoScrollingGallery = ({ images, businessName }) => {
     let scrollTimeout;
 
     const scrollToImage = (index) => {
-      const imageWidth = 320; // w-80 (320px) + gap
+      const imageWidth = 384 + 16; // w-96 (384px) + gap-4 (16px)
       const targetScroll = index * imageWidth;
       
       container.scrollTo({
@@ -265,7 +249,7 @@ const AutoScrollingGallery = ({ images, businessName }) => {
     
     const handleScroll = () => {
       const scrollLeft = container.scrollLeft;
-      const imageWidth = 320;
+      const imageWidth = 400; // w-96 + gap
       const newIndex = Math.round(scrollLeft / imageWidth);
       setActiveIndex(newIndex);
     };
@@ -284,14 +268,30 @@ const AutoScrollingGallery = ({ images, businessName }) => {
     <div>
       {/* Image gallery */}
       <div className="relative">
+        <style jsx>{`
+          .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+          }
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari and Opera */
+          }
+        `}</style>
         <div 
           ref={scrollContainerRef}
           className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+          style={{ overscrollBehavior: 'contain' }}
+          onWheel={(e) => {
+            // Prevent vertical scroll from affecting the page
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+              e.stopPropagation();
+            }
+          }}
         >
           {images.map((image, index) => (
             <motion.div
               key={index}
-              className="flex-shrink-0 w-80 snap-center"
+              className="flex-shrink-0 w-full md:w-96 snap-center"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -301,7 +301,7 @@ const AutoScrollingGallery = ({ images, businessName }) => {
                 <LazyImage
                   src={image.srcUrl}
                   alt={t(image.altKey) || `${businessName} facility ${index + 1}`}
-                  className="w-full h-60 object-cover"
+                  className="w-full h-80 object-cover"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <p className="text-white text-sm font-medium">
@@ -321,7 +321,7 @@ const AutoScrollingGallery = ({ images, businessName }) => {
               onClick={() => {
                 const container = scrollContainerRef.current;
                 if (container) {
-                  container.scrollLeft = index * 320;
+                  container.scrollLeft = index * 400;
                   setIsAutoScrolling(false);
                 }
               }}
@@ -456,29 +456,22 @@ const OurBusinessesSection = () => {
                       <CardDescription className="text-lg text-primary font-semibold">{t(business.dataKey)}</CardDescription>
                     </CardHeader>
                     <CardContent className="p-6">
-                      {/* Image Gallery Section at the top */}
-                      {businessImageGalleries[business.id] && (
-                        <div className="mb-8">
-                          <AutoScrollingGallery 
-                            images={businessImageGalleries[business.id]} 
-                            businessName={t(business.nameKey)}
-                          />
-                        </div>
-                      )}
-                      
-                      <div className="grid md:grid-cols-2 gap-8 items-start">
-                        {/* Column 1: Download Button */}
-                        <div className="flex flex-col justify-start">
-                          <Button asChild variant="secondary" className="w-fit">
-                            <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
-                              <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
-                            </a>
-                          </Button>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                        {/* Column 1: Image Gallery on the left */}
+                        <div>
+                          {businessImageGalleries[business.id] && (
+                            <AutoScrollingGallery 
+                              images={businessImageGalleries[business.id]} 
+                              businessName={t(business.nameKey)}
+                            />
+                          )}
                         </div>
 
-                        {/* Column 2: Manufacturing Cycle */}
-                        {business.resolvedCycleSteps && business.resolvedCycleSteps.length > 0 && (
-                          <div className="md:pl-8 md:border-l md:border-border">
+                        {/* Column 2: Manufacturing Cycle on the right */}
+                        <div className="w-full">
+                          {business.resolvedCycleSteps && business.resolvedCycleSteps.length > 0 ? (
+                            <>
+                            {/* Manufacturing Cycle for {business.id} */}
                             <motion.h3 
                               className="text-2xl font-semibold text-primary mb-10 text-center"
                               initial={{ opacity: 0, y: -20 }}
@@ -580,8 +573,22 @@ const OurBusinessesSection = () => {
                                 </motion.div>
                               ))}
                             </div>
-                          </div>
-                        )}
+                            
+                            {/* Download Button at bottom of cycle */}
+                            <div className="mt-8">
+                              <Button asChild variant="secondary" className="w-full md:w-fit">
+                                <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
+                                  <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
+                                </a>
+                              </Button>
+                            </div>
+                            </>
+                          ) : (
+                            <div className="text-center text-muted-foreground">
+                              <p>Production cycle information coming soon</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
