@@ -127,7 +127,7 @@ const HeroSection = () => {
   return (
     <section ref={heroRef} className={`relative min-h-screen flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
       {/* Enhanced animated gradient background */}
-      <AnimatedGradient />
+      {/* <AnimatedGradient /> */}
       
       {/* Additional ambient glow effects */}
       <motion.div
@@ -202,7 +202,7 @@ const HeroSection = () => {
             poster={videoPosterUrl}
             className="w-full h-full object-cover"
             initial={{ opacity: 0 }}
-            animate={{ opacity: isVideoLoaded ? 0.5 : 0 }}
+            animate={{ opacity: isVideoLoaded ? 0.8 : 0 }}
             transition={{ duration: 1 }}
             onLoadedData={() => setIsVideoLoaded(true)}
             aria-label={t(heroData.videoAltKey) || "Background video of company operations"}
@@ -211,11 +211,11 @@ const HeroSection = () => {
             {t('heroVideoNotSupported') || 'Your browser does not support the video tag.'}
           </motion.video>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent dark:from-background/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/20 via-transparent to-eco-lime-900/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent dark:from-background/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/10 via-transparent to-eco-lime-900/10"></div>
       </motion.div>
       
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-12 md:py-16">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-8 md:py-12">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -328,7 +328,7 @@ const HeroSection = () => {
 
         {/* Enhanced Key Metrics with Glass Morphism */}
         <motion.div 
-          className="relative bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-md rounded-3xl p-8 max-w-6xl mx-auto border border-white/30 shadow-2xl overflow-hidden"
+          className="relative bg-gradient-to-br from-white/5 via-white/2 to-transparent backdrop-blur-sm rounded-3xl p-6 max-w-5xl mx-auto border border-white/20 shadow-xl overflow-hidden"
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 
@@ -362,7 +362,7 @@ const HeroSection = () => {
           />
           
           <motion.h3 
-            className="text-white text-center text-xl font-bold mb-8 relative z-10"
+            className="text-white/90 text-center text-xl font-bold mb-6 relative z-10"
             variants={{
               hidden: { opacity: 0, y: -20 },
               visible: { opacity: 1, y: 0 }
@@ -374,7 +374,7 @@ const HeroSection = () => {
             {heroData.stats.map((stat, index) => (
               <motion.div 
                 key={stat.id}
-                className="group relative flex items-center justify-center space-x-4 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm rounded-2xl p-6 hover:from-white/30 hover:to-white/10 transition-all duration-300 border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl overflow-hidden"
+                className="group relative flex items-center justify-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl p-5 hover:bg-white/15 transition-all duration-300 border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl overflow-hidden"
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.8 },
                   visible: { 
@@ -406,7 +406,7 @@ const HeroSection = () => {
                 />
                 <div className="flex-shrink-0 relative z-10">
                   <motion.div
-                    className="p-3 bg-white/20 rounded-full backdrop-blur-sm"
+                    className="p-3 bg-white/15 rounded-full backdrop-blur-md"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
@@ -417,7 +417,7 @@ const HeroSection = () => {
                   <AnimatedCounter 
                     to={stat.value} 
                     suffix={stat.suffix}
-                    className="text-3xl md:text-4xl font-bold text-white block drop-shadow-lg"
+                    className="text-3xl md:text-4xl font-bold text-white/95 block drop-shadow-lg"
                   />
                   <motion.p 
                     className="text-white/90 text-sm font-semibold mt-1"

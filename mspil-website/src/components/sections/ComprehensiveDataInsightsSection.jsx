@@ -125,7 +125,7 @@ const ComprehensiveDataInsightsSection = () => {
   const chartDescClass = "text-sm text-foreground/70 mb-4 min-h-[40px]";
 
   return (
-    <section id="insights" className="section-padding">
+    <section id="insights" className="py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div {...fadeInProps} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Performance & Impact Metrics</h2>

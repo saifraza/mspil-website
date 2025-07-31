@@ -266,7 +266,7 @@ const AboutUsSection = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   >
-                    <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass dark:glass-dark">
                       <div className="aspect-video bg-muted relative overflow-hidden">
                         {event.imageUrl ? (
                           <motion.img 
@@ -354,7 +354,7 @@ const AboutUsSection = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
               >
-                <Card className="text-center h-full hover:shadow-xl transition-all duration-300">
+                <Card className="text-center h-full hover:shadow-xl transition-all duration-300 glass dark:glass-dark">
                   <CardHeader>
                     <div className="flex justify-center">{value.icon}</div>
                     <CardTitle className="text-xl">{t(value.titleKey)}</CardTitle>
