@@ -13,7 +13,7 @@ const AboutUsPage = lazy(() => import('@/pages/AboutUsPage'));
 const OurBusinessesPage = lazy(() => import('@/pages/OurBusinessesPage'));
 const SustainabilityPage = lazy(() => import('@/pages/SustainabilityPage'));
 const DataInsightsPage = lazy(() => import('@/pages/DataInsightsPage'));
-const InvestorRelationsPage = lazy(() => import('@/pages/InvestorRelationsPage'));
+const InvestorRelationsPage = lazy(() => import('@/pages/EnhancedInvestorRelationsPage'));
 const NewsMediaPage = lazy(() => import('@/pages/NewsMediaPage'));
 const CareersPage = lazy(() => import('@/pages/CareersPage'));
 const ContactUsPage = lazy(() => import('@/pages/ContactUsPage'));
