@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="generator" content="Hostinger Horizons" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>MSPIL - Leading Integrated Agri-Industrial Solutions | Sugar, Ethanol & Power</title>
+		<!-- Force Netlify rebuild -->
+		<meta name="description" content="Mahakaushal Sugar and Power Industries Ltd (MSPIL) - Leading manufacturer of sugar (8000 TCD), ethanol (350 KLPD), and renewable power (24 MW). Committed to sustainable growth since 2005." />
+		<meta name="keywords" content="MSPIL, Mahakaushal Sugar, ethanol production, sugar manufacturing, renewable power, agri-industrial, sustainable energy, co-generation, DDGS, animal feed" />
+		<meta name="author" content="Mahakaushal Sugar & Power Industries Ltd." />
+		<meta name="robots" content="index, follow" />
+		<link rel="canonical" href="https://mspil.com" />
+		
+		<!-- Performance optimizations -->
+		<link rel="preload" href="/images/company_logo.png" as="image" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="dns-prefetch" href="//api.github.com" />
+		
+		<!-- Critical CSS inlined to avoid render blocking -->
+		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content="MSPIL - Leading Integrated Agri-Industrial Solutions" />
+		<meta property="og:description" content="Leading manufacturer of sugar, ethanol, and renewable power. Committed to sustainable growth since 2005." />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://mspil.com" />
+		<meta property="og:site_name" content="Mahakaushal Sugar & Power Industries Ltd." />
+		<meta property="og:locale" content="en_US" />
+		
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="MSPIL - Leading Integrated Agri-Industrial Solutions" />
+		<meta name="twitter:description" content="Leading manufacturer of sugar, ethanol, and renewable power. Committed to sustainable growth since 2005." />
+		
+		<!-- Schema.org structured data -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": "Mahakaushal Sugar & Power Industries Ltd.",
+			"alternateName": "MSPIL",
+			"url": "https://mspil.com",
+			"foundingDate": "2005",
+			"description": "Leading integrated agri-industrial company manufacturing sugar, ethanol, and renewable power",
+			"industry": "Agri-Industrial Manufacturing",
+			"address": {
+				"@type": "PostalAddress",
+				"addressCountry": "IN",
+				"addressRegion": "Madhya Pradesh"
+			},
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"contactType": "customer service",
+				"email": "info@mahakaushal.com"
+			}
+		}
+		</script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/main.jsx"></script>
+		
+		<!-- Register Service Worker for offline functionality and caching -->
+		<script>
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('/sw.js')
+						.then(registration => console.log('SW registered:', registration))
+						.catch(err => console.log('SW registration failed:', err));
+				});
+			}
+		</script>
+		
+		<!-- Preload critical fonts -->
+		<link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+		
+		<!-- Defer non-critical CSS -->
+		<link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		<noscript><link rel="stylesheet" href="/src/index.css"></noscript>
+	</body>
+</html>
