@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
 import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
 
 const AboutUsPage = () => {
   const t = useTranslation();
@@ -136,13 +137,15 @@ const AboutUsPage = () => {
 
 
   return (
-    <div className={`min-h-screen ${pageBackgrounds.primary}`}>
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       {/* Existing About Us Section */}
       <AboutUsSection />
 
 
       {/* Leadership Profiles */}
-      <section id="leadership" className="section-padding bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
+      <section id="leadership" className="section-padding-compact bg-white/10 dark:bg-gray-800/10 backdrop-blur-md relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
@@ -159,11 +162,11 @@ const AboutUsPage = () => {
                 key={index}
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
-                className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+                className={`flex flex-col lg:flex-row items-center gap-16 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
               >
                 {/* Large Image Section */}
-                <div className="flex-shrink-0 w-full lg:w-1/3">
-                  <div className="relative w-80 h-80 mx-auto">
+                <div className="flex-shrink-0 w-full lg:w-1/2">
+                  <div className="relative w-96 h-96 mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/40 rounded-2xl blur-xl"></div>
                     <LazyImage
                       src={leader.image}
@@ -171,8 +174,8 @@ const AboutUsPage = () => {
                       className="relative z-10 w-full h-full rounded-2xl object-cover border-2 border-white/30 shadow-2xl"
                       fallbackSrc="/images/leadership/nawab_raza_chairman.jpg"
                     />
-                    <div className="absolute bottom-4 right-4 w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                      <User className="w-8 h-8 text-white" />
+                    <div className="absolute bottom-6 right-6 w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/30">
+                      <User className="w-10 h-10 text-white" />
                     </div>
                   </div>
                 </div>
@@ -195,7 +198,7 @@ const AboutUsPage = () => {
                   </div>
 
                   <div className="pt-4">
-                    <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
+                    <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70 shadow-lg hover:shadow-2xl transition-all duration-300">
                       <CardContent className="p-6">
                         <h4 className="text-xl font-semibold text-primary mb-3">Key Responsibilities</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/70">
@@ -257,9 +260,6 @@ const AboutUsPage = () => {
           </div>
         </div>
       </section>
-
-
-
     </div>
   );
 };

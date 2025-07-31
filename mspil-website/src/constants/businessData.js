@@ -32,11 +32,11 @@ export const businessesData = [
     iconBg: 'bg-orange-500'
   },
   {
-    id: 'dairy',
-    titleKey: 'businesses.dairy.title',
-    descriptionKey: 'businesses.dairy.description',
-    icon: '🥛',
-    bgColor: 'from-blue-100 to-indigo-100',
-    iconBg: 'bg-blue-500'
+    id: 'organic-manure',
+    titleKey: 'businesses.organicManure.title',
+    descriptionKey: 'businesses.organicManure.description',
+    icon: '🌱',
+    bgColor: 'from-lime-100 to-green-100',
+    iconBg: 'bg-green-500'
   }
 ];

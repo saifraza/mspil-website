@@ -112,7 +112,7 @@ export const GlassCard = React.forwardRef(({
         "absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-transparent",
         `bg-white/${opacity}`
       )} />
-      <BaseCard className="relative bg-transparent border border-white/20 shadow-xl">
+      <BaseCard className="relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 shadow-xl hover:bg-white/70 dark:hover:bg-gray-800/70">
         {children}
       </BaseCard>
     </motion.div>
@@ -181,7 +181,7 @@ export const Card3D = React.forwardRef(({
           transformStyle: 'preserve-3d',
         }}
       >
-        <BaseCard className="relative overflow-hidden shadow-2xl">
+        <BaseCard className="relative overflow-hidden shadow-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
           {/* Shine effect */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0"

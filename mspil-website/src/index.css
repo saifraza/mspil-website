@@ -220,3 +220,8 @@
 .section-padding {
   @apply py-16 md:py-24 lg:py-32;
 }
+
+/* Compact section padding for reduced scrolling */
+.section-padding-compact {
+  @apply py-8 md:py-12 lg:py-16;
+}

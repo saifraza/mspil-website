@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { shareholdingData, investmentData } from '@/constants/financialData';
 import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
 
 const InvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -83,9 +84,11 @@ const InvestorRelationsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       {/* Hero Section */}
-      <section className="relative py-20 bg-primary/5 dark:bg-primary/10">
+      <section className="relative py-20 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -148,7 +151,7 @@ const InvestorRelationsPage = () => {
               <div id="annual-reports">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Annual Reports</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="hover:shadow-lg transition-shadow">
+                  <Card className="hover:shadow-lg transition-shadow bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
                     <CardContent className="p-6">
                       <FileText className="w-8 h-8 text-primary mb-4" />
                       <h3 className="font-semibold mb-2">Annual Report 2023-24</h3>
@@ -468,7 +471,7 @@ const InvestorRelationsPage = () => {
                   { title: 'Dividend Distribution Policy', icon: TrendingUp },
                   { title: 'Corporate Social Responsibility Policy', icon: Building }
                 ].map((policy, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
+                  <Card key={index} className="hover:shadow-lg transition-shadow bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <policy.icon className="w-5 h-5 mr-2 text-primary" />

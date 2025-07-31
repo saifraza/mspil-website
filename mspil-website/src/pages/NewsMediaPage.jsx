@@ -1,9 +1,13 @@
 import React from 'react';
 import NewsMediaSection from '@/components/sections/NewsMediaSection';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { pageBackgrounds } from '@/utils/backgroundStyles';
 
 const NewsMediaPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-eco-lime-50 to-white dark:from-bio-green-900 dark:to-bio-green-800">
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       <NewsMediaSection />
     </div>
   );

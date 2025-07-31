@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card3D, GradientCard, FeatureCard, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
+import { Card } from '@/components/ui/card';
+import { CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Droplets, Zap, Wheat, Download, Package, Truck, ClipboardCheck, Pipette, Layers, Waves, Sparkles, Fan, PackageCheck, Archive, FlaskConical, Flame, Recycle, Warehouse, Send, Boxes, CloudSnow, Gauge, Snowflake, Network, Tractor, Shuffle, Disc3, ShoppingBasket, Camera, Image } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
@@ -175,44 +176,26 @@ const getIcon = (iconName, props) => {
   return IconComponent ? <IconComponent {...props} /> : null;
 };
 
+// Simple fade-in effect for manufacturing steps
+const fadeInProps = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.6 }
+};
+
+// Step animation variants
 const stepVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i) => ({
-    opacity: 1,
+  hidden: { opacity: 0, y: 20, x: -20 },
+  visible: { 
+    opacity: 1, 
     y: 0,
+    x: 0,
     transition: {
-      delay: i * 0.08,
-      duration: 0.3,
-      ease: "easeOut",
-    },
-  }),
-};
-
-const iconVariants = {
-  hidden: { scale: 0, rotate: -180 },
-  visible: (i) => ({
-    scale: 1,
-    rotate: 0,
-    transition: {
-      delay: i * 0.08 + 0.1,
-      duration: 0.4,
-      type: "spring",
-      stiffness: 260,
-      damping: 20,
-    },
-  }),
-};
-
-const lineVariants = {
-  hidden: { height: 0 },
-  visible: (i) => ({
-    height: "100%",
-    transition: {
-      delay: i * 0.08 + 0.2,
-      duration: 0.3,
-      ease: "easeInOut",
-    },
-  }),
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1]
+    }
+  }
 };
 
 // Auto-scrolling image gallery component
@@ -422,16 +405,16 @@ const OurBusinessesSection = () => {
   }, [t]);
 
   return (
-    <section id="businesses" className={`section-padding ${sectionBackgrounds.secondary}`}>
+    <section id="businesses" className={`section-padding-compact ${sectionBackgrounds.secondary}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-6"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">{t('businessesTitle')}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">{t('businessesTitle')}</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('businessesSubtitle')}
           </p>
@@ -444,7 +427,7 @@ const OurBusinessesSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-8 h-auto">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-6 h-auto">
               {processedBusinessesData.map((business) => (
                 <TabsTrigger key={business.id} value={business.id} className="flex flex-col items-center justify-center p-3 h-full text-center group">
                   {business.iconElement ? React.cloneElement(business.iconElement, { className: "w-8 h-8 mb-2 text-primary group-data-[state=active]:text-primary-foreground" }) : null}
@@ -460,20 +443,16 @@ const OurBusinessesSection = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Card3D className="shadow-xl" maxTilt={10}>
-                    <CardHeader className={`items-center text-center p-6 ${cardBackgrounds.primary}`}>
-                      <motion.div
-                        className="mx-auto mb-4"
-                        whileHover={{ rotate: 360, scale: 1.2 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        {business.iconElement ? React.cloneElement(business.iconElement, { className: "w-16 h-16 text-primary" }) : null}
-                      </motion.div>
-                      <CardTitle className="text-3xl md:text-4xl">{t(business.nameKey)}</CardTitle>
-                      <CardDescription className="text-lg text-primary font-semibold">{t(business.dataKey)}</CardDescription>
+                  <Card className="shadow-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
+                    <CardHeader className="items-center text-center p-4">
+                      <div className="mx-auto mb-2">
+                        {business.iconElement ? React.cloneElement(business.iconElement, { className: "w-12 h-12 text-primary" }) : null}
+                      </div>
+                      <CardTitle className="text-2xl md:text-3xl">{t(business.nameKey)}</CardTitle>
+                      <CardDescription className="text-base text-primary font-semibold">{t(business.dataKey)}</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <CardContent className="p-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                         {/* Column 1: Image Gallery on the left */}
                         <div>
                           {businessImageGalleries[business.id] && (
@@ -489,110 +468,82 @@ const OurBusinessesSection = () => {
                           {business.resolvedCycleSteps && business.resolvedCycleSteps.length > 0 ? (
                             <>
                             {/* Manufacturing Cycle for {business.id} */}
-                            <motion.h3 
-                              className="text-2xl font-semibold text-primary mb-10 text-center"
-                              initial={{ opacity: 0, y: -20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.5 }}
-                            >
+                            <h3 className="text-xl font-semibold text-primary mb-4 text-center">
                               {t(business.cycleTitleKey) || t('businessTabProcessFlowTitle')}
-                            </motion.h3>
+                            </h3>
                             <div className="relative max-w-2xl mx-auto">
                               {/* Animated background line */}
                               <motion.div
-                                className="absolute left-5 top-5 w-0.5 bg-gradient-to-b from-primary/20 to-primary/5"
+                                className="absolute left-5 top-5 w-0.5 bg-gradient-to-b from-primary/20 to-primary/5 overflow-hidden"
                                 initial={{ height: 0 }}
-                                animate={{ height: `${(business.resolvedCycleSteps.length - 1) * 56}px` }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.3 }}
+                                whileInView={{ height: `${(business.resolvedCycleSteps.length - 1) * 20}px` }}
+                                viewport={{ once: true, amount: 0.2 }}
+                                transition={{ duration: 1.5, ease: "easeInOut" }}
                               />
                               
                               {business.resolvedCycleSteps.map((step, index, arr) => (
                                 <motion.div
                                   key={index}
-                                  className="relative flex items-start group mb-4"
+                                  className="relative flex items-start group mb-1"
                                   variants={stepVariants}
                                   initial="hidden"
                                   whileInView="visible"
-                                  viewport={{ once: true, amount: 0.3 }}
-                                  custom={index}
+                                  viewport={{ 
+                                    once: true, 
+                                    amount: 0.5,
+                                    margin: "-50px"
+                                  }}
                                 >
                                   <div className="flex flex-col items-center mr-4 z-10">
                                     <motion.div 
                                       className="flex items-center justify-center w-10 h-10 rounded-full bg-background group-hover:bg-primary transition-all duration-300 border-2 border-primary/30 group-hover:border-primary group-hover:shadow-lg group-hover:shadow-primary/20"
-                                      variants={iconVariants}
-                                      initial="hidden"
-                                      whileInView="visible"
+                                      initial={{ scale: 0, rotate: -180 }}
+                                      whileInView={{ scale: 1, rotate: 0 }}
                                       viewport={{ once: true }}
-                                      custom={index}
-                                      whileHover={{ scale: 1.1, rotate: 360 }}
-                                      transition={{ duration: 0.3 }}
+                                      transition={{ 
+                                        delay: 0.3, 
+                                        type: "spring", 
+                                        stiffness: 200,
+                                        damping: 15
+                                      }}
                                     >
-                                      <motion.div
-                                        className="text-primary group-hover:text-primary-foreground transition-colors"
-                                        whileHover={{ scale: 1.2 }}
-                                      >
+                                      <div className="text-primary group-hover:text-primary-foreground transition-colors">
                                         {step.iconElement}
-                                      </motion.div>
+                                      </div>
                                     </motion.div>
                                     {index < arr.length - 1 && (
-                                      <motion.div 
-                                        className="w-0.5 bg-primary/30 group-hover:bg-primary transition-all duration-300 mt-1"
-                                        variants={lineVariants}
-                                        initial="hidden"
-                                        whileInView="visible"
-                                        viewport={{ once: true }}
-                                        custom={index}
-                                      />
+                                      <div className="w-0.5 h-5 bg-primary/30 group-hover:bg-primary transition-all duration-300 mt-1" />
                                     )}
                                   </div>
                                   <motion.div 
                                     className="pt-1.5 flex-1"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: index * 0.08 + 0.15, duration: 0.3 }}
+                                    transition={{ delay: 0.4, duration: 0.5 }}
                                   >
-                                    <motion.p 
-                                      className="font-semibold text-foreground group-hover:text-primary transition-colors"
-                                      whileHover={{ x: 5 }}
-                                      transition={{ type: "spring", stiffness: 300 }}
-                                    >
+                                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                                       {t('stepLabelPrefix') || 'Step'} {index + 1}: {t(step.textKey)}
-                                    </motion.p>
+                                    </p>
                                     {(business.id === 'sugar' && step.textKey === 'manufacturingCycleSugarStep7' && business.cycleByproductKey) &&
-                                      <motion.p 
-                                        className="text-sm text-muted-foreground italic mt-1"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                      >
+                                      <p className="text-sm text-muted-foreground italic mt-1">
                                         {t(business.cycleByproductKey)}
-                                      </motion.p>}
+                                      </p>}
                                     {(business.id === 'power' && step.textKey === 'manufacturingCyclePowerStep5' && business.cycleByproductKey) &&
-                                      <motion.p 
-                                        className="text-sm text-muted-foreground italic mt-1"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                      >
+                                      <p className="text-sm text-muted-foreground italic mt-1">
                                         {t(business.cycleByproductKey)}
-                                      </motion.p>}
+                                      </p>}
                                     {(business.id === 'ethanol' && step.textKey === 'manufacturingCycleEthanolStep6' && business.cycleByproductKey) && 
-                                      <motion.p 
-                                        className="text-sm text-muted-foreground italic mt-1"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                      >
+                                      <p className="text-sm text-muted-foreground italic mt-1">
                                         {t(business.cycleByproductKey)}
-                                      </motion.p>}
+                                      </p>}
                                   </motion.div>
                                 </motion.div>
                               ))}
                             </div>
                             
                             {/* Download Button at bottom of cycle */}
-                            <div className="mt-8">
+                            <div className="mt-4">
                               <Button asChild variant="secondary" className="w-full md:w-fit">
                                 <a href={business.productDataPublicUrl || '#'} download target="_blank" rel="noopener noreferrer">
                                   <Download className="mr-2 h-4 w-4" /> {t('downloadDataButton') || 'Download Data'}
@@ -608,7 +559,7 @@ const OurBusinessesSection = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Card3D>
+                  </Card>
                 </motion.div>
               </TabsContent>
             ))}

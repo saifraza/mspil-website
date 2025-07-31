@@ -38,6 +38,8 @@ import {
   AlertCircle,
   Info
 } from 'lucide-react';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { pageBackgrounds, cardBackgrounds, sectionBackgrounds } from '@/utils/backgroundStyles';
 
 const EnhancedInvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -149,9 +151,11 @@ const EnhancedInvestorRelationsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       {/* Hero Section with Investment Opportunity */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10">
+      <section className="relative py-20 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -162,7 +166,7 @@ const EnhancedInvestorRelationsPage = () => {
             </p>
             
             {/* Pre-IPO Investment Alert */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border border-green-200 dark:border-green-800 rounded-xl p-6 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-green-50/80 to-emerald-50/80 dark:from-green-900/40 dark:to-emerald-900/40 backdrop-blur-md border border-green-200/50 dark:border-green-800/50 rounded-xl p-6 max-w-4xl mx-auto shadow-xl">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <AlertCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                 <h3 className="text-xl font-bold text-green-800 dark:text-green-200">
@@ -207,7 +211,7 @@ const EnhancedInvestorRelationsPage = () => {
                 onClick={() => handleQuickNavigation(item.tab, item.section)}
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
-                className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow text-left w-full"
+                className="flex items-center p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl border border-white/20 rounded-lg shadow-lg hover:shadow-xl hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all text-left w-full hover:-translate-y-1"
               >
                 <item.icon className="w-8 h-8 text-primary mr-3" />
                 <span className="font-medium text-gray-900 dark:text-white">{item.title}</span>
@@ -243,7 +247,7 @@ const EnhancedInvestorRelationsPage = () => {
                       {...fadeInProps}
                       transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
                     >
-                      <Card className="h-full hover:shadow-lg transition-all duration-300 border-primary/10">
+                      <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
                         <CardContent className="p-6">
                           <highlight.icon className={`w-10 h-10 ${highlight.color} mb-4`} />
                           <h3 className="font-bold text-lg mb-2">{highlight.title}</h3>
@@ -257,7 +261,7 @@ const EnhancedInvestorRelationsPage = () => {
 
                 {/* Valuation Details */}
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <DollarSign className="w-5 h-5 text-primary" />
@@ -266,19 +270,19 @@ const EnhancedInvestorRelationsPage = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <div className="flex justify-between items-center p-4 bg-primary/5 rounded-lg">
+                        <div className="flex justify-between items-center p-4 bg-primary/10 backdrop-blur-sm rounded-lg border border-primary/20">
                           <span className="font-medium">Pre-Money Valuation</span>
                           <span className="text-2xl font-bold text-primary">₹820 Cr</span>
                         </div>
-                        <div className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="flex justify-between items-center p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <span>Post-Money Valuation</span>
                           <span className="text-xl font-semibold">₹910 Cr</span>
                         </div>
-                        <div className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="flex justify-between items-center p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <span>Book Value (FY28)</span>
                           <span className="text-xl font-semibold">₹536 Cr</span>
                         </div>
-                        <div className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="flex justify-between items-center p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <span>P/E Ratio</span>
                           <span className="text-xl font-semibold">3.3x</span>
                         </div>
@@ -286,7 +290,7 @@ const EnhancedInvestorRelationsPage = () => {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Timer className="w-5 h-5 text-primary" />
@@ -296,7 +300,7 @@ const EnhancedInvestorRelationsPage = () => {
                     <CardContent>
                       <div className="space-y-4">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                          <div className="w-12 h-12 bg-green-100/70 dark:bg-green-900/40 backdrop-blur-sm border border-green-200/30 rounded-full flex items-center justify-center">
                             <CheckCircle className="w-6 h-6 text-green-600" />
                           </div>
                           <div>
@@ -305,7 +309,7 @@ const EnhancedInvestorRelationsPage = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                          <div className="w-12 h-12 bg-blue-100/70 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-200/30 rounded-full flex items-center justify-center">
                             <Clock className="w-6 h-6 text-blue-600" />
                           </div>
                           <div>
@@ -314,7 +318,7 @@ const EnhancedInvestorRelationsPage = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                          <div className="w-12 h-12 bg-purple-100/70 dark:bg-purple-900/40 backdrop-blur-sm border border-purple-200/30 rounded-full flex items-center justify-center">
                             <Target className="w-6 h-6 text-purple-600" />
                           </div>
                           <div>
@@ -328,7 +332,7 @@ const EnhancedInvestorRelationsPage = () => {
                 </div>
 
                 {/* Growth Story Chart */}
-                <Card className="mb-8">
+                <Card className={`mb-8 ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>5-Year Growth Trajectory</CardTitle>
                     <CardDescription>Revenue, EBITDA, and PAT projections</CardDescription>
@@ -346,7 +350,7 @@ const EnhancedInvestorRelationsPage = () => {
                 </Card>
 
                 {/* Investment Terms */}
-                <Card>
+                <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <FileText className="w-5 h-5 text-primary" />
@@ -378,7 +382,7 @@ const EnhancedInvestorRelationsPage = () => {
                       </div>
                       <div className="space-y-3">
                         <h4 className="font-semibold text-lg mb-4">Exit Strategy</h4>
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg">
+                        <div className="bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/30 dark:to-emerald-900/30 backdrop-blur-sm p-4 rounded-lg border border-green-200/20">
                           <div className="flex items-center gap-2 mb-3">
                             <ArrowUpRight className="w-5 h-5 text-green-600" />
                             <span className="font-semibold text-green-800 dark:text-green-200">IPO Listing</span>
@@ -418,7 +422,7 @@ const EnhancedInvestorRelationsPage = () => {
                     { label: 'Peak ROCE', value: '49.0%', period: 'FY28', icon: Percent, color: 'text-purple-600' },
                     { label: 'Debt Reduction', value: '85%', period: 'By FY30', icon: Scale, color: 'text-orange-600' }
                   ].map((metric, index) => (
-                    <Card key={index}>
+                    <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                           <metric.icon className={`w-8 h-8 ${metric.color}`} />
@@ -432,7 +436,7 @@ const EnhancedInvestorRelationsPage = () => {
                 </div>
 
                 {/* Revenue Mix Evolution */}
-                <Card className="mb-8">
+                <Card className={`mb-8 ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>Revenue Mix Evolution</CardTitle>
                     <CardDescription>Transformation from sugar-centric to diversified revenue model</CardDescription>
@@ -447,7 +451,7 @@ const EnhancedInvestorRelationsPage = () => {
                         stacked={true}
                       />
                     </div>
-                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-50/80 dark:bg-blue-900/30 backdrop-blur-sm rounded-lg border border-blue-200/20">
                       <p className="text-sm">
                         <Info className="w-4 h-4 inline mr-2 text-blue-600" />
                         Ethanol becomes the dominant revenue contributor from FY27 onwards, accounting for over 60% of total revenue
@@ -458,15 +462,15 @@ const EnhancedInvestorRelationsPage = () => {
 
                 {/* Detailed Financial Projections */}
                 <div className="grid md:grid-cols-2 gap-8">
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle>Revenue & Profitability Growth</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <table className="w-full text-sm">
+                        <table className="w-full text-sm bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-lg overflow-hidden">
                           <thead>
-                            <tr className="border-b">
+                            <tr className="border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-100/50 dark:bg-gray-800/50">
                               <th className="text-left py-2">Year</th>
                               <th className="text-right py-2">Revenue</th>
                               <th className="text-right py-2">EBITDA</th>
@@ -475,11 +479,11 @@ const EnhancedInvestorRelationsPage = () => {
                           </thead>
                           <tbody>
                             {revenueProjections.map((year, index) => (
-                              <tr key={index} className="border-b">
-                                <td className="py-2">{year.year}</td>
-                                <td className="text-right font-medium">₹{year.revenue}</td>
-                                <td className="text-right">₹{year.ebitda}</td>
-                                <td className="text-right">₹{year.pat}</td>
+                              <tr key={index} className="border-b border-gray-200/30 dark:border-gray-700/30 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td className="py-2 font-medium">{year.year}</td>
+                                <td className="text-right font-semibold text-primary">₹{year.revenue}</td>
+                                <td className="text-right text-blue-600 dark:text-blue-400">₹{year.ebitda}</td>
+                                <td className="text-right text-green-600 dark:text-green-400">₹{year.pat}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -488,13 +492,13 @@ const EnhancedInvestorRelationsPage = () => {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle>Key Ratios & Metrics</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <div className="flex justify-between mb-2">
                             <span>EBITDA Margin Evolution</span>
                             <span className="font-medium">21.2% → 27.8%</span>
@@ -503,7 +507,7 @@ const EnhancedInvestorRelationsPage = () => {
                             <div className="bg-primary rounded-full h-2" style={{width: '78%'}}></div>
                           </div>
                         </div>
-                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <div className="flex justify-between mb-2">
                             <span>PAT Margin Growth</span>
                             <span className="font-medium">7.2% → 19.3%</span>
@@ -512,7 +516,7 @@ const EnhancedInvestorRelationsPage = () => {
                             <div className="bg-blue-600 rounded-full h-2" style={{width: '68%'}}></div>
                           </div>
                         </div>
-                        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <div className="flex justify-between mb-2">
                             <span>Debt-to-Equity Ratio</span>
                             <span className="font-medium">1.09 → 0.05</span>
@@ -534,7 +538,7 @@ const EnhancedInvestorRelationsPage = () => {
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Integrated Business Model</h2>
                 
                 {/* Business Model Overview */}
-                <Card className="mb-8">
+                <Card className={`mb-8 ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Factory className="w-6 h-6 text-primary" />
@@ -599,7 +603,7 @@ const EnhancedInvestorRelationsPage = () => {
 
                 {/* Competitive Advantages */}
                 <div className="grid md:grid-cols-2 gap-8">
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Award className="w-5 h-5 text-primary" />
@@ -640,7 +644,7 @@ const EnhancedInvestorRelationsPage = () => {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Target className="w-5 h-5 text-primary" />
@@ -690,7 +694,7 @@ const EnhancedInvestorRelationsPage = () => {
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Shareholding Pattern</h2>
                 
                 <div className="grid md:grid-cols-2 gap-8">
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle>Pre-IPO Structure</CardTitle>
                       <CardDescription>Current shareholding pattern</CardDescription>
@@ -698,7 +702,7 @@ const EnhancedInvestorRelationsPage = () => {
                     <CardContent>
                       <div className="space-y-4">
                         {shareholdingPattern.preIPO.map((holder, index) => (
-                          <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                             <div>
                               <p className="font-medium">{holder.category}</p>
                               <p className="text-sm text-gray-600 dark:text-gray-400">{holder.shares} shares</p>
@@ -709,7 +713,7 @@ const EnhancedInvestorRelationsPage = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="mt-6 p-4 bg-blue-50/80 dark:bg-blue-900/30 backdrop-blur-sm rounded-lg border border-blue-200/20">
                         <p className="text-sm">
                           <Info className="w-4 h-4 inline mr-2 text-blue-600" />
                           Total Equity Shares: 10 Crore (Pre-IPO)
@@ -718,7 +722,7 @@ const EnhancedInvestorRelationsPage = () => {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                     <CardHeader>
                       <CardTitle>Post-IPO Structure</CardTitle>
                       <CardDescription>Expected shareholding after IPO</CardDescription>
@@ -726,7 +730,7 @@ const EnhancedInvestorRelationsPage = () => {
                     <CardContent>
                       <div className="space-y-4">
                         {shareholdingPattern.postIPO.map((holder, index) => (
-                          <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                             <div>
                               <p className="font-medium">{holder.category}</p>
                               <p className="text-sm text-gray-600 dark:text-gray-400">{holder.shares} shares</p>
@@ -737,7 +741,7 @@ const EnhancedInvestorRelationsPage = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <div className="mt-6 p-4 bg-green-50/80 dark:bg-green-900/30 backdrop-blur-sm rounded-lg border border-green-200/20">
                         <p className="text-sm">
                           <Info className="w-4 h-4 inline mr-2 text-green-600" />
                           Total Equity Shares: 13.33 Crore (Post-IPO)
@@ -748,23 +752,23 @@ const EnhancedInvestorRelationsPage = () => {
                 </div>
 
                 {/* Key Shareholders */}
-                <Card className="mt-8">
+                <Card className={`mt-8 ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>Promoter Commitment</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center p-6 bg-primary/5 rounded-lg">
+                      <div className="text-center p-6 bg-primary/10 backdrop-blur-sm rounded-lg border border-primary/10">
                         <p className="text-3xl font-bold text-primary mb-2">56.25%</p>
                         <p className="font-medium">Post-IPO Holding</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Strong promoter confidence</p>
                       </div>
-                      <div className="text-center p-6 bg-primary/5 rounded-lg">
+                      <div className="text-center p-6 bg-primary/10 backdrop-blur-sm rounded-lg border border-primary/10">
                         <p className="text-3xl font-bold text-primary mb-2">3 Years</p>
                         <p className="font-medium">Lock-in Period</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Promoter shares locked</p>
                       </div>
-                      <div className="text-center p-6 bg-primary/5 rounded-lg">
+                      <div className="text-center p-6 bg-primary/10 backdrop-blur-sm rounded-lg border border-primary/10">
                         <p className="text-3xl font-bold text-primary mb-2">₹0</p>
                         <p className="font-medium">Pledged Shares</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Zero promoter pledge</p>
@@ -780,7 +784,7 @@ const EnhancedInvestorRelationsPage = () => {
               <div id="governance">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Corporate Governance</h2>
                 
-                <Card className="mb-8">
+                <Card className={`mb-8 ${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <Users className="w-5 h-5 mr-2 text-primary" />
@@ -801,12 +805,12 @@ const EnhancedInvestorRelationsPage = () => {
                         <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-semibold">{director.name}</h4>
-                            <span className={`px-2 py-1 text-xs rounded ${
+                            <span className={`px-2 py-1 text-xs rounded backdrop-blur-sm border ${
                               director.type === 'Independent' 
-                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                ? 'bg-green-100/70 text-green-700 dark:bg-green-900/40 dark:text-green-300 border-green-200/30'
                                 : director.type === 'Promoter'
-                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                ? 'bg-blue-100/70 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200/30'
+                                : 'bg-gray-100/70 text-gray-700 dark:bg-gray-700/40 dark:text-gray-300 border-gray-200/30'
                             }`}>
                               {director.type}
                             </span>
@@ -819,7 +823,7 @@ const EnhancedInvestorRelationsPage = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>Board Committees</CardTitle>
                   </CardHeader>
@@ -831,7 +835,7 @@ const EnhancedInvestorRelationsPage = () => {
                         { name: 'Stakeholders Relationship Committee', members: 3, chairman: 'Dr. Rajan Dubey', meetings: '4/year' },
                         { name: 'Risk Management Committee', members: 4, chairman: 'Mr. Nawab Raza', meetings: '2/year' }
                       ].map((committee, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div key={index} className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/10">
                           <div>
                             <p className="font-medium">{committee.name}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -855,7 +859,7 @@ const EnhancedInvestorRelationsPage = () => {
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Investor Contact</h2>
               
               <div className="grid md:grid-cols-2 gap-6">
-                <Card>
+                <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>For Investment Queries</CardTitle>
                   </CardHeader>
@@ -881,7 +885,7 @@ const EnhancedInvestorRelationsPage = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                   <CardHeader>
                     <CardTitle>Registered Office</CardTitle>
                   </CardHeader>
@@ -904,7 +908,7 @@ const EnhancedInvestorRelationsPage = () => {
                 </Card>
               </div>
 
-              <Card>
+              <Card className={`${cardBackgrounds.glass} shadow-xl hover:shadow-2xl transition-all duration-300`}>
                 <CardHeader>
                   <CardTitle>Investment Process</CardTitle>
                   <CardDescription>Simple 4-step process to become our valued investor</CardDescription>

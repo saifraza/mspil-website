@@ -73,17 +73,17 @@ const DataInsightsSection = () => {
   );
 
   return (
-    <section id="insights" className="section-padding bg-gradient-to-b from-white via-bio-green-50 to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-bio-green-900">
+    <section id="insights" className="section-padding-compact bg-gradient-to-b from-white via-bio-green-50 to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-bio-green-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div {...fadeInProps} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-bio-green-700 to-eco-lime-700 dark:from-bio-green-400 dark:to-eco-lime-400 bg-clip-text text-transparent mb-4">{t('insightsTitle')}</h2>
+        <motion.div {...fadeInProps} className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-bio-green-700 to-eco-lime-700 dark:from-bio-green-400 dark:to-eco-lime-400 bg-clip-text text-transparent mb-4">{t('insightsTitle')}</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('insightsSubtitle')}
           </p>
         </motion.div>
 
         {/* Financial Performance Overview */}
-        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }} className="mb-8">
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }} className="mb-6">
           <AdvancedChartCard
             title={t('insightsTurnoverChartTitle') || "Financial Performance Projection"}
             description={t('insightsTurnoverChartDesc') || "Revenue and profit growth trajectory"}
@@ -108,7 +108,7 @@ const DataInsightsSection = () => {
         </motion.div>
 
         {/* Comprehensive Production Overview */}
-        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }} className="mb-8">
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }} className="mb-6">
           <AdvancedChartCard
             title="Integrated Production Dashboard"
             description="All business segments production capacity and growth projections"
@@ -122,7 +122,7 @@ const DataInsightsSection = () => {
         </motion.div>
 
         {/* Individual Production Analysis */}
-        <Tabs defaultValue="ethanol" className="mb-8">
+        <Tabs defaultValue="ethanol" className="mb-6">
           <TabsList className="grid w-full grid-cols-2 md:w-[400px] mx-auto">
             <TabsTrigger value="ethanol" className="gap-2">
               <Droplets className="h-4 w-4" />
@@ -184,7 +184,7 @@ const DataInsightsSection = () => {
           </TabsContent>
         </Tabs>
         
-        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }} className="text-center mt-12">
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }} className="text-center mt-8">
             <Card className={`${chartCardClass} p-6`}>
                 <CardHeader className={chartHeaderClass}>
                     <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-bio-green-100 to-eco-lime-100 dark:from-bio-green-800 dark:to-bio-green-900 rounded-full flex items-center justify-center">

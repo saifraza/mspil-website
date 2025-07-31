@@ -1,15 +1,15 @@
 // Unified background styles for consistency across the website
 
-// Page backgrounds - consistent gradient patterns
+// Page backgrounds - consistent gradient patterns with subtle animations
 export const pageBackgrounds = {
-  // Primary gradient - used for main pages
-  primary: 'bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
+  // Primary gradient - subtle animated gradient for glass morphism
+  primary: 'bg-gradient-to-br from-gray-50 via-green-50/20 to-lime-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
   
   // Secondary gradient - used for special pages
   secondary: 'bg-gradient-to-br from-white via-bio-green-50/30 to-eco-lime-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
   
   // Simple background - used for content-heavy pages
-  simple: 'bg-background dark:bg-gray-900',
+  simple: 'bg-gray-50 dark:bg-gray-900',
   
   // Hero specific - maintains existing design but with consistent dark mode
   hero: 'bg-gradient-to-br from-bio-green-100 via-eco-lime-50 to-bio-green-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900'

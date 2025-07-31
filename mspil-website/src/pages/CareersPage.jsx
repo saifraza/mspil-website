@@ -1,9 +1,13 @@
 import React from 'react';
 import CareersSection from '@/components/sections/CareersSection';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { pageBackgrounds } from '@/utils/backgroundStyles';
 
 const CareersPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-eco-lime-50 to-bio-green-50 dark:from-bio-green-800 dark:via-bio-green-900 dark:to-eco-lime-900">
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       <CareersSection />
     </div>
   );

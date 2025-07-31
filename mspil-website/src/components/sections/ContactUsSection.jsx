@@ -57,19 +57,19 @@ const ContactUsSection = () => {
   ];
 
   return (
-    <section id="contact" className="section-padding bg-muted/30 dark:bg-background">
+    <section id="contact" className="section-padding-compact bg-muted/30 dark:bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div {...fadeInProps} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Contact Us</h2>
+        <motion.div {...fadeInProps} className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Contact Us</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             We're here to help. Reach out to us for inquiries, support, or partnership opportunities.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 mb-16 items-start">
+        <div className="grid md:grid-cols-2 gap-6 mb-6 items-start">
           <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }}>
             <h3 className="text-2xl font-semibold text-foreground mb-6">Get in Touch</h3>
-            <div className="space-y-6">
+            <div className="space-y-4">
               {contactDetails.map((detail, index) => (
                 <AnimatedCard key={index} variant="slide" delay={index * 0.1} className="shadow-sm hover:shadow-lg transition-shadow">
                   <CardHeader className="flex flex-row items-center space-x-4 pb-2">
@@ -119,8 +119,8 @@ const ContactUsSection = () => {
         </div>
         
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
-          <h3 className="text-2xl font-semibold text-foreground text-center mb-6">Our Locations</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <h3 className="text-2xl font-semibold text-foreground text-center mb-4">Our Locations</h3>
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <h4 className="text-lg font-semibold mb-3">Registered Office</h4>
               <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-xl border border-primary/20">

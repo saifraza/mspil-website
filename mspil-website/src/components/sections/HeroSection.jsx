@@ -8,44 +8,6 @@ import { Link } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { pageBackgrounds } from '@/utils/backgroundStyles';
 
-// Enhanced floating particle component with varied sizes and opacity
-const FloatingParticle = ({ delay = 0, type = 'dot' }) => {
-  const randomX = Math.random() * 100;
-  const randomDuration = 15 + Math.random() * 20;
-  const randomSize = 0.5 + Math.random() * 1.5;
-  
-  const particleTypes = {
-    dot: 'w-2 h-2 bg-gradient-to-r from-bio-green-400/30 to-eco-lime-400/20 rounded-full',
-    leaf: 'w-4 h-4 text-bio-green-400/30',
-    sprout: 'w-3 h-3 text-eco-lime-400/25'
-  };
-  
-  return (
-    <motion.div
-      className={`absolute ${type === 'dot' ? particleTypes.dot : ''}`}
-      initial={{ 
-        x: `${randomX}vw`, 
-        y: '110vh',
-        scale: randomSize,
-        rotate: 0
-      }}
-      animate={{
-        y: '-10vh',
-        x: [`${randomX}vw`, `${randomX + (Math.random() - 0.5) * 20}vw`],
-        rotate: type !== 'dot' ? 360 : 0
-      }}
-      transition={{
-        duration: randomDuration,
-        delay: delay,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-    >
-      {type === 'leaf' && <LeafIcon className="w-full h-full" />}
-      {type === 'sprout' && <Sprout className="w-full h-full" />}
-    </motion.div>
-  );
-};
 
 // Animated gradient background
 const AnimatedGradient = () => {
@@ -113,8 +75,8 @@ const HeroSection = () => {
     ],
     stats: [
       { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag className="w-6 h-6 text-white" /> },
-      { id: 2, value: 24, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap className="w-6 h-6 text-white" /> },
-      { id: 3, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets className="w-6 h-6 text-white" /> },
+      { id: 2, value: 800, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets className="w-6 h-6 text-white" />, subtext: '350 → 800' },
+      { id: 3, value: 24, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap className="w-6 h-6 text-white" />, subtext: '14 MW Export' },
     ]
   }), []);
 
@@ -162,20 +124,6 @@ const HeroSection = () => {
         />
       </motion.div>
       
-      {/* Enhanced floating particles with variety */}
-      {!prefersReducedMotion && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(5)].map((_, i) => (
-            <FloatingParticle key={`dot-${i}`} delay={i * 1.5} type="dot" />
-          ))}
-          {[...Array(3)].map((_, i) => (
-            <FloatingParticle key={`leaf-${i}`} delay={i * 2 + 0.5} type="leaf" />
-          ))}
-          {[...Array(2)].map((_, i) => (
-            <FloatingParticle key={`sprout-${i}`} delay={i * 3 + 1} type="sprout" />
-          ))}
-        </div>
-      )}
       
       <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
         <AnimatePresence mode="wait">
@@ -427,6 +375,16 @@ const HeroSection = () => {
                   >
                     {t(stat.labelKey)}
                   </motion.p>
+                  {stat.subtext && (
+                    <motion.p 
+                      className="text-white/80 text-xs mt-0.5"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 + index * 0.1 }}
+                    >
+                      {stat.subtext}
+                    </motion.p>
+                  )}
                 </div>
               </motion.div>
             ))}

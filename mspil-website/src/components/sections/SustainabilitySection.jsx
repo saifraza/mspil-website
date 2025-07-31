@@ -7,6 +7,7 @@ import AnimatedCounter from '@/components/AnimatedCounter';
 // Removed AutoPublishedContent - using static content now
 import { useTranslation } from '@/contexts/LanguageContext';
 import { sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
+import { SubtleBackground } from '@/components/ui/SubtleBackground';
 
 // Animated leaf component
 const AnimatedLeaf = ({ delay = 0, duration = 10 }) => {
@@ -146,28 +147,26 @@ const SustainabilitySection = () => {
   ];
 
   return (
-    <section id="sustainability" className="py-8 relative overflow-hidden bg-transparent">
-      {/* Animated background leaves */}
-      {[...Array(5)].map((_, i) => (
-        <AnimatedLeaf key={i} delay={i * 2} duration={15 + i * 2} />
-      ))}
+    <section id="sustainability" className="section-padding-compact relative overflow-hidden bg-transparent">
+      {/* Subtle animated background */}
+      <SubtleBackground type="gradient" colors={['rgba(34, 197, 94, 0.02)', 'rgba(16, 185, 129, 0.02)', 'rgba(20, 184, 166, 0.02)']} />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div {...fadeInProps} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">{t('sustainabilitySectionTitle')}</h2>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div {...fadeInProps} className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">{t('sustainabilitySectionTitle')}</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('sustainabilitySectionSubtitle')}
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.id}
               {...fadeInProps}
               transition={{ delay: index * 0.2 }}
             >
-              <Card className={`h-full hover:shadow-xl transition-all duration-300 overflow-hidden ${cardBackgrounds.glass}`}>
+              <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
                 <div className={`h-full bg-gradient-to-br ${feature.color}`}>
                   <CardHeader>
                     <motion.div
@@ -195,7 +194,7 @@ const SustainabilitySection = () => {
         </div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }}>
-          <Card className={`shadow-xl ${cardBackgrounds.elevated}`}>
+          <Card className="shadow-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
             <CardHeader className="text-center">
               <motion.div
                 animate={{ 
@@ -227,7 +226,7 @@ const SustainabilitySection = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md hover:shadow-lg rounded-lg p-4 border border-white/30 transition-all duration-300 hover:bg-white/40 dark:hover:bg-gray-800/40"
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl hover:shadow-lg rounded-lg p-4 border border-white/40 transition-all duration-300 hover:bg-white/60 dark:hover:bg-gray-800/60"
                   >
                     <motion.div 
                       className="flex justify-center mb-2 text-primary"
@@ -276,13 +275,13 @@ const SustainabilitySection = () => {
       </div>
 
       {/* CSR Reports & Sustainability Documents */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
             CSR Reports & Sustainability Documents

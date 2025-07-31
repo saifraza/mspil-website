@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { cardBackgrounds, sectionBackgrounds } from '@/utils/backgroundStyles';
+import { SubtleBackground } from '@/components/ui/SubtleBackground';
 import { LineChartLazy } from '@/components/LazyChart';
 import { EnhancedLineChartLazy, EnhancedBarChartLazy } from '@/components/EnhancedLazyChart';
 import { 
@@ -126,8 +127,11 @@ const ComprehensiveDataInsightsSection = () => {
   const chartDescClass = "text-sm text-foreground/70 mb-4 min-h-[40px]";
 
   return (
-    <section id="insights" className="py-8 bg-transparent">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="insights" className="py-8 bg-transparent relative">
+      {/* Subtle animated background */}
+      <SubtleBackground type="both" colors={['rgba(59, 130, 246, 0.02)', 'rgba(6, 182, 212, 0.02)', 'rgba(139, 92, 246, 0.02)']} />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div {...fadeInProps} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Performance & Impact Metrics</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">

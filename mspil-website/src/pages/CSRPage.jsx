@@ -16,6 +16,8 @@ import {
 import { useTranslation } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { pageBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 
 // Quick fix for getImage function
 const getImage = (category, fallback, index) => fallback;
@@ -117,9 +119,11 @@ const CSRPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bio-green-50 via-white to-eco-lime-50 dark:from-bio-green-900 dark:via-bio-green-800 dark:to-eco-lime-900">
+    <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
+      <UnifiedBackground />
+      
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10">
+      <section className="relative py-20 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -224,7 +228,7 @@ const CSRPage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
+                <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={program.getImageUrl() || program.image}
@@ -276,7 +280,7 @@ const CSRPage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
+                <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={program.getImageUrl() || program.image}
@@ -328,7 +332,7 @@ const CSRPage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
+                <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={program.getImageUrl() || program.image}
@@ -409,7 +413,7 @@ const CSRPage = () => {
                 {...fadeInProps}
                 transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-shadow">
+                <Card className={`${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <CardContent className="p-6 text-center">
                     <div className="mb-4">
                       <Download className="w-12 h-12 text-primary mx-auto" />

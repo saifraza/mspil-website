@@ -168,7 +168,7 @@ const AboutUsSection = () => {
   };
 
   return (
-    <section id="about" className="section-padding relative overflow-hidden bg-transparent">
+    <section id="about" className="section-padding-compact relative overflow-hidden bg-transparent">
       {/* Parallax background */}
       <motion.div 
         className="absolute inset-0 z-0 opacity-10"
@@ -180,11 +180,11 @@ const AboutUsSection = () => {
       />
       
       {/* Content overlay */}
-      <div className="absolute inset-0 bg-white/5 dark:bg-gray-900/5 backdrop-blur-sm z-0"></div>
+      <div className="absolute inset-0 bg-white/10 dark:bg-gray-900/10 backdrop-blur-md z-0"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div {...fadeInProps} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">{t('aboutTitle')}</h2>
+        <motion.div {...fadeInProps} className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">{t('aboutTitle')}</h2>
           <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
             {t('aboutSubtitle')}
           </p>
@@ -194,15 +194,15 @@ const AboutUsSection = () => {
         <motion.div 
           {...fadeInProps} 
           transition={{ ...fadeInProps.transition, delay: 0.1 }} 
-          className="mb-20 overflow-hidden"
+          className="mb-12 overflow-hidden"
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-primary text-center mb-12">{t('aboutHistoryTitle') || 'Our Journey Through Time'}</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-primary text-center mb-6">{t('aboutHistoryTitle') || 'Our Journey Through Time'}</h3>
           
           <div className="relative">
             {/* Scroll hint animation */}
             {showScrollHint && (
               <motion.div 
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/30"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-full p-3 shadow-lg border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ 
                   opacity: [0, 1, 1, 0],
@@ -228,7 +228,7 @@ const AboutUsSection = () => {
                   setShowScrollHint(false);
                 }
               }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-2 shadow-lg hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all hidden md:block border border-white/30"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-full p-2 shadow-lg hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all hidden md:block border border-white/40"
             >
               <ChevronLeft className="w-5 h-5 text-primary" />
             </button>
@@ -242,7 +242,7 @@ const AboutUsSection = () => {
                   setShowScrollHint(false);
                 }
               }}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full p-2 shadow-lg hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all hidden md:block border border-white/30"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-full p-2 shadow-lg hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all hidden md:block border border-white/40"
             >
               <ChevronRight className="w-5 h-5 text-primary" />
             </button>
