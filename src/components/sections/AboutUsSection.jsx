@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building, Zap, Users, Target, Award, Clock, CalendarDays, Factory, Droplets } from 'lucide-react';
+import { Building, Zap, Users, Target, Award, Clock, CalendarDays, Factory, Droplets, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
 const AboutUsSection = () => {
   const t = useTranslation();
   
   const [companyHistoryWithImages, setCompanyHistoryWithImages] = useState([]);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const scrollContainerRef = useRef(null);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Parallax effect
   const { scrollYProgress } = useScroll();
@@ -63,16 +67,6 @@ const AboutUsSection = () => {
       imageUrl: '/images/about-us/2024_future.jpg',
       icon: <Droplets className="w-8 h-8 text-primary" />,
       side: 'left'
-    },
-    {
-      year: '2024',
-      titleKey: 'aboutHistory2024Title',
-      descriptionKey: 'aboutHistory2024Desc',
-      imageAltKey: 'aboutHistory2024Alt',
-      imagePath: 'about-us/2024_ethanol_expansion.jpg',
-      imageUrl: '/images/about-us/2024_ethanol_expansion.jpg',
-      icon: <Droplets className="w-8 h-8 text-primary" />,
-      side: 'right'
     }
   ], []);
 
@@ -80,6 +74,82 @@ const AboutUsSection = () => {
     // Use the uploaded timeline images directly
     setCompanyHistoryWithImages(companyHistoryData);
   }, [companyHistoryData]);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (!isAutoScrolling || !scrollContainerRef.current || companyHistoryWithImages.length === 0) return;
+
+    const container = scrollContainerRef.current;
+    let currentIndex = 0;
+    let scrollTimeout;
+
+    const scrollToCard = (index) => {
+      const cardWidth = 408; // w-96 (384px) + gap-6 (24px)
+      const targetScroll = index * cardWidth;
+      
+      container.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    };
+
+    const autoScroll = () => {
+      // Move to next card
+      currentIndex = (currentIndex + 1) % companyHistoryWithImages.length;
+      scrollToCard(currentIndex);
+      setActiveIndex(currentIndex);
+      
+      // Schedule next scroll
+      scrollTimeout = setTimeout(autoScroll, 4000); // 4 seconds per card (including scroll time)
+    };
+
+    // Start auto-scroll after initial delay
+    scrollTimeout = setTimeout(() => {
+      autoScroll();
+    }, 2000);
+
+    // Stop auto-scroll on user interaction
+    const handleUserInteraction = (e) => {
+      // Only stop if the interaction is on the timeline container itself
+      if (e.currentTarget === container) {
+        setIsAutoScrolling(false);
+        setShowScrollHint(false);
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+      }
+    };
+
+    // Only listen to direct interactions on the timeline container
+    container.addEventListener('mouseenter', handleUserInteraction);
+    container.addEventListener('touchstart', handleUserInteraction);
+    
+    // For wheel events, check if it's actually on the timeline
+    const handleWheel = (e) => {
+      const rect = container.getBoundingClientRect();
+      if (e.clientX >= rect.left && e.clientX <= rect.right && 
+          e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        handleUserInteraction(e);
+      }
+    };
+    window.addEventListener('wheel', handleWheel);
+    const handleScroll = () => {
+      // Update active indicator based on scroll position
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = 408;
+      const newIndex = Math.round(scrollLeft / cardWidth);
+      currentIndex = newIndex;
+      setActiveIndex(newIndex);
+    };
+    
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      container.removeEventListener('mouseenter', handleUserInteraction);
+      container.removeEventListener('touchstart', handleUserInteraction);
+      window.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [isAutoScrolling, companyHistoryWithImages]);
 
   const coreValues = useMemo(() => [
     { icon: <Target className="w-10 h-10 text-primary mb-3" />, titleKey: 'aboutValueIntegrity', descKey: 'aboutValueIntegrityDesc' },
@@ -125,23 +195,77 @@ const AboutUsSection = () => {
           transition={{ ...fadeInProps.transition, delay: 0.1 }} 
           className="mb-20 overflow-hidden"
         >
-          <h3 className="text-3xl font-semibold text-foreground text-center mb-8">{t('aboutHistoryTitle') || 'Our Journey'}</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">{t('aboutHistoryTitle') || 'Our Journey Through Time'}</h3>
           
           <div className="relative">
+            {/* Scroll hint animation */}
+            {showScrollHint && (
+              <motion.div 
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-3 shadow-lg"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: [0, 1, 1, 0],
+                  x: [0, 0, 20, 20]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatDelay: 2
+                }}
+              >
+                <ChevronRight className="w-6 h-6 text-primary" />
+              </motion.div>
+            )}
+
+            {/* Navigation buttons */}
+            <button
+              onClick={() => {
+                const container = scrollContainerRef.current;
+                if (container) {
+                  container.scrollLeft -= 408;
+                  setIsAutoScrolling(false);
+                  setShowScrollHint(false);
+                }
+              }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-2 shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors hidden md:block"
+            >
+              <ChevronLeft className="w-5 h-5 text-primary" />
+            </button>
+            
+            <button
+              onClick={() => {
+                const container = scrollContainerRef.current;
+                if (container) {
+                  container.scrollLeft += 408;
+                  setIsAutoScrolling(false);
+                  setShowScrollHint(false);
+                }
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 dark:bg-gray-800/90 rounded-full p-2 shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors hidden md:block"
+            >
+              <ChevronRight className="w-5 h-5 text-primary" />
+            </button>
+
             {/* Horizontal scroll container */}
-            <div className="flex overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory">
+            <div 
+              ref={scrollContainerRef}
+              className="flex overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+              onScroll={() => {
+                if (showScrollHint) setShowScrollHint(false);
+              }}
+            >
               <div className="flex space-x-6">
                 {companyHistoryWithImages.map((event, index) => (
                   <motion.div
                     key={event.year}
-                    className="flex-shrink-0 w-80 snap-center"
+                    className="flex-shrink-0 w-96 snap-center"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   >
-                    <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <Card className="h-full shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 hover:border-primary/30">
                       <div className="aspect-video bg-muted relative overflow-hidden">
                         {event.imageUrl ? (
                           <motion.img 
@@ -160,11 +284,11 @@ const AboutUsSection = () => {
                           <span className="text-white font-bold text-lg">{event.year}</span>
                         </div>
                       </div>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{t(event.titleKey)}</CardTitle>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-xl font-bold leading-tight">{t(event.titleKey)}</CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground line-clamp-3">{t(event.descriptionKey)}</p>
+                      <CardContent className="pt-0">
+                        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">{t(event.descriptionKey)}</p>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -172,18 +296,43 @@ const AboutUsSection = () => {
               </div>
             </div>
             
-            {/* Scroll indicators */}
-            <div className="absolute left-0 right-0 bottom-0 flex justify-center space-x-2">
-              {companyHistoryWithImages.map((_, index) => (
+            {/* Scroll progress indicator */}
+            <div className="mt-6 flex justify-center items-center space-x-4">
+              <div className="flex space-x-2">
+                {companyHistoryWithImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      const container = scrollContainerRef.current;
+                      if (container) {
+                        container.scrollLeft = index * 408;
+                        setIsAutoScrolling(false);
+                        setShowScrollHint(false);
+                      }
+                    }}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === activeIndex ? 'w-8 bg-primary' : 'w-2 bg-primary/30 hover:bg-primary/50'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* Auto-scroll indicator */}
+              {isAutoScrolling && (
                 <motion.div
-                  key={index}
-                  className="w-2 h-2 rounded-full bg-primary/30"
-                  initial={{ opacity: 0.3 }}
-                  whileInView={{ opacity: 1, scale: 1.5 }}
-                  viewport={{ once: false, amount: 0.8 }}
-                  transition={{ duration: 0.3 }}
-                />
-              ))}
+                  className="text-xs text-muted-foreground flex items-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <span>Auto-scrolling</span>
+                  <motion.div
+                    className="w-1 h-1 bg-primary rounded-full"
+                    animate={{ scale: [1, 1.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                </motion.div>
+              )}
             </div>
           </div>
         </motion.div>

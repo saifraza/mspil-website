@@ -1,10 +1,11 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import ScrollToTop from '@/components/ScrollToTop';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { useWebVitals } from '@/hooks/useWebVitals';
 
 // Lazy load pages for better performance
 const HomePage = lazy(() => import('@/pages/HomePage'));
@@ -35,6 +36,9 @@ const LoadingSpinner = () => (
 );
 
 function App() {
+  // Monitor Core Web Vitals for performance
+  useWebVitals();
+  
   return (
     <ErrorBoundary>
       <LanguageProvider>
