@@ -88,24 +88,60 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
     };
     
     setMessages(prev => [...prev, userMessage]);
+    const messageToSend = inputMessage; // Store before clearing
     setInputMessage('');
     setIsLoading(true);
     
     try {
+      console.log('Sending message to:', `${SOCKET_URL}/api/chat/message`);
+      console.log('Message data:', { message: messageToSend, sessionId });
+      
       const response = await fetch(`${SOCKET_URL}/api/chat/message`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
-          message: inputMessage,
+          message: messageToSend,
           sessionId
         })
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+      
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error(responseData.error || 'Failed to send message');
+      }
+      
+      // If we got a successful response but WebSocket didn't emit, add the message manually
+      if (responseData.success && responseData.response) {
+        setTimeout(() => {
+          if (isLoading) {
+            setMessages(prev => [...prev, {
+              id: Date.now(),
+              type: 'agent',
+              content: responseData.response,
+              timestamp: new Date().toISOString(),
+              actions: responseData.actions,
+              attachments: responseData.attachments
+            }]);
+            setIsLoading(false);
+          }
+        }, 100);
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        response: error.response
+      });
+      
       setMessages(prev => [...prev, {
         id: Date.now(),
         type: 'agent',

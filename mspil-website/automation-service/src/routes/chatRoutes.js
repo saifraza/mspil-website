@@ -9,16 +9,24 @@ export default function chatRoutes(io) {
   // Process chat message
   router.post('/message', async (req, res) => {
     try {
-      logger.info('Received chat message:', { body: req.body });
+      logger.info('Received chat message request:', { 
+        body: req.body,
+        headers: req.headers,
+        method: req.method,
+        url: req.url
+      });
       
       const { error, value } = validateChatMessage(req.body);
       if (error) {
-        logger.error('Validation error:', error.details[0].message);
+        logger.error('Validation error:', { 
+          error: error.details[0].message,
+          body: req.body 
+        });
         return res.status(400).json({ error: error.details[0].message });
       }
       
       const { message, sessionId } = value;
-      logger.info('Processing message:', { message, sessionId });
+      logger.info('Message validated successfully:', { message, sessionId });
       
       // Emit user message to WebSocket
       io.to('marketing_chat').emit('user_message', {
@@ -27,8 +35,17 @@ export default function chatRoutes(io) {
         type: 'user'
       });
       
+      logger.info('About to process message with AI agent...');
+      
       // Process message with AI agent
       const response = await processUserMessage(message, sessionId);
+      
+      logger.info('AI agent response received:', {
+        hasResponse: !!response,
+        responseMessage: response?.message?.substring(0, 50) + '...',
+        hasActions: response?.actions?.length > 0,
+        hasAttachments: response?.attachments?.length > 0
+      });
       
       // Don't save to database if it's not available
       // This allows the chat to work without database
@@ -42,15 +59,26 @@ export default function chatRoutes(io) {
         attachments: response.attachments
       });
       
-      res.json({
+      const jsonResponse = {
         success: true,
         response: response.message,
         actions: response.actions,
         attachments: response.attachments
+      };
+      
+      logger.info('Sending response to client:', { 
+        success: jsonResponse.success,
+        responseLength: jsonResponse.response?.length 
       });
       
+      res.json(jsonResponse);
+      
     } catch (error) {
-      logger.error('Chat error:', error);
+      logger.error('Chat route error:', {
+        message: error.message,
+        stack: error.stack,
+        type: error.constructor.name
+      });
       res.status(500).json({ error: 'Failed to process message' });
     }
   });
