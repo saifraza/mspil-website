@@ -144,7 +144,7 @@ async function handleLinkedInPost(message, intent) {
     });
     
     return {
-      message: `I've successfully posted to LinkedIn! Here's what I shared:\n\n"${postContent.text}"\n\n${imageUrl ? 'I also included a custom generated image.' : ''}\n\nThe post is now live on your LinkedIn page.`,
+      message: `I\'ve successfully posted to LinkedIn! Here\'s what I shared:\n\n"${postContent.text}"\n\n${imageUrl ? 'I also included a custom generated image.' : ''}\n\nThe post is now live on your LinkedIn page.`,
       actions: [{
         type: 'linkedin_posted',
         postId: postResult.id,
@@ -169,7 +169,7 @@ async function handleImageGeneration(message, intent) {
     const imageUrl = await generateImage(imagePrompt);
     
     return {
-      message: `I've generated an image based on your request. You can use this for your marketing materials or social media posts.`,
+      message: `I\'ve generated an image based on your request. You can use this for your marketing materials or social media posts.`,
       actions: [{
         type: 'image_generated',
         prompt: imagePrompt
@@ -193,7 +193,7 @@ async function handleNewsCheck(intent) {
     
     if (news.length === 0) {
       return {
-        message: 'No new industry updates at the moment. I'll keep monitoring and alert you when there are relevant news.',
+        message: 'No new industry updates at the moment. I\'ll keep monitoring and alert you when there are relevant news.',
         actions: [],
         attachments: []
       };
@@ -229,7 +229,7 @@ async function handleScheduling(message, intent) {
     const scheduled = await scheduleContent(scheduleDetails);
     
     return {
-      message: `I've scheduled your content for ${scheduled.scheduledTime}. I'll automatically post it at that time. You can ask me to show scheduled posts anytime.`,
+      message: `I\'ve scheduled your content for ${scheduled.scheduledTime}. I\'ll automatically post it at that time. You can ask me to show scheduled posts anytime.`,
       actions: [{
         type: 'content_scheduled',
         scheduleId: scheduled.id,
