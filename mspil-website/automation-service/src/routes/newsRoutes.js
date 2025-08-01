@@ -5,15 +5,13 @@ import { logger } from '../server.js';
 
 const router = express.Router();
 
-// Get latest news
-router.get('/latest', async (req, res) => {
+// Get latest news - also handle root endpoint
+router.get(['/', '/latest'], async (req, res) => {
   try {
-    const { error, value } = validateNewsQuery(req.query);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
+    // Parse topics from query string
+    const topics = req.query.topics ? req.query.topics.split(',') : [];
+    const limit = parseInt(req.query.limit) || 10;
     
-    const { topics = [], limit = 10 } = value;
     const news = await getLatestNews(topics, limit);
     
     res.json({

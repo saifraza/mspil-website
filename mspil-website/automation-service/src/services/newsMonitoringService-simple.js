@@ -33,28 +33,64 @@ async function checkAllNewsSources() {
   // For now, return mock data until Puppeteer is set up
   const mockNews = [
     {
+      id: 1,
       title: 'Sugar Production Increases by 15% in Current Season',
       url: 'https://www.chinimandi.com/sugar-production-increases',
-      date: new Date(),
-      summary: 'Sugar production in India has seen a significant increase of 15% in the current crushing season...',
+      date: new Date().toISOString(),
+      summary: 'Sugar production in India has seen a significant increase of 15% in the current crushing season, with mills reporting higher recovery rates and better cane quality.',
       source: 'ChiniMandi',
+      category: 'sugar',
       categories: ['sugar', 'production']
     },
     {
+      id: 2,
       title: 'Ethanol Blending Target Achieved Ahead of Schedule',
       url: 'https://www.chinimandi.com/ethanol-blending-target',
-      date: new Date(Date.now() - 86400000), // Yesterday
-      summary: 'India achieves 12% ethanol blending target ahead of the 2025 deadline...',
+      date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+      summary: 'India achieves 12% ethanol blending target ahead of the 2025 deadline, marking a significant milestone in the renewable energy sector and reducing oil import dependency.',
       source: 'ChiniMandi',
+      category: 'ethanol',
       categories: ['ethanol', 'policy']
     },
     {
+      id: 3,
       title: 'New Technology Improves Sugar Mill Efficiency',
       url: 'https://www.indiansugar.com/new-technology',
-      date: new Date(Date.now() - 172800000), // 2 days ago
-      summary: 'Revolutionary new technology promises to improve sugar mill efficiency by 20%...',
+      date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+      summary: 'Revolutionary new technology promises to improve sugar mill efficiency by 20%, using AI-powered optimization and IoT sensors for real-time monitoring.',
       source: 'Indian Sugar Mills Association',
+      category: 'sugar',
       categories: ['sugar', 'technology', 'innovation']
+    },
+    {
+      id: 4,
+      title: 'Global Sugar Prices Show Upward Trend',
+      url: 'https://www.chinimandi.com/sugar-prices-trend',
+      date: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+      summary: 'International sugar prices have increased by 8% this month due to lower production forecasts from Brazil and strong demand from Asian markets.',
+      source: 'ChiniMandi',
+      category: 'market',
+      categories: ['sugar', 'market', 'prices']
+    },
+    {
+      id: 5,
+      title: 'Power Generation from Bagasse Reaches New Heights',
+      url: 'https://www.indiansugar.com/bagasse-power',
+      date: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+      summary: 'Sugar mills across India are generating record amounts of power from bagasse, contributing significantly to the renewable energy grid.',
+      source: 'Indian Sugar Mills Association',
+      category: 'power',
+      categories: ['power', 'renewable', 'bagasse']
+    },
+    {
+      id: 6,
+      title: 'Government Announces MSP for Sugarcane Crop',
+      url: 'https://www.chinimandi.com/sugarcane-msp',
+      date: new Date(Date.now() - 14400000).toISOString(), // 4 hours ago
+      summary: 'The government has announced an increased Minimum Support Price (MSP) for sugarcane, providing relief to farmers and ensuring sustainable cultivation.',
+      source: 'ChiniMandi',
+      category: 'sugar',
+      categories: ['sugar', 'policy', 'farmers']
     }
   ];
   

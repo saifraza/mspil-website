@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NewsMediaSection from '@/components/sections/NewsMediaSection';
+import AINewsSection from '@/components/AINewsSection';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
 import { pageBackgrounds } from '@/utils/backgroundStyles';
 import MarketingAgentChat from '@/components/MarketingAgentChat';
@@ -38,8 +39,11 @@ const NewsMediaPage = () => {
     <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
       <UnifiedBackground />
       
-      <NewsMediaSection />
+      {/* AI-Powered Industry News */}
+      <AINewsSection />
       
+      {/* Gallery Section */}
+      <NewsMediaSection />
       {/* Marketing Agent Button */}
       <Button
         onClick={handleAgentClick}
