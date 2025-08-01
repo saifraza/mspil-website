@@ -39,13 +39,15 @@ const io = new Server(httpServer, {
     origin: [
       process.env.CORS_ORIGIN || 'http://localhost:5173',
       'https://mspil.in',
+      'https://www.mspil.in',
       'http://localhost:5173',
       'http://localhost:3000',
-      'https://mspil-website-production.up.railway.app'
+      'https://mspil-website-production.up.railway.app',
+      'https://mspil-mcp-production.up.railway.app'
     ],
     methods: ['GET', 'POST'],
     credentials: true,
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
   },
   transports: ['websocket', 'polling']
 });
@@ -59,13 +61,16 @@ app.use(cors({
   origin: [
     process.env.CORS_ORIGIN || 'http://localhost:5173',
     'https://mspil.in',
+    'https://www.mspil.in',
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://mspil-website-production.up.railway.app'
+    'https://mspil-website-production.up.railway.app',
+    'https://mspil-mcp-production.up.railway.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  optionsSuccessStatus: 200
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
