@@ -4,6 +4,7 @@ import { logger } from '../server.js';
 // News operations
 export async function saveNewsItem(article) {
   const pool = await getPool();
+  if (!pool) return null; // No database available
   
   try {
     const query = `
@@ -34,6 +35,7 @@ export async function saveNewsItem(article) {
 
 export async function getLatestNewsFromDB(topics = [], limit = 10) {
   const pool = await getPool();
+  if (!pool) return []; // No database available
   
   try {
     let query = `

@@ -6,6 +6,12 @@ let pool;
 
 export async function initializeDatabase() {
   try {
+    // Only initialize database if DATABASE_URL is provided
+    if (!process.env.DATABASE_URL) {
+      logger.warn('DATABASE_URL not provided, running without database');
+      return;
+    }
+    
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
