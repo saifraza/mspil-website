@@ -9,12 +9,16 @@ export default function chatRoutes(io) {
   // Process chat message
   router.post('/message', async (req, res) => {
     try {
+      logger.info('Received chat message:', { body: req.body });
+      
       const { error, value } = validateChatMessage(req.body);
       if (error) {
+        logger.error('Validation error:', error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
       }
       
       const { message, sessionId } = value;
+      logger.info('Processing message:', { message, sessionId });
       
       // Emit user message to WebSocket
       io.to('marketing_chat').emit('user_message', {

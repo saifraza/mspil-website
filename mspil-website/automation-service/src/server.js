@@ -40,23 +40,32 @@ const io = new Server(httpServer, {
       process.env.CORS_ORIGIN || 'http://localhost:5173',
       'https://mspil.in',
       'http://localhost:5173',
-      'http://localhost:3000'
+      'http://localhost:3000',
+      'https://mspil-website-production.up.railway.app'
     ],
     methods: ['GET', 'POST'],
-    credentials: true
-  }
+    credentials: true,
+    allowedHeaders: ['Content-Type']
+  },
+  transports: ['websocket', 'polling']
 });
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP for development
+  crossOriginEmbedderPolicy: false
+}));
 app.use(cors({
   origin: [
     process.env.CORS_ORIGIN || 'http://localhost:5173',
     'https://mspil.in',
     'http://localhost:5173',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://mspil-website-production.up.railway.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
