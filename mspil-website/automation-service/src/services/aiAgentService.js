@@ -1,16 +1,16 @@
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { logger } from '../server.js';
 import { generateImage } from './imageGenerationService.js';
 import { postToLinkedIn } from './linkedinService.js';
 import { getLatestNews } from './newsMonitoringService.js';
 import { scheduleContent } from './schedulingService.js';
 
-let openai;
+let anthropic;
 let systemPrompt;
 
 export async function initializeAIAgent() {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+  anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY
   });
   
   systemPrompt = `You are the AI Marketing Agent for Mahakaushal Sugar & Power Industries Ltd (MSPIL), a leading sugar and ethanol manufacturing company in India.
@@ -95,25 +95,34 @@ export async function processUserMessage(message, sessionId) {
 }
 
 async function analyzeIntent(message) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 500,
+    system: `Analyze the user's message and determine their intent. Respond with a JSON object containing:
+    - primaryIntent: one of ['linkedin_post', 'image_generation', 'news_check', 'schedule_content', 'general_query']
+    - entities: extracted entities like content, timing, topics
+    - confidence: confidence score 0-1`,
     messages: [
-      {
-        role: 'system',
-        content: `Analyze the user's message and determine their intent. Respond with a JSON object containing:
-        - primaryIntent: one of ['linkedin_post', 'image_generation', 'news_check', 'schedule_content', 'general_query']
-        - entities: extracted entities like content, timing, topics
-        - confidence: confidence score 0-1`
-      },
       {
         role: 'user',
         content: message
       }
-    ],
-    response_format: { type: 'json_object' }
+    ]
   });
   
-  return JSON.parse(completion.choices[0].message.content);
+  try {
+    // Extract JSON from Claude's response
+    const responseText = completion.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    // Fallback if no JSON found
+    return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
+  } catch (error) {
+    logger.error('Intent parsing error:', error);
+    return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
+  }
 }
 
 async function handleLinkedInPost(message, intent) {
@@ -240,31 +249,11 @@ async function handleScheduling(message, intent) {
 }
 
 async function handleGeneralQuery(message) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 1000,
+    system: systemPrompt,
     messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: message }
-    ]
-  });
-  
-  return {
-    message: completion.choices[0].message.content,
-    actions: [],
-    attachments: []
-  };
-}
-
-async function generatePostContent(message, intent) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
-    messages: [
-      {
-        role: 'system',
-        content: `Generate professional LinkedIn post content for MSPIL based on the user's request. 
-        Include relevant hashtags and maintain a professional tone. Keep it under 1300 characters.
-        Focus on sustainability, innovation, and achievements.`
-      },
       {
         role: 'user',
         content: message
@@ -272,20 +261,40 @@ async function generatePostContent(message, intent) {
     ]
   });
   
-  const content = completion.choices[0].message.content;
+  return {
+    message: completion.content[0].text,
+    actions: [],
+    attachments: []
+  };
+}
+
+async function generatePostContent(message, intent) {
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 500,
+    system: `Generate professional LinkedIn post content for MSPIL based on the user's request. 
+    Include relevant hashtags and maintain a professional tone. Keep it under 1300 characters.
+    Focus on sustainability, innovation, and achievements.`,
+    messages: [
+      {
+        role: 'user',
+        content: message
+      }
+    ]
+  });
+  
+  const content = completion.content[0].text;
   const topic = intent.entities.topic || 'general update';
   
   return { text: content, topic };
 }
 
 async function generateImagePrompt(topic) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 200,
+    system: 'Generate a detailed DALL-E 3 prompt for a professional marketing image for a sugar and ethanol company. Make it photorealistic and professional.',
     messages: [
-      {
-        role: 'system',
-        content: 'Generate a detailed DALL-E 3 prompt for a professional marketing image for a sugar and ethanol company. Make it photorealistic and professional.'
-      },
       {
         role: 'user',
         content: `Create an image prompt for: ${topic}`
@@ -293,17 +302,15 @@ async function generateImagePrompt(topic) {
     ]
   });
   
-  return completion.choices[0].message.content;
+  return completion.content[0].text;
 }
 
 async function refineImagePrompt(message) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 200,
+    system: 'Convert the user request into a detailed DALL-E 3 prompt. Make it specific, professional, and suitable for corporate marketing.',
     messages: [
-      {
-        role: 'system',
-        content: 'Convert the user request into a detailed DALL-E 3 prompt. Make it specific, professional, and suitable for corporate marketing.'
-      },
       {
         role: 'user',
         content: message
@@ -311,24 +318,31 @@ async function refineImagePrompt(message) {
     ]
   });
   
-  return completion.choices[0].message.content;
+  return completion.content[0].text;
 }
 
 async function parseScheduleRequest(message, intent) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+  const completion = await anthropic.messages.create({
+    model: 'claude-3-opus-20240229',
+    max_tokens: 200,
+    system: 'Extract scheduling details from the message. Return JSON with: content, scheduledTime (ISO format), platform',
     messages: [
-      {
-        role: 'system',
-        content: 'Extract scheduling details from the message. Return JSON with: content, scheduledTime (ISO format), platform'
-      },
       {
         role: 'user',
         content: message
       }
-    ],
-    response_format: { type: 'json_object' }
+    ]
   });
   
-  return JSON.parse(completion.choices[0].message.content);
+  try {
+    const responseText = completion.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    throw new Error('Could not parse schedule request');
+  } catch (error) {
+    logger.error('Schedule parsing error:', error);
+    throw error;
+  }
 }

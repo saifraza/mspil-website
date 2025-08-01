@@ -4,10 +4,10 @@ AI-powered marketing agent for automated news monitoring, content creation, and 
 
 ## Features
 
-- 🤖 **AI Chat Interface** - Natural language interaction for content creation
+- 🤖 **AI Chat Interface** - Natural language interaction powered by Claude
 - 📰 **News Monitoring** - Automated scraping of sugar/ethanol industry news
 - 💼 **LinkedIn Integration** - Automated posting with images
-- 🎨 **AI Image Generation** - DALL-E 3 powered marketing visuals
+- 🎨 **Image Selection** - Smart stock photo selection for marketing
 - 📅 **Content Scheduling** - Plan and automate posts
 - 📊 **Analytics Tracking** - Performance metrics and insights
 

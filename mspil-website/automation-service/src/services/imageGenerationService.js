@@ -1,58 +1,34 @@
-import OpenAI from 'openai';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import { logger } from '../server.js';
-
-let openai;
+import { generateSimpleImage, searchPexelsImage } from './simpleImageService.js';
 
 export function initializeImageGeneration() {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
+  // No OpenAI initialization needed for Anthropic-only setup
+  logger.info('Image generation service initialized (using simple image service)');
 }
 
 export async function generateImage(prompt, options = {}) {
   try {
-    const {
-      size = '1024x1024',
-      quality = 'standard',
-      style = 'natural',
-      n = 1
-    } = options;
-    
-    // Enhance prompt for better corporate/industrial imagery
-    const enhancedPrompt = enhancePromptForMSPIL(prompt);
-    
-    logger.info('Generating image with DALL-E 3:', { 
-      originalPrompt: prompt,
-      enhancedPrompt: enhancedPrompt.substring(0, 100) + '...'
+    // Since we're using Anthropic, we'll use simple image generation
+    logger.info('Generating image with simple service:', { 
+      originalPrompt: prompt
     });
     
-    const response = await openai.images.generate({
-      model: 'dall-e-3',
-      prompt: enhancedPrompt,
-      n: 1, // DALL-E 3 only supports n=1
-      size,
-      quality,
-      style,
-      response_format: 'url'
-    });
+    // Try Pexels first if API key is available
+    if (process.env.PEXELS_API_KEY) {
+      return await searchPexelsImage(prompt);
+    }
     
-    const imageUrl = response.data[0].url;
-    
-    // Download and save the image
-    const savedPath = await downloadAndSaveImage(imageUrl);
-    
-    // Optimize for social media
-    const optimizedPath = await optimizeImageForSocialMedia(savedPath);
-    
-    return optimizedPath;
+    // Otherwise use placeholder images
+    return await generateSimpleImage(prompt);
     
   } catch (error) {
     logger.error('Image generation error:', error);
-    throw new Error('Failed to generate image: ' + error.message);
+    // Return a default image URL
+    return 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1200&h=627&fit=crop';
   }
 }
 

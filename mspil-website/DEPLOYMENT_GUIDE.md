@@ -32,27 +32,29 @@ Click on the automation service and add these variables:
 # Required Variables
 PORT=3001
 NODE_ENV=production
-DATABASE_URL=[paste from PostgreSQL service]
-OPENAI_API_KEY=sk-...your-openai-key...
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+ANTHROPIC_API_KEY=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
 LINKEDIN_ACCESS_TOKEN=your-linkedin-token
 LINKEDIN_PAGE_ID=your-linkedin-page-id
 JWT_SECRET=generate-random-secret-here
 CORS_ORIGIN=https://mspil.in
 
 # Optional
+PEXELS_API_KEY=your-pexels-key-for-images
 NEWS_CHECK_INTERVAL=0 0 */6 * * *
-OPENAI_RATE_LIMIT=60
 LINKEDIN_RATE_LIMIT=100
 ```
 
 ### Step 5: Get API Keys
 
-#### OpenAI API Key:
-1. Go to [platform.openai.com](https://platform.openai.com)
-2. Create account/login
-3. Go to API Keys section
-4. Create new secret key
-5. Copy and save it
+#### Anthropic API Key:
+✅ **Already provided!** Your key is included in the environment variables above.
+
+#### Pexels API Key (Optional - for stock images):
+1. Go to [www.pexels.com/api/](https://www.pexels.com/api/)
+2. Create free account
+3. Get your API key
+4. Free tier includes 200 requests/hour
 
 #### LinkedIn Access Token:
 1. Go to [LinkedIn Developers](https://www.linkedin.com/developers/)
