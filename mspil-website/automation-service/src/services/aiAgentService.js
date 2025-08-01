@@ -9,8 +9,17 @@ let anthropic;
 let systemPrompt;
 
 export async function initializeAIAgent() {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  
+  if (!apiKey) {
+    logger.error('ANTHROPIC_API_KEY is not set in environment variables');
+    throw new Error('ANTHROPIC_API_KEY is required');
+  }
+  
+  logger.info('Initializing Anthropic with API key:', apiKey.substring(0, 10) + '...');
+  
   anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
+    apiKey: apiKey
   });
   
   systemPrompt = `You are the AI Marketing Agent for Mahakaushal Sugar & Power Industries Ltd (MSPIL), a leading sugar and ethanol manufacturing company in India.
@@ -41,8 +50,18 @@ When users ask you to post or create content, analyze their request and determin
 
 export async function processUserMessage(message, sessionId) {
   try {
+    logger.info('Processing user message:', { message, sessionId });
+    
+    // Check if anthropic is initialized
+    if (!anthropic) {
+      logger.error('Anthropic client not initialized');
+      throw new Error('AI service not properly initialized');
+    }
+    
     // Analyze user intent
+    logger.info('Analyzing intent...');
     const intentAnalysis = await analyzeIntent(message);
+    logger.info('Intent analysis result:', intentAnalysis);
     
     // Process based on intent
     let response = {
@@ -85,9 +104,25 @@ export async function processUserMessage(message, sessionId) {
     return response;
     
   } catch (error) {
-    logger.error('AI Agent error:', error);
+    logger.error('AI Agent error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      sessionId,
+      userMessage: message
+    });
+    
+    // Provide more specific error messages
+    if (error.message.includes('API key')) {
+      return {
+        message: 'I apologize, but the AI service is not properly configured. Please ensure the Anthropic API key is set in the environment variables.',
+        actions: [],
+        attachments: []
+      };
+    }
+    
     return {
-      message: 'I encountered an error processing your request. Please try again or rephrase your message.',
+      message: 'I apologize, but I encountered an error. Please try again.',
       actions: [],
       attachments: []
     };
@@ -96,6 +131,8 @@ export async function processUserMessage(message, sessionId) {
 
 async function analyzeIntent(message) {
   try {
+    logger.info('Calling Anthropic API for intent analysis...');
+    
     const completion = await anthropic.messages.create({
       model: 'claude-3-opus-20240229',
       max_tokens: 500,
@@ -110,22 +147,30 @@ async function analyzeIntent(message) {
         }
       ]
     });
+    
+    logger.info('Anthropic API response received');
   
-  try {
-    // Extract JSON from Claude's response
-    const responseText = completion.content[0].text;
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
+    try {
+      // Extract JSON from Claude's response
+      const responseText = completion.content[0].text;
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+      // Fallback if no JSON found
+      return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
+    } catch (error) {
+      logger.error('Intent parsing error:', error);
+      return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
     }
-    // Fallback if no JSON found
-    return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
   } catch (error) {
-    logger.error('Intent parsing error:', error);
-    return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
-  }
-  } catch (error) {
-    logger.error('Anthropic API error in analyzeIntent:', error);
+    logger.error('Anthropic API error in analyzeIntent:', {
+      message: error.message,
+      status: error.status,
+      type: error.error?.type,
+      details: error.error
+    });
+    
     // Return default intent if API fails
     return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
   }

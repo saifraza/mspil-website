@@ -84,6 +84,60 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Test Anthropic API
+app.get('/api/test-anthropic', async (req, res) => {
+  try {
+    const hasApiKey = !!process.env.ANTHROPIC_API_KEY;
+    const keyPreview = hasApiKey ? process.env.ANTHROPIC_API_KEY.substring(0, 10) + '...' : 'NOT SET';
+    
+    logger.info('Testing Anthropic API:', { hasApiKey, keyPreview });
+    
+    if (!hasApiKey) {
+      return res.json({
+        success: false,
+        error: 'ANTHROPIC_API_KEY not set in environment variables',
+        keyPreview
+      });
+    }
+    
+    // Try a simple API call
+    const { Anthropic } = await import('@anthropic-ai/sdk');
+    const testClient = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY
+    });
+    
+    const testResponse = await testClient.messages.create({
+      model: 'claude-3-opus-20240229',
+      max_tokens: 100,
+      messages: [{
+        role: 'user',
+        content: 'Say "API is working"'
+      }]
+    });
+    
+    res.json({
+      success: true,
+      response: testResponse.content[0].text,
+      keyPreview
+    });
+    
+  } catch (error) {
+    logger.error('Anthropic API test error:', {
+      message: error.message,
+      status: error.status,
+      type: error.error?.type
+    });
+    
+    res.json({
+      success: false,
+      error: error.message,
+      status: error.status,
+      type: error.error?.type,
+      keyPreview: process.env.ANTHROPIC_API_KEY ? process.env.ANTHROPIC_API_KEY.substring(0, 10) + '...' : 'NOT SET'
+    });
+  }
+});
+
 // WebSocket connection handling
 io.on('connection', (socket) => {
   logger.info('New client connected:', socket.id);
