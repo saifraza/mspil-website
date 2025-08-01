@@ -95,20 +95,21 @@ export async function processUserMessage(message, sessionId) {
 }
 
 async function analyzeIntent(message) {
-  const completion = await anthropic.messages.create({
-    model: 'claude-3-opus-20240229',
-    max_tokens: 500,
-    system: `Analyze the user's message and determine their intent. Respond with a JSON object containing:
-    - primaryIntent: one of ['linkedin_post', 'image_generation', 'news_check', 'schedule_content', 'general_query']
-    - entities: extracted entities like content, timing, topics
-    - confidence: confidence score 0-1`,
-    messages: [
-      {
-        role: 'user',
-        content: message
-      }
-    ]
-  });
+  try {
+    const completion = await anthropic.messages.create({
+      model: 'claude-3-opus-20240229',
+      max_tokens: 500,
+      system: `Analyze the user's message and determine their intent. Respond with a JSON object containing:
+      - primaryIntent: one of ['linkedin_post', 'image_generation', 'news_check', 'schedule_content', 'general_query']
+      - entities: extracted entities like content, timing, topics
+      - confidence: confidence score 0-1`,
+      messages: [
+        {
+          role: 'user',
+          content: message
+        }
+      ]
+    });
   
   try {
     // Extract JSON from Claude's response
@@ -121,6 +122,11 @@ async function analyzeIntent(message) {
     return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
   } catch (error) {
     logger.error('Intent parsing error:', error);
+    return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
+  }
+  } catch (error) {
+    logger.error('Anthropic API error in analyzeIntent:', error);
+    // Return default intent if API fails
     return { primaryIntent: 'general_query', entities: {}, confidence: 0.5 };
   }
 }
@@ -249,23 +255,42 @@ async function handleScheduling(message, intent) {
 }
 
 async function handleGeneralQuery(message) {
-  const completion = await anthropic.messages.create({
-    model: 'claude-3-opus-20240229',
-    max_tokens: 1000,
-    system: systemPrompt,
-    messages: [
-      {
-        role: 'user',
-        content: message
-      }
-    ]
-  });
-  
-  return {
-    message: completion.content[0].text,
-    actions: [],
-    attachments: []
-  };
+  try {
+    const completion = await anthropic.messages.create({
+      model: 'claude-3-opus-20240229',
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [
+        {
+          role: 'user',
+          content: message
+        }
+      ]
+    });
+    
+    return {
+      message: completion.content[0].text,
+      actions: [],
+      attachments: []
+    };
+  } catch (error) {
+    logger.error('Anthropic API error in handleGeneralQuery:', error);
+    
+    // Check if it's an API key issue
+    if (error.message && error.message.includes('API key')) {
+      return {
+        message: 'I\'m having trouble connecting to my AI service. Please ensure the Anthropic API key is properly configured.',
+        actions: [],
+        attachments: []
+      };
+    }
+    
+    return {
+      message: 'I apologize, but I\'m experiencing technical difficulties. Please try again in a moment.',
+      actions: [],
+      attachments: []
+    };
+  }
 }
 
 async function generatePostContent(message, intent) {

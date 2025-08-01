@@ -101,10 +101,10 @@ async function createTables() {
 }
 
 export async function getPool() {
-  if (!pool) {
+  if (!pool && process.env.DATABASE_URL) {
     await initializeDatabase();
   }
-  return pool;
+  return pool; // May be undefined if no DATABASE_URL
 }
 
 export async function closeDatabase() {

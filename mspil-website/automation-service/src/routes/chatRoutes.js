@@ -26,6 +26,9 @@ export default function chatRoutes(io) {
       // Process message with AI agent
       const response = await processUserMessage(message, sessionId);
       
+      // Don't save to database if it's not available
+      // This allows the chat to work without database
+      
       // Emit AI response to WebSocket
       io.to('marketing_chat').emit('agent_message', {
         message: response.message,
