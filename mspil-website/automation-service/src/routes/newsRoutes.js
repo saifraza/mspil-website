@@ -1,5 +1,5 @@
 import express from 'express';
-import { getLatestNews } from '../services/newsMonitoringService.js';
+import { getLatestNews } from '../services/newsMonitoringService-simple.js';
 import { validateNewsQuery } from '../utils/validation.js';
 import { logger } from '../server.js';
 

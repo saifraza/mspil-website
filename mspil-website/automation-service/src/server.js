@@ -9,7 +9,7 @@ import chatRoutes from './routes/chatRoutes.js';
 import newsRoutes from './routes/newsRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
 import { initializeDatabase } from './config/database.js';
-import { startNewsMonitoring } from './services/newsMonitoringService.js';
+import { startNewsMonitoring } from './services/newsMonitoringService-simple.js';
 import { initializeAIAgent } from './services/aiAgentService.js';
 
 dotenv.config();

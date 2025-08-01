@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { logger } from '../server.js';
 import { generateImage } from './imageGenerationService.js';
 import { postToLinkedIn } from './linkedinService.js';
-import { getLatestNews } from './newsMonitoringService.js';
+import { getLatestNews } from './newsMonitoringService-simple.js';
 import { scheduleContent } from './schedulingService.js';
 
 let anthropic;
