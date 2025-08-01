@@ -162,7 +162,7 @@ const EnhancedContactForm = ({ className }) => {
         <Label 
           htmlFor={name} 
           className={cn(
-            "flex items-center gap-2 mb-2 transition-colors",
+            "flex items-center gap-2 mb-2 transition-colors text-gray-200",
             isFocused && "text-primary",
             hasError && "text-destructive"
           )}
@@ -293,7 +293,7 @@ const EnhancedContactForm = ({ className }) => {
         <Label 
           htmlFor="inquiryType" 
           className={cn(
-            "flex items-center gap-2 mb-2",
+            "flex items-center gap-2 mb-2 text-gray-200",
             focusedField === 'inquiryType' && "text-primary",
             errors.inquiryType && "text-destructive"
           )}
@@ -351,7 +351,7 @@ const EnhancedContactForm = ({ className }) => {
         <Label 
           htmlFor="message" 
           className={cn(
-            "flex items-center gap-2 mb-2",
+            "flex items-center gap-2 mb-2 text-gray-200",
             focusedField === 'message' && "text-primary",
             errors.message && "text-destructive"
           )}
@@ -375,7 +375,7 @@ const EnhancedContactForm = ({ className }) => {
               errors.message && "border-destructive focus:ring-destructive"
             )}
           />
-          <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+          <div className="absolute bottom-2 right-2 text-xs text-gray-500">
             {formData.message.length}/500
           </div>
         </div>
@@ -433,7 +433,7 @@ const EnhancedContactForm = ({ className }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex items-center justify-between text-sm text-gray-500"
+        className="flex items-center justify-between text-sm text-gray-400"
       >
         <div className="flex items-center gap-1">
           <Sparkles className="w-4 h-4" />

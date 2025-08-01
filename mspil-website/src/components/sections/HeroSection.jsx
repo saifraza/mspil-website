@@ -87,7 +87,7 @@ const HeroSection = () => {
   }, [heroData.backgroundVideoPath, heroData.videoPosterPath]);
 
   return (
-    <section ref={heroRef} className={`relative h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
+    <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
       {/* Enhanced animated gradient background */}
       {/* <AnimatedGradient /> */}
       
@@ -274,9 +274,9 @@ const HeroSection = () => {
           ))}
         </motion.div>
 
-        {/* Enhanced Key Metrics with Glass Morphism */}
+        {/* Enhanced Key Metrics with Glass Morphism - Mobile Optimized */}
         <motion.div 
-          className="relative bg-white/10 backdrop-blur-md rounded-2xl p-3 max-w-2xl mx-auto border border-white/20 shadow-lg overflow-hidden mt-6 mb-8"
+          className="relative bg-white/10 backdrop-blur-md rounded-2xl p-4 mx-4 sm:mx-auto sm:max-w-2xl border border-white/20 shadow-lg overflow-hidden mt-6 mb-8"
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 
@@ -293,7 +293,7 @@ const HeroSection = () => {
         >
           
           <motion.h3 
-            className="text-white/80 text-center text-sm font-semibold mb-3 relative z-10 uppercase tracking-wider"
+            className="text-white/80 text-center text-xs sm:text-sm font-semibold mb-4 relative z-10 uppercase tracking-wider"
             variants={{
               hidden: { opacity: 0, y: -20 },
               visible: { opacity: 1, y: 0 }
@@ -301,11 +301,11 @@ const HeroSection = () => {
           >
             {t('heroMetricsTitle') || 'Our Operational Excellence'}
           </motion.h3>
-          <div className="grid grid-cols-3 gap-2 md:gap-3 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2 md:gap-3 relative z-10">
             {heroData.stats.map((stat, index) => (
               <motion.div 
                 key={stat.id}
-                className="group relative flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl p-2 hover:bg-white/20 transition-all duration-300 border border-white/10"
+                className="group relative flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-2 hover:bg-white/20 transition-all duration-300 border border-white/10"
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.8 },
                   visible: { 
@@ -321,17 +321,17 @@ const HeroSection = () => {
                 }}
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="flex-shrink-0 relative z-10">
-                  {React.cloneElement(stat.icon, { className: "w-5 h-5 text-white/80" })}
+                <div className="flex-shrink-0 relative z-10 sm:mb-0 mb-2">
+                  {React.cloneElement(stat.icon, { className: "w-6 h-6 sm:w-5 sm:h-5 text-white/80" })}
                 </div>
-                <div className="text-left relative z-10 flex-1">
+                <div className="text-center sm:text-left relative z-10 flex-1">
                   <AnimatedCounter 
                     to={stat.value} 
                     suffix={stat.suffix}
-                    className="text-xl md:text-2xl font-bold text-white/90 block"
+                    className="text-2xl sm:text-xl md:text-2xl font-bold text-white/90 block"
                   />
                   <motion.p 
-                    className="text-white/70 text-xs"
+                    className="text-white/70 text-sm sm:text-xs"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 + index * 0.1 }}

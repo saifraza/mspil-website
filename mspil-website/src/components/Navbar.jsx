@@ -218,13 +218,13 @@ const Navbar = () => {
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="lg:hidden bg-white/95 dark:bg-bio-green-900/95 backdrop-blur-md shadow-lg pb-4"
+          className="lg:hidden bg-gray-800/60 backdrop-blur-xl shadow-2xl border border-white/20 pb-4 relative z-50 max-h-[calc(100vh-120px)] overflow-y-auto"
         >
           <div className="flex flex-col space-y-2 px-4 pt-2">
             {navStructure.map((item) => (
               item.hasDropdown ? (
                 <div key={item.labelKey} className="space-y-1">
-                  <div className="px-3 py-2 text-base font-medium text-foreground border-b border-gray-200 dark:border-gray-700">
+                  <div className="px-3 py-2 text-base font-medium text-white/90 border-b border-white/20 bg-white/5 backdrop-blur-sm rounded-lg">
                     {t(item.labelKey)}
                   </div>
                   {item.items.map((subItem) => (
@@ -232,7 +232,7 @@ const Navbar = () => {
                       key={subItem.href}
                       to={subItem.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-6 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-bio-green-100 dark:hover:bg-bio-green-800 hover:text-bio-green-700 dark:hover:text-bio-green-300 transition-all duration-200 rounded-md ml-3"
+                      className="block px-6 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white hover:backdrop-blur-sm transition-all duration-200 rounded-md ml-3 border border-transparent hover:border-white/10"
                     >
                       {typeof subItem.labelKey === 'string' && subItem.labelKey.startsWith('nav') ? t(subItem.labelKey) : subItem.labelKey}
                     </Link>
@@ -243,10 +243,10 @@ const Navbar = () => {
                   key={item.labelKey}
                   to={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
+                  className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 border ${
                     isActiveRoute(item.href)
-                      ? 'bg-gradient-to-r from-bio-green-500 to-eco-lime-500 text-white'
-                      : 'text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800 hover:text-bio-green-700 dark:hover:text-bio-green-300'
+                      ? 'bg-gradient-to-r from-green-600/80 to-green-500/80 text-white backdrop-blur-sm border-white/30 shadow-lg'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:backdrop-blur-sm border-transparent hover:border-white/20'
                   }`}
                 >
                   {t(item.labelKey)}

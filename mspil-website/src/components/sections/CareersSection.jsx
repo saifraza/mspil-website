@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { AnimatedCard, FeatureCard, GlassCard, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/animated-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -54,22 +53,22 @@ const CareersSection = () => {
 
 
   return (
-    <section id="careers" className="section-padding-compact bg-background dark:bg-muted/20">
+    <section id="careers" className="py-16 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div {...fadeInProps} className="text-center mb-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">{t('careersTitle')}</h2>
-          <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+        <motion.div {...fadeInProps} className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('careersTitle')}</h2>
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
             {t('careersSubtitle')}
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6 items-start">
+        <div className="grid md:grid-cols-2 gap-8 mb-12 items-start">
           <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }}>
-            <h3 className="text-2xl font-semibold text-foreground mb-6 flex items-center"><Sparkles className="mr-3 w-7 h-7 text-primary"/>{t('careersCultureTitle')}</h3>
-            <p className="text-foreground/70 mb-4 leading-relaxed">
+            <h3 className="text-2xl font-semibold text-white mb-6 flex items-center"><Sparkles className="mr-3 w-7 h-7 text-primary"/>{t('careersCultureTitle')}</h3>
+            <p className="text-gray-300 mb-4 leading-relaxed">
               {t('careersCultureDesc1')}
             </p>
-            <p className="text-foreground/70 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed">
               {t('careersCultureDesc2')}
             </p>
             {cultureImage ? (
@@ -82,30 +81,37 @@ const CareersSection = () => {
           </motion.div>
 
           <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.4 }}>
-            <h3 className="text-2xl font-semibold text-foreground mb-6 flex items-center"><Briefcase className="mr-3 w-7 h-7 text-primary"/>{t('careersOpeningsTitle')}</h3>
+            <h3 className="text-2xl font-semibold text-white mb-6 flex items-center"><Briefcase className="mr-3 w-7 h-7 text-primary"/>{t('careersOpeningsTitle')}</h3>
             <div className="space-y-4">
               {jobOpenings.length > 0 ? jobOpenings.map((job, index) => (
-                <AnimatedCard key={index} variant="slide" delay={index * 0.1} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg p-4 group-hover:-translate-y-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-semibold text-foreground">{t(job.titleKey)}</p>
-                        <p className="text-sm text-muted-foreground">{t(job.locationKey)} • {t(job.typeKey)}</p>
+                        <p className="font-semibold text-white">{t(job.titleKey)}</p>
+                        <p className="text-sm text-gray-300">{t(job.locationKey)} • {t(job.typeKey)}</p>
                       </div>
                       <Button variant="ghost" size="sm" className="text-primary hover:text-primary">{t('careersApplyButton')} <ChevronRight className="w-4 h-4 ml-1"/></Button>
                     </div>
-                  </CardContent>
-                </AnimatedCard>
+                  </div>
+                </motion.div>
               )) : (
-                <p className="text-muted-foreground">{t('careersNoOpenings')}</p>
+                <p className="text-gray-400">{t('careersNoOpenings')}</p>
               )}
             </div>
              <Button variant="link" className="mt-6 text-primary">{t('careersViewAllButton')} <span aria-hidden="true">→</span></Button>
           </motion.div>
         </div>
         
-        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }} className="mb-8">
-          <h3 className="text-2xl md:text-3xl font-semibold text-foreground text-center mb-6">{t('careersTestimonialsTitle')}</h3>
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }} className="mb-12">
+          <h3 className="text-2xl md:text-3xl font-semibold text-white text-center mb-8">{t('careersTestimonialsTitle')}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             {testimonialsWithImages.map((testimonial, index) => (
               <motion.div 
@@ -115,57 +121,55 @@ const CareersSection = () => {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.5, delay: 0.1 * index }}
               >
-                <GlassCard className="p-6" blur="md" opacity="15">
-                  <CardContent className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 p-0">
+                <div className="bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg p-6">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
                     {testimonial.imageUrl ? (
                       <LazyImage alt={t(testimonial.imageAltKey)} className="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-primary" src={testimonial.imageUrl} />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center flex-shrink-0 border-2 border-primary">
-                        <ImageOff className="w-10 h-10 text-muted-foreground" />
+                      <div className="w-20 h-20 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 border-2 border-primary">
+                        <ImageOff className="w-10 h-10 text-gray-400" />
                       </div>
                     )}
                     <div>
-                      <p className="text-foreground/80 italic">"{t(testimonial.quoteKey)}"</p>
+                      <p className="text-gray-300 italic">"{t(testimonial.quoteKey)}"</p>
                       <p className="mt-3 font-semibold text-primary">- {t(testimonial.authorKey)}</p>
                     </div>
-                  </CardContent>
-                </GlassCard>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
-          <AnimatedCard variant="scale" className="max-w-2xl mx-auto shadow-xl p-6 sm:p-8">
-            <CardHeader className="text-center p-0 mb-6">
+          <div className="max-w-2xl mx-auto bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg p-6 sm:p-8">
+            <div className="text-center mb-6">
               <Users className="w-12 h-12 text-primary mx-auto mb-3"/>
-              <CardTitle className="text-2xl md:text-3xl">{t('careersWorkWithUsTitle')}</CardTitle>
-              <CardDescription className="mt-2">{t('careersWorkWithUsDesc')}</CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
+              <h3 className="text-2xl md:text-3xl font-bold text-white">{t('careersWorkWithUsTitle')}</h3>
+              <p className="mt-2 text-gray-300">{t('careersWorkWithUsDesc')}</p>
+            </div>
               <form className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="career-name">{t('formFullNameLabel')}</Label>
+                    <Label htmlFor="career-name" className="text-gray-200">{t('formFullNameLabel')}</Label>
                     <Input id="career-name" type="text" placeholder={t('formFullNamePlaceholder')} />
                   </div>
                   <div>
-                    <Label htmlFor="career-email">{t('formEmailLabel')}</Label>
+                    <Label htmlFor="career-email" className="text-gray-200">{t('formEmailLabel')}</Label>
                     <Input id="career-email" type="email" placeholder={t('formEmailPlaceholder')} />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="career-resume">{t('formResumeLabel')}</Label>
+                  <Label htmlFor="career-resume" className="text-gray-200">{t('formResumeLabel')}</Label>
                   <Input id="career-resume" type="file" />
                 </div>
                 <div>
-                  <Label htmlFor="career-message">{t('formMessageLabel')}</Label>
+                  <Label htmlFor="career-message" className="text-gray-200">{t('formMessageLabel')}</Label>
                   <Textarea id="career-message" placeholder={t('formMessagePlaceholderCareers') } rows={4} />
                 </div>
                 <Button type="submit" className="w-full" size="lg">{t('formSubmitButton')}</Button>
               </form>
-            </CardContent>
-          </AnimatedCard>
+          </div>
         </motion.div>
       </div>
     </section>

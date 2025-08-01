@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Newspaper, CalendarDays, Video, Image as ImageIcon, Linkedin, Twitter, ImageOff, X, ChevronLeft, ChevronRight, TrendingUp, Clock, Eye } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
@@ -10,7 +9,7 @@ const NewsTicker = ({ items }) => {
   const t = useTranslation();
   
   return (
-    <div className="overflow-hidden bg-primary/10 dark:bg-primary/20 py-2 mb-8 rounded-lg">
+    <div className="overflow-hidden bg-primary/10 backdrop-blur-sm py-2 mb-8 rounded-lg">
       <motion.div
         className="flex whitespace-nowrap"
         animate={{
@@ -120,8 +119,8 @@ const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) =>
               className="w-full h-full object-contain rounded-lg"
             />
           ) : (
-            <div className="w-96 h-96 flex items-center justify-center bg-muted rounded-lg">
-              <ImageOff className="w-20 h-20 text-muted-foreground" />
+            <div className="w-96 h-96 flex items-center justify-center bg-gray-800 rounded-lg">
+              <ImageOff className="w-20 h-20 text-gray-400" />
             </div>
           )}
           <motion.p
@@ -223,7 +222,7 @@ const NewsMediaSection = () => {
   };
 
   return (
-    <section id="news" className="py-20 bg-gradient-to-b from-muted/30 to-background dark:from-background dark:to-muted/20 relative overflow-hidden">
+    <section id="news" className="py-16 bg-transparent relative overflow-hidden">
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-5">
         <motion.div
@@ -244,9 +243,9 @@ const NewsMediaSection = () => {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div {...fadeInProps} className="text-center mb-8">
+        <motion.div {...fadeInProps} className="text-center mb-12">
           <motion.h2 
-            className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400"
+            className="text-3xl md:text-4xl font-bold mb-4 text-white"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -255,7 +254,7 @@ const NewsMediaSection = () => {
             {t('newsSectionTitle')}
           </motion.h2>
           <motion.p 
-            className="text-lg text-foreground/70 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -271,7 +270,7 @@ const NewsMediaSection = () => {
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }} className="grid md:grid-cols-2 gap-12 mb-16">
           <div>
             <motion.h3 
-              className="text-2xl font-semibold text-foreground mb-6 flex items-center"
+              className="text-2xl font-semibold text-white mb-6 flex items-center"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -299,11 +298,11 @@ const NewsMediaSection = () => {
                   }}
                   className="transition-all duration-300"
                 >
-                  <Card className="hover:shadow-2xl transition-all duration-300 border-primary/10 hover:border-primary/30 relative overflow-hidden">
+                  <div className="bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg relative overflow-hidden">
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"
                     />
-                    <CardContent className="p-4 flex items-start space-x-3 relative z-10">
+                    <div className="p-4 flex items-start space-x-3 relative z-10">
                       <motion.div 
                         className="flex-shrink-0 pt-1"
                         animate={{
@@ -314,21 +313,21 @@ const NewsMediaSection = () => {
                         {item.icon}
                       </motion.div>
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground hover:text-primary transition-colors">{t(item.titleKey)}</p>
+                        <p className="font-semibold text-white hover:text-primary transition-colors">{t(item.titleKey)}</p>
                         <div className="flex items-center gap-4 mt-1">
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <p className="text-xs text-gray-400 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {t(item.dateKey)}
                           </p>
-                          <p className="text-xs text-muted-foreground">{t(item.categoryKey)}</p>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1 ml-auto">
+                          <p className="text-xs text-gray-400">{t(item.categoryKey)}</p>
+                          <p className="text-xs text-gray-400 flex items-center gap-1 ml-auto">
                             <Eye className="w-3 h-3" />
                             {item.views}
                           </p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -351,7 +350,7 @@ const NewsMediaSection = () => {
           
           <div>
             <motion.h3 
-              className="text-2xl font-semibold text-foreground mb-6 flex items-center"
+              className="text-2xl font-semibold text-white mb-6 flex items-center"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -376,7 +375,7 @@ const NewsMediaSection = () => {
                   onClick={() => item.type === 'image' && openLightbox(index)}
                   className="cursor-pointer"
                 >
-                  <Card className="overflow-hidden aspect-square group relative bg-muted shadow-lg hover:shadow-2xl transition-all duration-300">
+                  <div className="overflow-hidden aspect-square group relative bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
                     {item.imageUrl ? (
                       <motion.img 
                         alt={t(item.altKey) || t(item.titleKey)} 
@@ -387,7 +386,7 @@ const NewsMediaSection = () => {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <ImageOff className="w-10 h-10 text-muted-foreground" />
+                        <ImageOff className="w-10 h-10 text-gray-400" />
                       </div>
                     )}
                     <motion.div 
@@ -410,7 +409,7 @@ const NewsMediaSection = () => {
                         </p>
                       </motion.div>
                     </motion.div>
-                  </Card>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -434,7 +433,7 @@ const NewsMediaSection = () => {
         
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }} className="text-center">
           <motion.h3 
-            className="text-2xl font-semibold text-foreground mb-4"
+            className="text-2xl font-semibold text-white mb-4"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -443,7 +442,7 @@ const NewsMediaSection = () => {
             {t('newsFollowUsTitle')}
           </motion.h3>
           <motion.p 
-            className="text-muted-foreground mb-6"
+            className="text-gray-300 mb-6"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

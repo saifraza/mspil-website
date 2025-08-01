@@ -80,7 +80,7 @@ const EnhancedInvestorRelationsPage = () => {
       icon: Factory,
       title: 'Ethanol Expansion',
       description: '350 KLPD capacity operational from 2025',
-      metric: '₹883 Cr Revenue',
+      metric: '₹925 Cr Revenue',
       color: 'text-blue-600'
     },
     {
@@ -101,10 +101,10 @@ const EnhancedInvestorRelationsPage = () => {
 
   // Financial Projection Data
   const revenueProjections = [
-    { year: 'FY25', revenue: 300, ebitda: 63.6, pat: 21.7 },
+    { year: 'FY25', revenue: 300.2, ebitda: 67.28, pat: 33.20 },
     { year: 'FY26', revenue: 811.08, ebitda: 171.82, pat: 76.45 },
     { year: 'FY27', revenue: 1310.56, ebitda: 296.13, pat: 170.13 },
-    { year: 'FY28', revenue: 1378.40, ebitda: 372.92, pat: 246.99 },
+    { year: 'FY28', revenue: 1378.40, ebitda: 372.92, pat: 247.00 },
     { year: 'FY29', revenue: 1462.27, ebitda: 406.12, pat: 276.34 },
     { year: 'FY30', revenue: 1564.91, ebitda: 434.30, pat: 301.45 }
   ];
@@ -124,13 +124,18 @@ const EnhancedInvestorRelationsPage = () => {
     ]
   };
 
-  // Business Segments Revenue Mix
+  // Business Segments Revenue Mix (CORRECTED from Excel Model)
   const segmentRevenueMix = [
-    { year: 'FY26', sugar: 50.3, ethanol: 26.6, ddgs: 5.1, power: 18.0 },
-    { year: 'FY27', sugar: 18.7, ethanol: 63.2, ddgs: 12.2, power: 3.9 },
-    { year: 'FY28', sugar: 19.9, ethanol: 64.1, ddgs: 12.3, power: 3.9 },
-    { year: 'FY29', sugar: 19.9, ethanol: 60.5, ddgs: 11.6, power: 3.7 },
-    { year: 'FY30', sugar: 26.1, ethanol: 59.1, ddgs: 11.4, power: 3.5 }
+    { year: 'FY26', sugar: 35.9, ethanol: 50.9, ddgs: 9.3, power: 3.9, 
+      sugarValue: 291.26, ethanolValue: 412.99, ddgsValue: 75.14, powerValue: 31.69 },
+    { year: 'FY27', sugar: 20.5, ethanol: 65.1, ddgs: 11.8, power: 2.6,
+      sugarValue: 268.53, ethanolValue: 853.46, ddgsValue: 154.71, powerValue: 33.86 },
+    { year: 'FY28', sugar: 21.7, ethanol: 63.6, ddgs: 11.8, power: 2.9,
+      sugarValue: 299.08, ethanolValue: 877.19, ddgsValue: 162.21, powerValue: 39.92 },
+    { year: 'FY29', sugar: 23.6, ethanol: 61.6, ddgs: 11.6, power: 3.2,
+      sugarValue: 345.15, ethanolValue: 900.90, ddgsValue: 169.95, powerValue: 46.27 },
+    { year: 'FY30', sugar: 26.1, ethanol: 59.1, ddgs: 11.4, power: 3.5,
+      sugarValue: 408.02, ethanolValue: 924.61, ddgsValue: 177.94, powerValue: 54.34 }
   ];
 
   const handleQuickNavigation = (targetTab, targetSection) => {
@@ -225,13 +230,13 @@ const EnhancedInvestorRelationsPage = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-2">
-              <TabsTrigger value="investment-opportunity">Investment</TabsTrigger>
-              <TabsTrigger value="financial-performance">Financials</TabsTrigger>
-              <TabsTrigger value="business-model">Business</TabsTrigger>
-              <TabsTrigger value="shareholding">Shareholding</TabsTrigger>
-              <TabsTrigger value="governance">Governance</TabsTrigger>
-              <TabsTrigger value="contact">Contact</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 h-auto">
+              <TabsTrigger value="investment-opportunity" className="text-xs sm:text-sm">Investment</TabsTrigger>
+              <TabsTrigger value="financial-performance" className="text-xs sm:text-sm">Financials</TabsTrigger>
+              <TabsTrigger value="business-model" className="text-xs sm:text-sm">Business</TabsTrigger>
+              <TabsTrigger value="shareholding" className="text-xs sm:text-sm">Shareholding</TabsTrigger>
+              <TabsTrigger value="governance" className="text-xs sm:text-sm">Governance</TabsTrigger>
+              <TabsTrigger value="contact" className="text-xs sm:text-sm">Contact</TabsTrigger>
             </TabsList>
 
             {/* Investment Opportunity Tab */}
@@ -446,7 +451,7 @@ const EnhancedInvestorRelationsPage = () => {
                       <EnhancedBarChartLazy
                         data={segmentRevenueMix}
                         dataKeys={['sugar', 'ethanol', 'ddgs', 'power']}
-                        colors={['#f59e0b', '#06b6d4', '#10b981', '#8b5cf6']}
+                        colors={['#e5e7eb', '#10b981', '#fbbf24', '#3b82f6']}
                         names={['Sugar %', 'Ethanol %', 'DDGS %', 'Power %']}
                         stacked={true}
                       />
@@ -528,6 +533,68 @@ const EnhancedInvestorRelationsPage = () => {
                       </div>
                     </CardContent>
                   </Card>
+                </div>
+
+                {/* Annual Reports Section */}
+                <div id="reports" className="mt-12">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Annual Reports</h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { year: '2023-24', title: 'Annual Report 2023-24', status: 'Available', fileSize: '2.4 MB' },
+                      { year: '2022-23', title: 'Annual Report 2022-23', status: 'Available', fileSize: '2.1 MB' },
+                      { year: '2021-22', title: 'Annual Report 2021-22', status: 'Available', fileSize: '1.9 MB' }
+                    ].map((report, index) => (
+                      <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <FileText className="w-8 h-8 text-primary" />
+                            <span className={`px-2 py-1 text-xs rounded-full ${report.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                              {report.status}
+                            </span>
+                          </div>
+                          <h4 className="font-semibold mb-2">{report.title}</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Financial Year {report.year}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">{report.fileSize}</span>
+                            <Button size="sm" variant="outline">
+                              <Download className="w-4 h-4 mr-2" />
+                              Download
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quarterly Results Section */}
+                <div id="quarterly" className="mt-12">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Quarterly Results</h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[
+                      { quarter: 'Q3 FY24', title: 'Q3 FY2024 Results', date: 'Feb 2024', growth: '+23%' },
+                      { quarter: 'Q2 FY24', title: 'Q2 FY2024 Results', date: 'Nov 2023', growth: '+18%' },
+                      { quarter: 'Q1 FY24', title: 'Q1 FY2024 Results', date: 'Aug 2023', growth: '+15%' },
+                      { quarter: 'Q4 FY23', title: 'Q4 FY2023 Results', date: 'May 2023', growth: '+12%' }
+                    ].map((result, index) => (
+                      <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <BarChart3 className="w-8 h-8 text-blue-600" />
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              {result.growth}
+                            </span>
+                          </div>
+                          <h4 className="font-semibold mb-2">{result.quarter}</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{result.date}</p>
+                          <Button size="sm" variant="outline" className="w-full">
+                            <FileSpreadsheet className="w-4 h-4 mr-2" />
+                            View Results
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
               </div>
             </TabsContent>

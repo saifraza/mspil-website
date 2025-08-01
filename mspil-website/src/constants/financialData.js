@@ -6,7 +6,7 @@ export const financialData = {
   // Revenue and Growth Data
   revenue: {
     projections: [
-      { year: 'FY25', turnover: 300, label: '₹300 Cr' },
+      { year: 'FY25', turnover: 300.2, label: '₹300 Cr' },
       { year: 'FY26', turnover: 811.08, label: '₹811 Cr' },
       { year: 'FY27', turnover: 1310.56, label: '₹1,311 Cr' },
       { year: 'FY28', turnover: 1378.40, label: '₹1,378 Cr' },
@@ -21,21 +21,21 @@ export const financialData = {
   ethanol: {
     production: [
       { year: 'FY25', production: 0, revenue: 0 },
-      { year: 'FY26', production: 30, revenue: 215.58 },
-      { year: 'FY27', production: 123, revenue: 883.74 },
-      { year: 'FY28', production: 123, revenue: 883.74 },
-      { year: 'FY29', production: 123, revenue: 883.74 },
-      { year: 'FY30', production: 123, revenue: 924.61 }
+      { year: 'FY26', production: 57.8, revenue: 412.99 },
+      { year: 'FY27', production: 119.3, revenue: 853.46 },
+      { year: 'FY28', production: 122.6, revenue: 877.19 },
+      { year: 'FY29', production: 125.9, revenue: 900.90 },
+      { year: 'FY30', production: 129.2, revenue: 924.61 }
     ],
     capacity: {
-      daily: '410 KLPD',
+      daily: '350 KLPD',
       annual: '12.3 Cr L',
       annualMillionLiters: 123
     },
     metrics: {
       rawMaterial: '900 TPD',
-      conversionRate: '407 L/MT',
-      operationDays: '300 Days',
+      conversionRate: '400 L/MT',
+      operationDays: '330 Days',
       utilization: '82%'
     }
   },
@@ -43,9 +43,10 @@ export const financialData = {
   // Profitability Data
   profitability: {
     margins: [
+      { year: 'FY25', ebitda: 67.28, pat: 33.20, ebitdaMargin: 22.4, patMargin: 11.1 },
       { year: 'FY26', ebitda: 171.82, pat: 76.45, ebitdaMargin: 21.2, patMargin: 9.4 },
       { year: 'FY27', ebitda: 296.13, pat: 170.13, ebitdaMargin: 22.6, patMargin: 13.0 },
-      { year: 'FY28', ebitda: 372.92, pat: 246.99, ebitdaMargin: 27.1, patMargin: 17.9 },
+      { year: 'FY28', ebitda: 372.92, pat: 247.00, ebitdaMargin: 27.1, patMargin: 17.9 },
       { year: 'FY29', ebitda: 406.12, pat: 276.34, ebitdaMargin: 27.8, patMargin: 18.9 },
       { year: 'FY30', ebitda: 434.30, pat: 301.45, ebitdaMargin: 27.8, patMargin: 19.3 }
     ],
@@ -55,11 +56,12 @@ export const financialData = {
   // Return Ratios
   returns: {
     ratios: [
-      { year: 'FY26', roe: 27.0, roce: 15.5 },
-      { year: 'FY27', roe: 38.5, roce: 41.2 },
-      { year: 'FY28', roe: 46.0, roce: 49.0 },
-      { year: 'FY29', roe: 37.9, roce: 42.5 },
-      { year: 'FY30', roe: 30.9, roce: 37.2 }
+      { year: 'FY25', roe: 27.0, roce: 15.5 },
+      { year: 'FY26', roe: 38.3, roce: 29.5 },
+      { year: 'FY27', roe: 46.0, roce: 49.0 },
+      { year: 'FY28', roe: 40.1, roce: 44.7 },
+      { year: 'FY29', roe: 30.9, roce: 37.2 },
+      { year: 'FY30', roe: 25.2, roce: 31.6 }
     ],
     peakROCE: '49.0%',
     peakROE: '46.0%'
@@ -68,10 +70,10 @@ export const financialData = {
   // Segment Revenue Data
   segments: {
     revenue: [
-      { year: 'FY26', sugar: 407.48, ethanol: 215.58, ddgs: 41.46, power: 146.56 },
-      { year: 'FY27', sugar: 261.59, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
-      { year: 'FY28', sugar: 274.67, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
-      { year: 'FY29', sugar: 291.19, ethanol: 883.74, ddgs: 169.95, power: 54.34 },
+      { year: 'FY26', sugar: 291.26, ethanol: 412.99, ddgs: 75.14, power: 31.69 },
+      { year: 'FY27', sugar: 268.53, ethanol: 853.46, ddgs: 154.71, power: 33.86 },
+      { year: 'FY28', sugar: 299.08, ethanol: 877.19, ddgs: 162.21, power: 39.92 },
+      { year: 'FY29', sugar: 345.15, ethanol: 900.90, ddgs: 169.95, power: 46.27 },
       { year: 'FY30', sugar: 408.02, ethanol: 924.61, ddgs: 177.94, power: 54.34 }
     ]
   },
@@ -92,7 +94,7 @@ export const financialData = {
   efficiency: {
     metrics: [
       { metric: 'Sugar Recovery', value: 11, industry: 10, unit: '%' },
-      { metric: 'Ethanol Yield', value: 407, industry: 380, unit: 'L/MT' },
+      { metric: 'Ethanol Yield', value: 400, industry: 380, unit: 'L/MT' },
       { metric: 'Plant Utilization', value: 85, industry: 75, unit: '%' },
       { metric: 'Power Efficiency', value: 92, industry: 85, unit: '%' }
     ]
@@ -102,7 +104,7 @@ export const financialData = {
   capacity: {
     current: [
       { segment: 'Sugar Mill', capacity: 8000, utilization: 85, unit: 'TCD' },
-      { segment: 'Ethanol Plant', capacity: 410, utilization: 82, unit: 'KLPD' },
+      { segment: 'Ethanol Plant', capacity: 350, utilization: 82, unit: 'KLPD' },
       { segment: 'Power Plant', capacity: 9.66, utilization: 90, unit: 'MW' },
       { segment: 'DDGS', capacity: 300, utilization: 80, unit: 'TPD' }
     ]

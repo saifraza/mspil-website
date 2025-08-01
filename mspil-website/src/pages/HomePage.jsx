@@ -165,18 +165,20 @@ const HomePage = () => {
       {/* Recent News & Announcements */}
       <section className="py-8 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <motion.div {...fadeInProps} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
+            <div className="flex-1">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
                 {t('homeNewsTitle')}
               </h2>
             </div>
-            <Button asChild variant="outline">
-              <Link to="/news-media">
-                {t('homeNewsViewAll')}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
+            <div className="flex-shrink-0">
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Link to="/news-media">
+                  {t('homeNewsViewAll')}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
