@@ -195,7 +195,7 @@ async function handleLinkedInPost(message, intent) {
     });
     
     return {
-      message: `I\'ve successfully posted to LinkedIn! Here\'s what I shared:\n\n"${postContent.text}"\n\n${imageUrl ? 'I also included a custom generated image.' : ''}\n\nThe post is now live on your LinkedIn page.`,
+      message: `I\'ve successfully posted to LinkedIn! Here\'s what I shared:\n\n"${postContent.text}"\n\n${imageUrl ? 'I also included a custom generated image.' : ''}\n\nThe post is now live on your LinkedIn company page.`,
       actions: [{
         type: 'linkedin_posted',
         postId: postResult.id,
@@ -206,8 +206,23 @@ async function handleLinkedInPost(message, intent) {
     
   } catch (error) {
     logger.error('LinkedIn posting error:', error);
+    
+    let errorMessage = 'I encountered an issue posting to LinkedIn. ';
+    
+    if (error.message.includes('credentials not configured')) {
+      errorMessage += 'LinkedIn integration is not set up yet. Please configure your LinkedIn access token and organization ID in the environment variables.';
+    } else if (error.message.includes('rate limit')) {
+      errorMessage += 'We\'ve reached the LinkedIn daily posting limit. Please try again tomorrow.';
+    } else if (error.response?.status === 401) {
+      errorMessage += 'LinkedIn authentication failed. Please check that your access token is valid and has the required permissions.';
+    } else if (error.response?.status === 403) {
+      errorMessage += 'LinkedIn permissions error. Please ensure the access token has permission to post to your company page.';
+    } else {
+      errorMessage += 'Please check your LinkedIn settings and try again. Error: ' + (error.message || 'Unknown error');
+    }
+    
     return {
-      message: 'I encountered an issue posting to LinkedIn. Please check your LinkedIn credentials and try again.',
+      message: errorMessage,
       actions: [],
       attachments: []
     };

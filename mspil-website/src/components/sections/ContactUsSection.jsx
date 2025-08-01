@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Mail, Phone, MapPin, MessageSquare, User, Building } from 'lucide-react'; // User for General, Building for Investor/HR
+import { Mail, Phone, MapPin, MessageSquare, User, Building, Linkedin, Twitter, Globe } from 'lucide-react'; // User for General, Building for Investor/HR
 import EnhancedContactForm from '@/components/EnhancedContactForm';
 
 const ContactUsSection = () => {
@@ -130,6 +130,32 @@ const ContactUsSection = () => {
             </div>
           </motion.div>
         </div>
+        
+        {/* Social Media Section */}
+        <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.5 }} className="mb-12">
+          <div className="bg-gray-800/60 backdrop-blur-xl border border-white/40 rounded-lg p-6 text-center">
+            <h3 className="text-2xl font-semibold text-white mb-4">Connect With Us</h3>
+            <p className="text-gray-300 mb-6">Follow us on social media for updates and news</p>
+            <div className="flex justify-center space-x-6">
+              <a 
+                href="https://www.linkedin.com/company/mahakaushal-sugar-and-power-industries-limited" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center space-x-2 bg-gray-700/40 hover:bg-gray-700/60 border border-white/20 hover:border-white/40 rounded-lg px-4 py-2 transition-all duration-300 group"
+              >
+                <Linkedin size={20} className="text-blue-400 group-hover:text-blue-300" />
+                <span className="text-white">LinkedIn</span>
+              </a>
+              <a 
+                href="https://www.mspil.in" 
+                className="flex items-center space-x-2 bg-gray-700/40 hover:bg-gray-700/60 border border-white/20 hover:border-white/40 rounded-lg px-4 py-2 transition-all duration-300 group"
+              >
+                <Globe size={20} className="text-green-400 group-hover:text-green-300" />
+                <span className="text-white">Website</span>
+              </a>
+            </div>
+          </div>
+        </motion.div>
         
         <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.6 }}>
           <h3 className="text-2xl font-semibold text-white text-center mb-8">Our Locations</h3>

@@ -27,10 +27,10 @@ export async function postToLinkedIn({ content, imageUrl, imageFile }) {
     checkRateLimit();
     
     const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
-    const pageId = process.env.LINKEDIN_PAGE_ID;
+    const organizationId = process.env.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_PAGE_ID;
     
-    if (!accessToken || !pageId) {
-      throw new Error('LinkedIn credentials not configured');
+    if (!accessToken || !organizationId) {
+      throw new Error('LinkedIn credentials not configured. Please set LINKEDIN_ACCESS_TOKEN and LINKEDIN_ORGANIZATION_ID in environment variables.');
     }
     
     let mediaAsset = null;
@@ -42,7 +42,7 @@ export async function postToLinkedIn({ content, imageUrl, imageFile }) {
     
     // Create the post
     const postData = {
-      author: `urn:li:organization:${pageId}`,
+      author: `urn:li:organization:${organizationId}`,
       lifecycleState: 'PUBLISHED',
       specificContent: {
         'com.linkedin.ugc.ShareContent': {
@@ -103,7 +103,7 @@ export async function postToLinkedIn({ content, imageUrl, imageFile }) {
 async function uploadImageToLinkedIn(imageUrl, imageFile) {
   try {
     const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
-    const pageId = process.env.LINKEDIN_PAGE_ID;
+    const organizationId = process.env.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_PAGE_ID;
     
     // Step 1: Register the upload
     const registerResponse = await axios.post(
@@ -111,7 +111,7 @@ async function uploadImageToLinkedIn(imageUrl, imageFile) {
       {
         registerUploadRequest: {
           recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
-          owner: `urn:li:organization:${pageId}`,
+          owner: `urn:li:organization:${organizationId}`,
           serviceRelationships: [{
             relationshipType: 'OWNER',
             identifier: 'urn:li:userGeneratedContent'
@@ -156,10 +156,10 @@ async function uploadImageToLinkedIn(imageUrl, imageFile) {
 export async function getLinkedInProfile() {
   try {
     const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
-    const pageId = process.env.LINKEDIN_PAGE_ID;
+    const organizationId = process.env.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_PAGE_ID;
     
     const response = await axios.get(
-      `${LINKEDIN_API_BASE}/organizations/${pageId}`,
+      `${LINKEDIN_API_BASE}/organizations/${organizationId}`,
       {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -214,7 +214,7 @@ export async function postToLinkedInPages({ content, imageUrl }) {
     checkRateLimit();
     
     const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
-    const pageId = process.env.LINKEDIN_PAGE_ID;
+    const organizationId = process.env.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_PAGE_ID;
     
     let mediaAsset = null;
     if (imageUrl) {
@@ -223,7 +223,7 @@ export async function postToLinkedInPages({ content, imageUrl }) {
     }
     
     const postData = {
-      author: `urn:li:organization:${pageId}`,
+      author: `urn:li:organization:${organizationId}`,
       commentary: content,
       visibility: 'PUBLIC',
       distribution: {
@@ -274,7 +274,7 @@ export async function postToLinkedInPages({ content, imageUrl }) {
 async function uploadImageV2(imageUrl) {
   try {
     const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
-    const pageId = process.env.LINKEDIN_PAGE_ID;
+    const organizationId = process.env.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_PAGE_ID;
     
     // Initialize upload
     const initResponse = await axios.post(

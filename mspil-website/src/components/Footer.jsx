@@ -27,7 +27,7 @@ const Footer = () => {
               Leading in Sustainability Since 2005
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="https://www.linkedin.com/company/27478454/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/company/mahakaushal-sugar-and-power-industries-limited" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors" aria-label="LinkedIn">
                 <Linkedin size={20} />
                 <span className="sr-only">LinkedIn</span>
               </a>
