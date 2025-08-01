@@ -221,5 +221,4 @@ async function addTextOverlay(imagePath, text) {
   }
 }
 
-// Initialize on module load
-initializeImageGeneration();
+// Don't initialize on module load - will be called from server.js

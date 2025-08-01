@@ -11,6 +11,7 @@ import contentRoutes from './routes/contentRoutes.js';
 import { initializeDatabase } from './config/database.js';
 import { startNewsMonitoring } from './services/newsMonitoringService-simple.js';
 import { initializeAIAgent } from './services/aiAgentService.js';
+import { initializeImageGeneration } from './services/imageGenerationService.js';
 
 dotenv.config();
 
@@ -111,6 +112,10 @@ async function startServer() {
     // Initialize AI agent
     await initializeAIAgent();
     logger.info('AI agent initialized');
+    
+    // Initialize image generation
+    initializeImageGeneration();
+    logger.info('Image generation initialized');
     
     // Start news monitoring
     startNewsMonitoring();
