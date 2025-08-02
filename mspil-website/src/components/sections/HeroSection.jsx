@@ -14,6 +14,11 @@ const isMobile = () => {
          window.innerWidth <= 768;
 };
 
+// Preload critical hero image for instant LCP
+const HERO_IMAGE_URL = '/images/hero/hero-bg-optimized.webp';
+const HERO_VIDEO_URL = '/videos/hero/hero_background_video.mp4';
+const VIDEO_POSTER_URL = '/videos/hero/hero_video_thumbnail.jpg';
+
 
 // Animated gradient background
 const AnimatedGradient = () => {
@@ -93,24 +98,23 @@ const HeroSection = () => {
     // Detect mobile device
     setIsMobileDevice(isMobile());
     
-    // Smart video loading with existing video file
-    const loadOptimizedVideo = () => {
-      // Use the only available video file
-      const videoUrl = heroData.videoSources.original;
+    // AGGRESSIVE LCP OPTIMIZATION: Prioritize static image over video
+    const loadOptimizedMedia = () => {
+      // Always set poster first for immediate LCP
+      setVideoPosterUrl(heroData.videoPosterPath);
       
-      // Only load video on good connections and desktop to save bandwidth
+      // Only load video after everything else is loaded (non-critical)
       if (!isMobileDevice && (!navigator.connection || navigator.connection.effectiveType === '4g')) {
-        // Delay video loading to prioritize other content
+        // Significantly delay video loading to not interfere with LCP
         const timer = setTimeout(() => {
-          setBackgroundVideoUrl(videoUrl);
-        }, 1000);
+          setBackgroundVideoUrl(heroData.videoSources.original);
+        }, 3000); // Delay increased to 3 seconds
         
         return () => clearTimeout(timer);
       }
     };
     
-    // Set poster image
-    setVideoPosterUrl(heroData.videoPosterPath);
+    loadOptimizedMedia();
     
     // Load video if conditions are met
     loadOptimizedVideo();
