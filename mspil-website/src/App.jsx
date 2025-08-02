@@ -47,7 +47,7 @@ function App() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
           <Layout>
             <Suspense fallback={<LoadingSpinner />}>

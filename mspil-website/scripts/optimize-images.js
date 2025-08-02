@@ -5,21 +5,17 @@
  * Converts all images to WebP format for 60-80% size reduction
  */
 
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images');
+const IMAGES_DIR = 'public/images';
 const SUPPORTED_FORMATS = ['.jpg', '.jpeg', '.png'];
 
 // Check if sharp is available
-async function checkSharp() {
+function checkSharp() {
   try {
-    await import('sharp');
+    require('sharp');
     return true;
   } catch (error) {
     console.error('❌ Sharp not found. Installing...');
@@ -56,7 +52,7 @@ function getAllImageFiles(dir, fileList = []) {
 
 // Optimize single image
 async function optimizeImage(inputPath) {
-  const sharp = (await import('sharp')).default;
+  const sharp = require('sharp');
   
   const dir = path.dirname(inputPath);
   const name = path.basename(inputPath, path.extname(inputPath));
@@ -96,7 +92,7 @@ async function optimizeImage(inputPath) {
 
 // Create responsive image variants
 async function createResponsiveImages(inputPath) {
-  const sharp = (await import('sharp')).default;
+  const sharp = require('sharp');
   
   const dir = path.dirname(inputPath);
   const name = path.basename(inputPath, path.extname(inputPath));
@@ -127,7 +123,7 @@ async function createResponsiveImages(inputPath) {
 
 // Main optimization function
 async function optimizeAllImages() {
-  if (!(await checkSharp())) {
+  if (!checkSharp()) {
     return;
   }
 

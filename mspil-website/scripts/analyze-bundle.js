@@ -5,16 +5,12 @@
  * Identifies unused dependencies and optimization opportunities
  */
 
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 // Check if a dependency is actually used in the codebase
-function isDependencyUsed(packageName, sourceDir = path.join(__dirname, '..', 'src')) {
+function isDependencyUsed(packageName, sourceDir = 'src') {
   try {
     const files = getAllFiles(sourceDir, ['.js', '.jsx', '.ts', '.tsx']);
     
@@ -64,8 +60,7 @@ function getAllFiles(dir, extensions, fileList = []) {
 
 // Analyze package.json dependencies
 function analyzeDependencies() {
-  const packageJsonPath = path.join(__dirname, '..', 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
   
   console.log('🔍 Analyzing dependencies...\n');

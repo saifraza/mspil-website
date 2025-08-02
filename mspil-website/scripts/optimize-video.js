@@ -5,16 +5,12 @@
  * Compresses the hero video from 18MB to ~2MB using modern codecs
  */
 
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const INPUT_VIDEO = path.join(__dirname, '..', 'public', 'videos', 'hero', 'hero_background_video.mp4');
-const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'videos', 'hero');
+const INPUT_VIDEO = 'public/videos/hero/hero_background_video.mp4';
+const OUTPUT_DIR = 'public/videos/hero/';
 
 // Check if FFmpeg is available
 function checkFFmpeg() {
