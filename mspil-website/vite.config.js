@@ -182,11 +182,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Core React dependencies
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router')) {
-            return 'vendor';
-          }
-          
           // Chart libraries - only load when needed
           if (id.includes('recharts') || id.includes('node_modules/d3')) {
             return 'charts';
@@ -197,7 +192,7 @@ export default defineConfig({
             return 'motion';
           }
           
-          // UI components
+          // UI components that depend on React
           if (id.includes('@radix-ui') || id.includes('lucide-react')) {
             return 'ui';
           }
@@ -207,9 +202,9 @@ export default defineConfig({
             return 'data-heavy-pages';
           }
           
-          // Keep other node_modules together
+          // Group ALL vendor dependencies together to avoid circular dependencies
           if (id.includes('node_modules')) {
-            return 'vendor-misc';
+            return 'vendor';
           }
         },
         chunkFileNames: (chunkInfo) => {
