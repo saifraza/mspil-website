@@ -242,7 +242,12 @@ export default defineConfig({
     },
     sourcemap: false,
     reportCompressedSize: true,
-    chunkSizeWarningLimit: 500
+    chunkSizeWarningLimit: 500,
+    
+    // Enhanced optimizations
+    target: 'es2015',
+    cssCodeSplit: true,
+    
   },
   server: {
     port: 3000,

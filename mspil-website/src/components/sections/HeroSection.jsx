@@ -56,8 +56,15 @@ const HeroSection = () => {
     taglinePart1Key: "heroTagline1",
     taglinePart2Key: "heroTagline2",
     introKey: "heroIntro",
-    backgroundVideoPath: "/videos/hero/hero_background_video.mp4", 
-    videoPosterPath: "/videos/hero/hero_video_thumbnail.jpg", 
+    // Optimized video sources for different scenarios
+    videoSources: {
+      webm: "/videos/hero/hero_background_video.webm",
+      mp4_optimized: "/videos/hero/hero_background_video_optimized.mp4",
+      mp4_mobile: "/videos/hero/hero_background_video_mobile.mp4",
+      original: "/videos/hero/hero_background_video.mp4"
+    },
+    videoPosterPath: "/videos/hero/hero_video_poster_optimized.jpg", 
+    videoPosterFallback: "/videos/hero/hero_video_thumbnail.jpg",
     videoAltKey: "heroVideoAlt",
     ctaButtons: [
       { 
@@ -90,19 +97,41 @@ const HeroSection = () => {
     // Detect mobile device
     setIsMobileDevice(isMobile());
     
-    // Only load video on desktop and good connections
-    if (!isMobileDevice && navigator.connection?.effectiveType !== 'slow-2g' && navigator.connection?.effectiveType !== '2g') {
-      // Delay video loading slightly to prioritize other content
-      const timer = setTimeout(() => {
-        setBackgroundVideoUrl(heroData.backgroundVideoPath);
-      }, 1000);
+    // Smart video loading based on device and connection
+    const loadOptimizedVideo = () => {
+      // Check if optimized videos exist, fallback to original
+      let videoUrl = heroData.videoSources.original;
       
-      return () => clearTimeout(timer);
-    }
+      if (isMobileDevice) {
+        // Use mobile-optimized version for mobile devices
+        videoUrl = heroData.videoSources.mp4_mobile;
+      } else {
+        // Check browser support for WebM (better compression)
+        const video = document.createElement('video');
+        if (video.canPlayType('video/webm; codecs="vp9"') === 'probably') {
+          videoUrl = heroData.videoSources.webm;
+        } else {
+          videoUrl = heroData.videoSources.mp4_optimized;
+        }
+      }
+      
+      // Only load video on good connections and desktop
+      if (!isMobileDevice && navigator.connection?.effectiveType !== 'slow-2g' && navigator.connection?.effectiveType !== '2g') {
+        // Delay video loading to prioritize other content
+        const timer = setTimeout(() => {
+          setBackgroundVideoUrl(videoUrl);
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+      }
+    };
     
-    // Always set poster for fallback
+    // Set optimized poster image
     setVideoPosterUrl(heroData.videoPosterPath);
-  }, [heroData.backgroundVideoPath, heroData.videoPosterPath, isMobileDevice]);
+    
+    // Load video if conditions are met
+    loadOptimizedVideo();
+  }, [heroData, isMobileDevice]);
 
   return (
     <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>

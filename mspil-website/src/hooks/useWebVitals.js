@@ -23,14 +23,32 @@ export const useWebVitals = () => {
       }
     };
 
-    // Dynamically import web-vitals to reduce bundle size
-    import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
-      onCLS(reportWebVital);
-      onFID(reportWebVital);
-      onFCP(reportWebVital);
-      onLCP(reportWebVital);
-      onTTFB(reportWebVital);
-    });
+    // Native performance monitoring without external dependencies
+    if ('PerformanceObserver' in window) {
+      // Observe Layout Shift (CLS)
+      new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+          if (!entry.hadRecentInput) {
+            reportWebVital({
+              name: 'CLS',
+              value: entry.value,
+              id: `${Date.now()}-${Math.random()}`
+            });
+          }
+        });
+      }).observe({ type: 'layout-shift', buffered: true });
+
+      // Observe Largest Contentful Paint (LCP)
+      new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1];
+        reportWebVital({
+          name: 'LCP',
+          value: lastEntry.startTime,
+          id: `${Date.now()}-${Math.random()}`
+        });
+      }).observe({ type: 'largest-contentful-paint', buffered: true });
+    }
   }, []);
 };
 

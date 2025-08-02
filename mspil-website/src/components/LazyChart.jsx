@@ -1,96 +1,69 @@
-import React, { lazy, Suspense } from 'react';
-import { Loader2 } from 'lucide-react';
+import React from 'react';
+import { TrendingUp, BarChart3 } from 'lucide-react';
 
-// Custom tooltip component
-const CustomTooltip = ({ active, payload, label, valueLabel = 'Value' }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
+// Simple data visualization component without heavy dependencies
+const SimpleChart = ({ data, dataKey, name, type = 'line', fill = '#22c55e', stroke = '#22c55e' }) => {
+  if (!data || data.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-        <p className="font-semibold text-lg mb-2">{label}</p>
-        <p className="text-primary font-bold text-xl">
-          {valueLabel}: {payload[0].value}
-        </p>
-        {data.note && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 italic">
-            {data.note}
-          </p>
-        )}
+      <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+        <div className="text-center text-gray-500">
+          <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
+          <p>No data available</p>
+        </div>
       </div>
     );
   }
-  return null;
+
+  const maxValue = Math.max(...data.map(item => item[dataKey] || 0));
+  const minValue = Math.min(...data.map(item => item[dataKey] || 0));
+  const range = maxValue - minValue || 1;
+
+  return (
+    <div className="w-full h-[300px] p-4 bg-white rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+        <TrendingUp className="h-5 w-5 text-green-500" />
+      </div>
+      
+      <div className="relative h-full">
+        {/* Simple bar chart visualization */}
+        <div className="flex items-end justify-between h-5/6 border-b border-l border-gray-300">
+          {data.map((item, index) => {
+            const height = ((item[dataKey] - minValue) / range) * 100;
+            return (
+              <div
+                key={index}
+                className="flex flex-col items-center flex-1 group"
+                style={{ maxWidth: `${100 / data.length}%` }}
+              >
+                <div className="relative w-full px-1">
+                  <div
+                    className="bg-green-500 rounded-t-md transition-all duration-300 hover:bg-green-600 cursor-pointer"
+                    style={{ 
+                      height: `${Math.max(height, 5)}%`,
+                      backgroundColor: fill
+                    }}
+                    title={`${item.year}: ${item[dataKey]}`}
+                  />
+                </div>
+                <div className="text-xs text-gray-600 mt-2 text-center">
+                  {item.year}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Y-axis labels */}
+        <div className="absolute left-0 top-0 h-5/6 flex flex-col justify-between text-xs text-gray-500 -ml-8">
+          <span>{maxValue}</span>
+          <span>{Math.round((maxValue + minValue) / 2)}</span>
+          <span>{minValue}</span>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-// Lazy load the charts to reduce initial bundle size
-const LazyLineChart = lazy(async () => {
-  const recharts = await import('recharts');
-  return { 
-    default: ({ data, dataKey, stroke, name }) => (
-      <recharts.ResponsiveContainer width="100%" height={300}>
-        <recharts.LineChart data={data}>
-          <recharts.CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <recharts.XAxis dataKey="year" stroke="#6b7280" />
-          <recharts.YAxis stroke="#6b7280" />
-          <recharts.Tooltip 
-            content={<CustomTooltip valueLabel={name} />}
-            cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-          />
-          <recharts.Legend />
-          <recharts.Line 
-            type="monotone" 
-            dataKey={dataKey} 
-            stroke={stroke} 
-            name={name} 
-            strokeWidth={3}
-            dot={{ fill: stroke, strokeWidth: 2, r: 5 }}
-            activeDot={{ r: 7 }}
-            connectNulls={true}
-          />
-        </recharts.LineChart>
-      </recharts.ResponsiveContainer>
-    )
-  };
-});
-
-const LazyBarChart = lazy(async () => {
-  const recharts = await import('recharts');
-  return { 
-    default: ({ data, dataKey, fill, name }) => (
-      <recharts.ResponsiveContainer width="100%" height={300}>
-        <recharts.BarChart data={data}>
-          <recharts.CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <recharts.XAxis dataKey="year" stroke="#6b7280" />
-          <recharts.YAxis stroke="#6b7280" />
-          <recharts.Tooltip 
-            content={<CustomTooltip valueLabel={name} />}
-            cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-          />
-          <recharts.Legend />
-          <recharts.Bar dataKey={dataKey} fill={fill} name={name} />
-        </recharts.BarChart>
-      </recharts.ResponsiveContainer>
-    )
-  };
-});
-
-const ChartLoader = () => (
-  <div className="flex items-center justify-center h-[300px]">
-    <div className="flex flex-col items-center space-y-2">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      <p className="text-sm text-muted-foreground">Loading chart...</p>
-    </div>
-  </div>
-);
-
-export const LineChartLazy = (props) => (
-  <Suspense fallback={<ChartLoader />}>
-    <LazyLineChart {...props} />
-  </Suspense>
-);
-
-export const BarChartLazy = (props) => (
-  <Suspense fallback={<ChartLoader />}>
-    <LazyBarChart {...props} />
-  </Suspense>
-);
+export const LineChartLazy = (props) => <SimpleChart {...props} type="line" />;
+export const BarChartLazy = (props) => <SimpleChart {...props} type="bar" />;
