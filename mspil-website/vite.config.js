@@ -173,6 +173,10 @@ export default defineConfig({
   define: {
     'process.env.VITE_API_BASE_URL': JSON.stringify('https://mspil-mcp-production.up.railway.app')
   },
+  optimizeDeps: {
+    force: true, // Force re-optimization on every start
+    include: ['react', 'react-dom', 'framer-motion', 'lucide-react']
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -259,6 +263,10 @@ export default defineConfig({
     allowedHosts: 'all',
     headers: {
       'Cache-Control': 'no-store',
-    }
+    },
+    hmr: {
+      overlay: true
+    },
+    force: true // Force dependency re-optimization
   }
 })
