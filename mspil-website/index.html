@@ -18,7 +18,8 @@
 		
 		<!-- Critical LCP optimization - Hero image MUST load first -->
 		<link rel="preload" href="/videos/hero/hero_video_thumbnail.jpg" as="image" fetchpriority="high" />
-		<link rel="preload" href="/images/company_logo.webp" as="image" fetchpriority="low" />
+		<!-- Company logo loaded immediately for navigation -->
+		<link rel="prefetch" href="/images/company_logo.webp" as="image" />
 		
 		<!-- Google Fonts optimization -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,7 +37,7 @@
 		
 		<!-- Critical CSS inlined to avoid render blocking -->
 		<style>
-		*,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::before,::after{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-feature-settings:normal;font-variation-settings:normal}body{margin:0;line-height:inherit;background-color:#0f172a;color:#f8fafc}
+		*,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::before,::after{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-feature-settings:normal;font-variation-settings:normal;position:relative}body{margin:0;line-height:inherit;background-color:#0f172a;color:#f8fafc;position:relative}
 		.hero-container{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;background-color:#1f2937;overflow:hidden}
 		.hero-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1}
 		.hero-content{position:relative;z-index:10;text-align:center;color:white;padding:2rem}
