@@ -1,12 +1,12 @@
 import React from 'react';
 import { TrendingUp, BarChart3 } from 'lucide-react';
 
-// Enhanced multi-series chart component without heavy dependencies
+// Simple multi-series chart component without heavy dependencies
 const EnhancedSimpleChart = ({ data, dataKeys = [], colors = [], names = [], type = 'line', stacked = false }) => {
   if (!data || data.length === 0 || dataKeys.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600">
-        <div className="text-center text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+        <div className="text-center text-gray-500">
           <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
           <p>No data available</p>
         </div>
@@ -18,109 +18,62 @@ const EnhancedSimpleChart = ({ data, dataKeys = [], colors = [], names = [], typ
   const allValues = data.flatMap(item => 
     dataKeys.map(key => item[key] || 0)
   );
-  const maxValue = Math.max(...allValues) * 1.1; // Add 10% padding
-  const minValue = 0; // Always start from 0 for better visualization
+  const maxValue = Math.max(...allValues);
+  const minValue = Math.min(...allValues);
   const range = maxValue - minValue || 1;
 
-  const defaultColors = ['#059669', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
-  const chartHeight = 280; // Fixed height for chart area
-
-  // Format value for display
-  const formatValue = (value) => {
-    if (value >= 1000) {
-      return `${(value / 1000).toFixed(1)}K`;
-    }
-    return value.toFixed(0);
-  };
+  const defaultColors = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-gray-900 rounded-lg">
+    <div className="w-full h-[300px] p-4 bg-white rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Multi-Series Data</h3>
+        <TrendingUp className="h-5 w-5 text-green-500" />
+      </div>
+      
       {/* Legend */}
-      <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4 px-2">
+      <div className="flex flex-wrap gap-4 mb-4">
         {dataKeys.map((key, index) => (
           <div key={key} className="flex items-center gap-2">
             <div 
-              className="w-3 h-3 rounded-full shadow-sm" 
+              className="w-3 h-3 rounded-full" 
               style={{ backgroundColor: colors[index] || defaultColors[index % defaultColors.length] }}
             />
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{names[index] || key}</span>
+            <span className="text-sm text-gray-600">{names[index] || key}</span>
           </div>
         ))}
       </div>
       
-      <div className="relative flex-1" style={{ minHeight: `${chartHeight}px` }}>
-        {/* Chart area */}
-        <div className="absolute inset-0 flex items-end justify-between px-8 pb-8 pt-4">
-          {/* Y-axis lines */}
-          <div className="absolute inset-0 px-8 pb-8 pt-4">
-            {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
-              <div
-                key={ratio}
-                className="absolute w-full border-t border-gray-200 dark:border-gray-700"
-                style={{ bottom: `${ratio * 100}%` }}
-              />
-            ))}
-          </div>
-
-          {/* Bars */}
+      <div className="relative h-full">
+        {/* Simple grouped bar chart visualization */}
+        <div className="flex items-end justify-between h-4/5 border-b border-l border-gray-300">
           {data.map((item, itemIndex) => (
             <div
               key={itemIndex}
-              className="relative flex flex-col items-center flex-1 z-10"
-              style={{ maxWidth: `${90 / data.length}%` }}
+              className="flex flex-col items-center flex-1"
+              style={{ maxWidth: `${100 / data.length}%` }}
             >
-              <div className="relative w-full h-full flex items-end justify-center">
-                {stacked ? (
-                  // Stacked bars
-                  <div className="relative w-3/4 flex flex-col items-stretch">
-                    {dataKeys.map((key, keyIndex) => {
-                      const value = item[key] || 0;
-                      const height = (value / 100) * 100; // For percentage data
-                      const color = colors[keyIndex] || defaultColors[keyIndex % defaultColors.length];
-                      
-                      return (
-                        <div
-                          key={key}
-                          className="transition-all duration-300 hover:opacity-80 cursor-pointer"
-                          style={{ 
-                            height: `${height}%`,
-                            backgroundColor: color,
-                          }}
-                          title={`${item.year || item.period} - ${names[keyIndex] || key}: ${value}%`}
-                        />
-                      );
-                    })}
-                  </div>
-                ) : (
-                  // Grouped bars
-                  <div className="flex items-end justify-center gap-1 w-full px-1">
-                    {dataKeys.map((key, keyIndex) => {
-                      const value = item[key] || 0;
-                      const height = ((value - minValue) / range) * 100;
-                      const color = colors[keyIndex] || defaultColors[keyIndex % defaultColors.length];
-                      
-                      return (
-                        <div
-                          key={key}
-                          className="rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer flex-1 relative group"
-                          style={{ 
-                            height: `${Math.max(height, 2)}%`,
-                            backgroundColor: color,
-                            maxWidth: `${100 / dataKeys.length}%`
-                          }}
-                          title={`${item.year || item.period} - ${names[keyIndex] || key}: ${value}`}
-                        >
-                          {/* Value label on hover */}
-                          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none">
-                            {formatValue(value)}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+              <div className="flex items-end justify-center w-full px-1 gap-1">
+                {dataKeys.map((key, keyIndex) => {
+                  const value = item[key] || 0;
+                  const height = ((value - minValue) / range) * 100;
+                  const color = colors[keyIndex] || defaultColors[keyIndex % defaultColors.length];
+                  
+                  return (
+                    <div
+                      key={key}
+                      className="rounded-t-md transition-all duration-300 hover:opacity-80 cursor-pointer flex-1"
+                      style={{ 
+                        height: `${Math.max(height, 5)}%`,
+                        backgroundColor: color,
+                        minWidth: '8px'
+                      }}
+                      title={`${item.year || item.period} - ${names[keyIndex] || key}: ${value}`}
+                    />
+                  );
+                })}
               </div>
-              <div className="absolute -bottom-6 text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+              <div className="text-xs text-gray-600 mt-2 text-center">
                 {item.year || item.period}
               </div>
             </div>
@@ -128,24 +81,10 @@ const EnhancedSimpleChart = ({ data, dataKeys = [], colors = [], names = [], typ
         </div>
         
         {/* Y-axis labels */}
-        <div className="absolute left-0 top-4 bottom-8 flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 w-8 text-right">
-          {stacked ? (
-            <>
-              <span>100%</span>
-              <span>75%</span>
-              <span>50%</span>
-              <span>25%</span>
-              <span>0%</span>
-            </>
-          ) : (
-            <>
-              <span>{formatValue(maxValue)}</span>
-              <span>{formatValue(maxValue * 0.75)}</span>
-              <span>{formatValue(maxValue * 0.5)}</span>
-              <span>{formatValue(maxValue * 0.25)}</span>
-              <span>0</span>
-            </>
-          )}
+        <div className="absolute left-0 top-0 h-4/5 flex flex-col justify-between text-xs text-gray-500 -ml-8">
+          <span>{maxValue}</span>
+          <span>{Math.round((maxValue + minValue) / 2)}</span>
+          <span>{minValue}</span>
         </div>
       </div>
     </div>

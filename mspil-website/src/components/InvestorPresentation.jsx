@@ -113,9 +113,26 @@ const InvestorPresentation = () => {
       backgroundGradient: 'from-purple-50 to-indigo-50'
     },
 
-    // Slide 6: Growth Strategy
+    // Slide 6: Revenue Growth Trajectory
     {
       id: 6,
+      type: 'revenue-growth',
+      title: 'Revenue Growth Trajectory',
+      subtitle: 'Exponential growth driven by ethanol capacity addition',
+      data: [
+        { year: 'FY25', revenue: 300.2 },
+        { year: 'FY26', revenue: 811.08 },
+        { year: 'FY27', revenue: 1310.56 },
+        { year: 'FY28', revenue: 1378.40 },
+        { year: 'FY29', revenue: 1462.27 },
+        { year: 'FY30', revenue: 1564.91 }
+      ],
+      backgroundGradient: 'from-slate-50 to-green-50'
+    },
+
+    // Slide 7: Growth Strategy
+    {
+      id: 7,
       type: 'growth-strategy',
       title: 'Growth Strategy & Future Plans',
       strategies: [
@@ -151,9 +168,9 @@ const InvestorPresentation = () => {
       backgroundGradient: 'from-green-50 to-lime-50'
     },
 
-    // Slide 7: ESG & Sustainability
+    // Slide 8: ESG & Sustainability
     {
-      id: 7,
+      id: 8,
       type: 'sustainability',
       title: 'ESG & Sustainability Initiatives',
       initiatives: [
@@ -191,9 +208,9 @@ const InvestorPresentation = () => {
       backgroundGradient: 'from-teal-50 to-cyan-50'
     },
 
-    // Slide 8: Investment Proposition
+    // Slide 9: Investment Proposition
     {
-      id: 8,
+      id: 9,
       type: 'investment',
       title: 'Investment Proposition',
       propositions: [
@@ -216,9 +233,9 @@ const InvestorPresentation = () => {
       backgroundGradient: 'from-indigo-50 to-purple-50'
     },
 
-    // Slide 9: Thank You
+    // Slide 10: Thank You
     {
-      id: 9,
+      id: 10,
       type: 'thank-you',
       title: 'Thank You',
       subtitle: 'Questions & Discussion',
@@ -410,6 +427,84 @@ const InvestorPresentation = () => {
                   </div>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        );
+
+      case 'revenue-growth':
+        const maxRevenue = 1600;
+        return (
+          <div className={`h-full w-full bg-gradient-to-br ${slide.backgroundGradient} p-12`}>
+            <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">{slide.title}</h1>
+            <p className="text-xl text-gray-600 mb-8 text-center">{slide.subtitle}</p>
+            
+            <div className="bg-white rounded-xl shadow-xl p-8 h-4/5 flex flex-col">
+              {/* Growth indicator */}
+              <div className="flex justify-end mb-4">
+                <div className="flex items-center gap-2 bg-green-100 px-4 py-2 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  <span className="text-green-800 font-semibold">5.2x Growth</span>
+                </div>
+              </div>
+              
+              {/* Chart */}
+              <div className="flex-1 flex">
+                {/* Y-axis */}
+                <div className="w-20 flex flex-col justify-between text-sm text-gray-600 text-right pr-4">
+                  <span>1600</span>
+                  <span>1200</span>
+                  <span>800</span>
+                  <span>400</span>
+                  <span>0</span>
+                </div>
+                
+                {/* Chart area */}
+                <div className="flex-1 relative border-l-2 border-b-2 border-gray-400">
+                  {/* Grid lines */}
+                  {[0.25, 0.5, 0.75, 1].map((ratio) => (
+                    <div
+                      key={ratio}
+                      className="absolute w-full border-t border-gray-200"
+                      style={{ bottom: `${ratio * 100}%` }}
+                    />
+                  ))}
+                  
+                  {/* Bars */}
+                  <div className="absolute inset-0 flex items-end justify-around px-4 pb-12">
+                    {slide.data.map((item, index) => {
+                      const barHeight = (item.revenue / maxRevenue) * 100;
+                      return (
+                        <div key={index} className="relative flex flex-col items-center" style={{ width: '12%', height: '100%' }}>
+                          {/* Value label */}
+                          <div className="absolute top-0 text-sm font-bold text-gray-800 whitespace-nowrap"
+                               style={{ top: `${100 - barHeight - 5}%` }}>
+                            ₹{item.revenue.toFixed(0)}
+                          </div>
+                          {/* Bar */}
+                          <motion.div
+                            initial={{ height: 0 }}
+                            animate={{ height: `${barHeight}%` }}
+                            transition={{ delay: index * 0.15, duration: 1, ease: "easeOut" }}
+                            className="absolute bottom-0 w-full bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg"
+                            style={{
+                              boxShadow: '0 -2px 8px rgba(0,0,0,0.1)'
+                            }}
+                          />
+                          {/* Year label */}
+                          <div className="absolute -bottom-8 text-sm font-medium text-gray-700 whitespace-nowrap">
+                            {item.year}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Y-axis label */}
+              <div className="absolute left-4 top-1/2 transform -rotate-90 origin-center text-sm font-semibold text-gray-700">
+                Revenue (₹ Cr)
+              </div>
             </div>
           </div>
         );

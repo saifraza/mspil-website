@@ -151,8 +151,7 @@ const AdvancedLineChart = lazy(async () => {
                   stroke={colors[index]}
                   strokeWidth={3}
                   name={names[index]}
-                  fill={`url(#gradient-${key})`}
-                  dot={{ fill: colors[index], strokeWidth: 2, r: 0 }}
+                  dot={{ fill: colors[index], strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, fill: colors[index] }}
                   animationDuration={showAnimation ? 1500 : 0}
                   animationBegin={index * 200}
@@ -162,8 +161,8 @@ const AdvancedLineChart = lazy(async () => {
                     type={curved ? "monotone" : "linear"}
                     dataKey={key}
                     stroke="none"
-                    fill={`url(#gradient-${key})`}
-                    fillOpacity={0.3}
+                    fill={colors[index]}
+                    fillOpacity={0.1}
                     animationDuration={500}
                     animationBegin={1500 + index * 100}
                   />
@@ -231,7 +230,7 @@ const AdvancedBarChart = lazy(async () => {
               <recharts.Bar
                 key={key}
                 dataKey={key}
-                fill={`url(#bar-gradient-${key})`}
+                fill={colors[index]}
                 name={names[index]}
                 stackId={stacked ? "stack" : undefined}
                 animationDuration={showAnimation ? 1000 : 0}
