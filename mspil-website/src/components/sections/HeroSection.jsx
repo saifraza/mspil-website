@@ -90,7 +90,7 @@ const HeroSection = () => {
     stats: [
       { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag />, link: '/businesses#sugar' },
       { id: 2, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets />, link: '/businesses#ethanol' },
-      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: 'Export: 14 MW', link: '/businesses#power' },
+      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, link: '/businesses#power' },
     ]
   }), []);
 
@@ -336,7 +336,7 @@ const HeroSection = () => {
             {heroData.stats.map((stat, index) => (
               <Link to={stat.link} key={stat.id}>
                 <motion.div 
-                  className={`group relative flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 ${isMobileDevice ? 'bg-white/15 samsung-safe' : 'bg-white/10 backdrop-blur-sm'} rounded-xl p-3 sm:p-2 hover:bg-white/20 transition-all duration-300 border border-white/10 cursor-pointer`}
+                  className={`group relative flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 ${isMobileDevice ? 'bg-black/40 border-white/20' : 'bg-white/10 backdrop-blur-sm border-white/10'} rounded-xl p-4 sm:p-2 hover:bg-white/20 transition-all duration-300 border cursor-pointer shadow-lg`}
                   variants={{
                     hidden: { opacity: 0, y: 30, scale: 0.8 },
                     visible: { 
@@ -354,16 +354,16 @@ const HeroSection = () => {
                   whileTap={{ scale: 0.98 }}
                 >
                 <div className="flex-shrink-0 relative z-10 sm:mb-0 mb-2">
-                  {React.cloneElement(stat.icon, { className: "w-6 h-6 sm:w-5 sm:h-5 text-white/80" })}
+                  {React.cloneElement(stat.icon, { className: `w-6 h-6 sm:w-5 sm:h-5 ${isMobileDevice ? 'text-white' : 'text-white/80'}` })}
                 </div>
                 <div className="text-center sm:text-left relative z-10 flex-1">
                   <AnimatedCounter 
                     to={stat.value} 
                     suffix={stat.suffix}
-                    className="text-2xl sm:text-xl md:text-2xl font-bold text-white/90 block"
+                    className={`text-2xl sm:text-xl md:text-2xl font-bold ${isMobileDevice ? 'text-white' : 'text-white/90'} block`}
                   />
                   <motion.p 
-                    className="text-white/70 text-sm sm:text-xs"
+                    className={`${isMobileDevice ? 'text-white/90' : 'text-white/70'} text-sm sm:text-xs font-medium`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
