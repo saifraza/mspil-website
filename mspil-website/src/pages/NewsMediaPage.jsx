@@ -36,10 +36,6 @@ const NewsMediaPage = () => {
     setIsChatOpen(true);
   };
 
-  const handleNewsPosted = (newsItem) => {
-    // Refresh the news section by updating the key
-    setNewsRefreshKey(prev => prev + 1);
-  };
   
   return (
     <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>

@@ -16,6 +16,7 @@ const Navbar = () => {
   const t = useTranslation();
 
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
 
   const navStructure = [
     { href: '/', labelKey: 'navHome' },
@@ -78,8 +79,13 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (dropdownTimeout) {
+        clearTimeout(dropdownTimeout);
+      }
+    };
+  }, [dropdownTimeout]);
 
   // Theme toggle removed - dark theme only
 
@@ -91,6 +97,28 @@ const Navbar = () => {
 
   const isActiveRoute = (href) => {
     return location.pathname === href;
+  };
+
+  const handleDropdownEnter = (dropdownKey) => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setActiveDropdown(dropdownKey);
+  };
+
+  const handleDropdownLeave = () => {
+    const timeout = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 300); // 300ms delay before closing
+    setDropdownTimeout(timeout);
+  };
+
+  const handleDropdownStay = () => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
   };
 
   return (
@@ -130,8 +158,8 @@ const Navbar = () => {
                 <div 
                   key={item.labelKey}
                   className="relative group"
-                  onMouseEnter={() => setActiveDropdown(item.labelKey)}
-                  onMouseLeave={() => setActiveDropdown(null)}
+                  onMouseEnter={() => handleDropdownEnter(item.labelKey)}
+                  onMouseLeave={handleDropdownLeave}
                 >
                   <Link
                     to={item.items[0]?.href || '/'}
@@ -151,7 +179,9 @@ const Navbar = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                      className="absolute top-full left-0 mt-0 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50 pt-1"
+                      onMouseEnter={handleDropdownStay}
+                      onMouseLeave={handleDropdownLeave}
                     >
                       {item.items.map((subItem) => (
                         <Link
