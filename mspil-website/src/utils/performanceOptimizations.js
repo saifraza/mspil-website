@@ -22,24 +22,34 @@ export const lazyLoadImages = () => {
 
 // Preload critical resources
 export const preloadCriticalResources = () => {
-  // Preload critical CSS
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'style';
-  link.href = '/css/index.css';
-  document.head.appendChild(link);
+  // Only preload in production mode where CSS files are built
+  const isProduction = import.meta.env.PROD;
   
-  // Preload fonts
+  if (isProduction) {
+    // Try to find the actual CSS file in production
+    const existingCSSLink = document.querySelector('link[rel="stylesheet"]');
+    if (existingCSSLink && existingCSSLink.href) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'style';
+      link.href = existingCSSLink.href;
+      document.head.appendChild(link);
+    }
+  }
+  
+  // Preload fonts (only if not already loaded)
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
   ];
   
   fontLinks.forEach(font => {
-    const fontLink = document.createElement('link');
-    fontLink.rel = 'preload';
-    fontLink.as = 'style';
-    fontLink.href = font;
-    document.head.appendChild(fontLink);
+    if (!document.querySelector(`link[href="${font}"]`)) {
+      const fontLink = document.createElement('link');
+      fontLink.rel = 'preload';
+      fontLink.as = 'style';
+      fontLink.href = font;
+      document.head.appendChild(fontLink);
+    }
   });
 };
 

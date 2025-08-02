@@ -7,8 +7,8 @@ import '@/utils/lightweightAnimations.css';
 import { initPerformanceOptimizations } from '@/utils/performanceOptimizations';
 import { initCommonAnimations } from '@/utils/lightweightScrollAnimations';
 
-// Register service worker for caching
-if ('serviceWorker' in navigator) {
+// Register service worker for caching (only in production)
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {

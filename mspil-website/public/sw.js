@@ -7,7 +7,7 @@ const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 // Core assets to cache immediately
 const STATIC_ASSETS = [
   '/',
-  '/images/company_logo.png',
+  '/images/company_logo.webp',
   '/manifest.json'
 ];
 
@@ -22,8 +22,21 @@ const CACHE_EXPIRATION = {
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then((cache) => {
+        // Try to cache assets individually to avoid failing on missing files
+        return Promise.allSettled(
+          STATIC_ASSETS.map(asset => 
+            cache.add(asset).catch(err => {
+              console.warn(`Failed to cache ${asset}:`, err);
+              return null;
+            })
+          )
+        );
+      })
       .then(() => self.skipWaiting())
+      .catch((err) => {
+        console.error('Service worker installation failed:', err);
+      })
   );
 });
 
