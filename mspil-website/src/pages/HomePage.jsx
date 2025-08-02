@@ -23,6 +23,7 @@ import UnifiedBackground from '@/components/ui/UnifiedBackground';
 
 const HomePage = () => {
   const t = useTranslation();
+  
 
   const fadeInProps = {
     initial: { opacity: 0, y: 20 },
