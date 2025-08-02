@@ -5,7 +5,7 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import LazyImage from '@/components/LazyImage';
 import { sectionBackgrounds } from '@/utils/backgroundStyles';
 
-const companyLogoUrl = "/images/company-logo.svg";
+const companyLogoUrl = "/images/company_logo.png";
 const companyName = "Mahakaushal Sugar & Power Industries Ltd.";
 
 const Footer = () => {
