@@ -137,38 +137,38 @@ const HeroSection = () => {
     loadOptimizedMedia();
   }, [heroData, isMobileDevice, prefersReducedMotion]);
 
-  // Mobile-specific preload optimization
+  // Smart preload optimization - only preload what will be used, and only when component is about to use it
   useEffect(() => {
-    if (isMobileDevice) {
-      // Preload critical hero image for mobile LCP optimization
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = HERO_IMAGE_URL;
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
+    let preloadLink = null;
+    
+    // Add a small delay to ensure we're actually going to use the resource
+    const preloadTimer = setTimeout(() => {
+      if (isMobileDevice && heroData?.backgroundImage) {
+        // Mobile: preload critical hero image for LCP optimization
+        preloadLink = document.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.as = 'image';
+        preloadLink.href = HERO_IMAGE_URL;
+        preloadLink.fetchPriority = 'high';
+        document.head.appendChild(preloadLink);
+      } else if (videoPosterUrl && !isMobileDevice) {
+        // Desktop: only preload poster if we have it and will use it
+        preloadLink = document.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.as = 'image';
+        preloadLink.href = videoPosterUrl;
+        preloadLink.fetchPriority = 'high';
+        document.head.appendChild(preloadLink);
+      }
+    }, 100); // Small delay to ensure component is actually being used
 
-      return () => {
-        if (document.head.contains(link)) {
-          document.head.removeChild(link);
-        }
-      };
-    } else {
-      // Desktop: preload video poster for better UX
-      const posterLink = document.createElement('link');
-      posterLink.rel = 'preload';
-      posterLink.as = 'image';
-      posterLink.href = VIDEO_POSTER_URL;
-      posterLink.fetchPriority = 'high';
-      document.head.appendChild(posterLink);
-
-      return () => {
-        if (document.head.contains(posterLink)) {
-          document.head.removeChild(posterLink);
-        }
-      };
-    }
-  }, [isMobileDevice]);
+    return () => {
+      clearTimeout(preloadTimer);
+      if (preloadLink && document.head.contains(preloadLink)) {
+        document.head.removeChild(preloadLink);
+      }
+    };
+  }, [isMobileDevice, videoPosterUrl, heroData]);
 
   return (
     <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
