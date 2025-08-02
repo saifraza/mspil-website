@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import DocumentViewer from '@/components/DocumentViewer';
 import { LineChartLazy, BarChartLazy } from '@/components/LazyChart';
 import { EnhancedLineChartLazy, EnhancedBarChartLazy } from '@/components/EnhancedLazyChart';
 import { 
@@ -45,6 +46,23 @@ import { fastFadeInProps, fastStaggerProps } from '@/utils/scrollAnimations';
 const EnhancedInvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
   const [activeTab, setActiveTab] = useState('investment-opportunity');
+  const [documents, setDocuments] = useState(null);
+  const [selectedDocument, setSelectedDocument] = useState(null);
+
+  // Fetch documents data
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await fetch('/data/documents.json');
+        const data = await response.json();
+        setDocuments(data);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+      }
+    };
+
+    fetchDocuments();
+  }, []);
 
   // Pre-IPO Investment Data
   const investmentData = {
@@ -541,8 +559,50 @@ const EnhancedInvestorRelationsPage = () => {
                 {/* Annual Reports Section */}
                 <div id="reports" className="mt-12">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Annual Reports</h3>
+                  
+                  {/* Document Viewer */}
+                  {selectedDocument && (
+                    <div className="mb-8">
+                      <DocumentViewer
+                        document={selectedDocument}
+                        onClose={() => setSelectedDocument(null)}
+                      />
+                    </div>
+                  )}
+                  
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
+                    {documents?.investorRelations?.annualReports?.map((report, index) => {
+                      const year = report.title.includes('2023-24') ? '2023-24' : 
+                                   report.title.includes('2022-23') ? '2022-23' : '2021-22';
+                      
+                      return (
+                        <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <FileText className="w-8 h-8 text-primary" />
+                              <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                                Available
+                              </span>
+                            </div>
+                            <h4 className="font-semibold mb-2">{report.title}</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{report.description}</p>
+                            <p className="text-xs text-gray-500 mb-4">Financial Year {year}</p>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">{report.fileSize}</span>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => setSelectedDocument(report)}
+                              >
+                                <FileText className="w-4 h-4 mr-2" />
+                                View Report
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    }) || [
+                      // Fallback data if documents haven't loaded yet
                       { year: '2023-24', title: 'Annual Report 2023-24', status: 'Available', fileSize: '2.4 MB' },
                       { year: '2022-23', title: 'Annual Report 2022-23', status: 'Available', fileSize: '2.1 MB' },
                       { year: '2021-22', title: 'Annual Report 2021-22', status: 'Available', fileSize: '1.9 MB' }
@@ -551,17 +611,17 @@ const EnhancedInvestorRelationsPage = () => {
                         <CardContent className="p-6">
                           <div className="flex items-start justify-between mb-4">
                             <FileText className="w-8 h-8 text-primary" />
-                            <span className={`px-2 py-1 text-xs rounded-full ${report.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
-                              {report.status}
+                            <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
+                              Loading...
                             </span>
                           </div>
                           <h4 className="font-semibold mb-2">{report.title}</h4>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Financial Year {report.year}</p>
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-gray-500">{report.fileSize}</span>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" disabled>
                               <Download className="w-4 h-4 mr-2" />
-                              Download
+                              Loading...
                             </Button>
                           </div>
                         </CardContent>

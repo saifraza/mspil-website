@@ -8,7 +8,28 @@
         "date": "2024-03-31",
         "type": "pdf",
         "category": "Annual Reports",
-        "description": "Comprehensive annual report covering financial performance, business operations, and strategic initiatives for FY 2023-24"
+        "description": "Comprehensive annual report covering financial performance, business operations, and strategic initiatives for FY 2023-24",
+        "fileSize": "2.4 MB"
+      },
+      {
+        "title": "Annual Report 2022-23",
+        "filename": "annual_report_2022_23.pdf.txt",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2022_23.pdf.txt",
+        "date": "2023-03-31",
+        "type": "pdf",
+        "category": "Annual Reports",
+        "description": "Annual report detailing company performance, strategic developments, and financial results for FY 2022-23",
+        "fileSize": "2.1 MB"
+      },
+      {
+        "title": "Annual Report 2021-22",
+        "filename": "annual_report_2021_22.pdf.txt",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2021_22.pdf.txt",
+        "date": "2022-03-31",
+        "type": "pdf",
+        "category": "Annual Reports",
+        "description": "Comprehensive annual report covering business operations, financial performance, and growth initiatives for FY 2021-22",
+        "fileSize": "1.9 MB"
       }
     ],
     "quarterlyResults": [
