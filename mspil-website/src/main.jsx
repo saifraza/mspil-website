@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from '@/App';
 import '@/index.css';
 import '@/styles/mobile-fixes.css';
+import { initPerformanceOptimizations } from '@/utils/performanceOptimizations';
 
 // Register service worker for caching
 if ('serviceWorker' in navigator) {
@@ -16,6 +17,9 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// Initialize performance optimizations
+initPerformanceOptimizations();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

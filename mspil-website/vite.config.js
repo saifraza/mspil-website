@@ -181,11 +181,36 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-          'charts': ['recharts'],
-          'motion': ['framer-motion']
+        manualChunks: (id) => {
+          // Core React dependencies
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router')) {
+            return 'vendor';
+          }
+          
+          // Chart libraries - only load when needed
+          if (id.includes('recharts') || id.includes('node_modules/d3')) {
+            return 'charts';
+          }
+          
+          // Animation library
+          if (id.includes('framer-motion')) {
+            return 'motion';
+          }
+          
+          // UI components
+          if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+            return 'ui';
+          }
+          
+          // Split page components into separate chunks
+          if (id.includes('/pages/DataInsightsPage') || id.includes('/pages/EnhancedInvestorRelationsPage')) {
+            return 'data-heavy-pages';
+          }
+          
+          // Keep other node_modules together
+          if (id.includes('node_modules')) {
+            return 'vendor-misc';
+          }
         },
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';

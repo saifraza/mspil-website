@@ -82,18 +82,27 @@ const HeroSection = () => {
     stats: [
       { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag />, link: '/businesses#sugar' },
       { id: 2, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets />, link: '/businesses#ethanol' },
-      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: '14 MW Export', link: '/businesses#power' },
+      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: 'Export: 14 MW', link: '/businesses#power' },
     ]
   }), []);
 
   useEffect(() => {
-    // Use static video files directly for better performance
-    setBackgroundVideoUrl(heroData.backgroundVideoPath);
-    setVideoPosterUrl(heroData.videoPosterPath);
-    
     // Detect mobile device
     setIsMobileDevice(isMobile());
-  }, [heroData.backgroundVideoPath, heroData.videoPosterPath]);
+    
+    // Only load video on desktop and good connections
+    if (!isMobileDevice && navigator.connection?.effectiveType !== 'slow-2g' && navigator.connection?.effectiveType !== '2g') {
+      // Delay video loading slightly to prioritize other content
+      const timer = setTimeout(() => {
+        setBackgroundVideoUrl(heroData.backgroundVideoPath);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+    
+    // Always set poster for fallback
+    setVideoPosterUrl(heroData.videoPosterPath);
+  }, [heroData.backgroundVideoPath, heroData.videoPosterPath, isMobileDevice]);
 
   return (
     <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
@@ -350,7 +359,7 @@ const HeroSection = () => {
                   </motion.p>
                   {stat.subtext && (
                     <motion.p 
-                      className="text-white/80 text-xs mt-0.5"
+                      className="text-white/70 text-xs mt-1 px-2 py-0.5 bg-white/10 rounded-full"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.6 + index * 0.1 }}
