@@ -95,7 +95,7 @@ const HomePage = () => {
       <HeroSection />
       
       {/* About MSPIL Short Section */}
-      <section className="py-8 relative">
+      <section className="py-8 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div {...eagerProps} className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
@@ -115,7 +115,7 @@ const HomePage = () => {
       </section>
 
       {/* Investor Highlights */}
-      <section className="py-8 relative">
+      <section className="py-8 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div {...fastFadeInProps} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -158,7 +158,7 @@ const HomePage = () => {
       </section>
 
       {/* Recent News & Announcements */}
-      <section className="py-8 bg-transparent">
+      <section className="py-8 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fastFadeInProps} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
             <div className="flex-1">

@@ -8,6 +8,12 @@ import { Link } from 'react-router-dom';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { pageBackgrounds } from '@/utils/backgroundStyles';
 
+// Detect mobile devices for performance optimizations
+const isMobile = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+         window.innerWidth <= 768;
+};
+
 
 // Animated gradient background
 const AnimatedGradient = () => {
@@ -33,11 +39,11 @@ const AnimatedGradient = () => {
 
 const HeroSection = () => {
   const t = useTranslation();
-  //  // Not needed for static files
   const prefersReducedMotion = useReducedMotion();
   const [backgroundVideoUrl, setBackgroundVideoUrl] = useState('');
   const [videoPosterUrl, setVideoPosterUrl] = useState('');
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -74,9 +80,9 @@ const HeroSection = () => {
       },
     ],
     stats: [
-      { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag /> },
-      { id: 2, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets /> },
-      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: '14 MW Export' },
+      { id: 1, value: 8000, labelKey: 'heroStatSugar', suffix: ' TCD', icon: <ShoppingBag />, link: '/businesses#sugar' },
+      { id: 2, value: 350, labelKey: 'heroStatEthanol', suffix: ' KLPD', icon: <Droplets />, link: '/businesses#ethanol' },
+      { id: 3, value: 35, labelKey: 'heroStatPower', suffix: ' MW', icon: <Zap />, subtext: '14 MW Export', link: '/businesses#power' },
     ]
   }), []);
 
@@ -84,6 +90,9 @@ const HeroSection = () => {
     // Use static video files directly for better performance
     setBackgroundVideoUrl(heroData.backgroundVideoPath);
     setVideoPosterUrl(heroData.videoPosterPath);
+    
+    // Detect mobile device
+    setIsMobileDevice(isMobile());
   }, [heroData.backgroundVideoPath, heroData.videoPosterPath]);
 
   return (
@@ -148,10 +157,10 @@ const HeroSection = () => {
             muted
             playsInline
             poster={videoPosterUrl}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover hero-background-video ${isMobileDevice ? 'samsung-safe' : ''}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: isVideoLoaded ? 0.5 : 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: isMobileDevice ? 0.3 : 1 }}
             onLoadedData={() => setIsVideoLoaded(true)}
             aria-label={t(heroData.videoAltKey) || "Background video of company operations"}
           >
@@ -276,7 +285,7 @@ const HeroSection = () => {
 
         {/* Enhanced Key Metrics with Glass Morphism - Mobile Optimized */}
         <motion.div 
-          className="relative bg-white/10 backdrop-blur-md rounded-2xl p-4 mx-4 sm:mx-auto sm:max-w-2xl border border-white/20 shadow-lg overflow-hidden mt-6 mb-8"
+          className={`relative ${isMobileDevice ? 'bg-white/20 samsung-safe' : 'bg-white/10 backdrop-blur-md'} rounded-2xl p-4 mx-4 sm:mx-auto sm:max-w-2xl border border-white/20 shadow-lg overflow-hidden mt-6 mb-8`}
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 
@@ -303,24 +312,25 @@ const HeroSection = () => {
           </motion.h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2 md:gap-3 relative z-10">
             {heroData.stats.map((stat, index) => (
-              <motion.div 
-                key={stat.id}
-                className="group relative flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-2 hover:bg-white/20 transition-all duration-300 border border-white/10"
-                variants={{
-                  hidden: { opacity: 0, y: 30, scale: 0.8 },
-                  visible: { 
-                    opacity: 1, 
-                    y: 0, 
-                    scale: 1,
-                    transition: {
-                      delay: index * 0.1,
-                      type: "spring",
-                      stiffness: 100
+              <Link to={stat.link} key={stat.id}>
+                <motion.div 
+                  className={`group relative flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 ${isMobileDevice ? 'bg-white/15 samsung-safe' : 'bg-white/10 backdrop-blur-sm'} rounded-xl p-3 sm:p-2 hover:bg-white/20 transition-all duration-300 border border-white/10 cursor-pointer`}
+                  variants={{
+                    hidden: { opacity: 0, y: 30, scale: 0.8 },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: {
+                        delay: index * 0.1,
+                        type: "spring",
+                        stiffness: 100
+                      }
                     }
-                  }
-                }}
-                whileHover={{ scale: 1.02 }}
-              >
+                  }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
                 <div className="flex-shrink-0 relative z-10 sm:mb-0 mb-2">
                   {React.cloneElement(stat.icon, { className: "w-6 h-6 sm:w-5 sm:h-5 text-white/80" })}
                 </div>
@@ -349,7 +359,8 @@ const HeroSection = () => {
                     </motion.p>
                   )}
                 </div>
-              </motion.div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </motion.div>

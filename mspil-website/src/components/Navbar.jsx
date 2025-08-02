@@ -110,7 +110,7 @@ const Navbar = () => {
   const handleDropdownLeave = () => {
     const timeout = setTimeout(() => {
       setActiveDropdown(null);
-    }, 300); // 300ms delay before closing
+    }, 800); // 800ms delay before closing (was 300ms)
     setDropdownTimeout(timeout);
   };
 

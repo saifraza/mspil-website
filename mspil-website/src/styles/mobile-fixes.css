@@ -1,0 +1,133 @@
+/* Mobile-specific fixes for Samsung phones and other Android devices */
+
+/* Fix backdrop-blur flickering on mobile devices */
+@media (max-width: 768px) {
+  /* Reduce backdrop-blur intensity on mobile */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  
+  .backdrop-blur-md {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
+  
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+  
+  /* Force hardware acceleration and fix layering issues */
+  .backdrop-blur-xl,
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    transform: translateZ(0);
+    will-change: auto;
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* Samsung browser specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 768px) {
+  /* Disable complex animations on high-DPI mobile screens */
+  .motion-reduce-on-mobile * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  /* Reduce transform complexity */
+  .hero-background-video {
+    transform: none !important;
+  }
+  
+  /* Simplify glass morphism effects */
+  .bg-white\/10,
+  .bg-white\/20,
+  .bg-gray-800\/10,
+  .bg-gray-800\/20 {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Fix navigation dropdown on mobile */
+  .mobile-nav-dropdown {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    background: rgba(31, 41, 55, 0.9) !important;
+  }
+}
+
+/* Android Chrome specific fixes */
+@supports (-webkit-appearance: none) {
+  @media (max-width: 768px) {
+    /* Reduce GPU load */
+    .framer-motion-component {
+      will-change: auto !important;
+    }
+    
+    /* Simplify gradients that might cause flickering */
+    .bg-gradient-to-r,
+    .bg-gradient-to-br,
+    .bg-gradient-to-t {
+      background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    }
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  /* Reduce motion for better performance */
+  .reduce-motion-mobile {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+  
+  /* Optimize video performance */
+  video {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Fix scroll performance */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+  
+  /* Prevent flickering on scroll */
+  .sticky,
+  .fixed {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* Specific Samsung browser detection and fixes */
+@media screen and (max-width: 768px) {
+  /* Samsung Internet browser fixes */
+  .samsung-safe {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Reduce complex layering */
+  .complex-background {
+    background: var(--background) !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Simplify shadows */
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+}
