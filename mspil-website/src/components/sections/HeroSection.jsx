@@ -103,19 +103,72 @@ const HeroSection = () => {
       // Always set poster first for immediate LCP
       setVideoPosterUrl(heroData.videoPosterPath);
       
-      // Only load video after everything else is loaded (non-critical)
-      if (!isMobileDevice && (!navigator.connection || navigator.connection.effectiveType === '4g')) {
-        // Significantly delay video loading to not interfere with LCP
+      // OPTIMIZED MOBILE VIDEO LOADING: Load video but with smart performance strategies
+      const isFastConnection = navigator.connection?.effectiveType === '4g' || !navigator.connection;
+      const hasEnoughMemory = navigator.deviceMemory ? navigator.deviceMemory >= 2 : true;
+      
+      // Load video for all devices but with different strategies
+      if (isFastConnection && hasEnoughMemory && !prefersReducedMotion) {
+        // Desktop: Load immediately after page load
+        const delay = isMobileDevice ? 8000 : 2000; // 8s for mobile, 2s for desktop
         const timer = setTimeout(() => {
           setBackgroundVideoUrl(heroData.videoSources.original);
-        }, 3000); // Delay increased to 3 seconds
+        }, delay);
         
         return () => clearTimeout(timer);
+      } else if (isMobileDevice) {
+        // Mobile with slow connection: Load after user interaction
+        const handleInteraction = () => {
+          setBackgroundVideoUrl(heroData.videoSources.original);
+          document.removeEventListener('touchstart', handleInteraction);
+          document.removeEventListener('scroll', handleInteraction);
+        };
+        
+        document.addEventListener('touchstart', handleInteraction, { once: true, passive: true });
+        document.addEventListener('scroll', handleInteraction, { once: true, passive: true });
+        
+        return () => {
+          document.removeEventListener('touchstart', handleInteraction);
+          document.removeEventListener('scroll', handleInteraction);
+        };
       }
     };
     
     loadOptimizedMedia();
-  }, [heroData, isMobileDevice]);
+  }, [heroData, isMobileDevice, prefersReducedMotion]);
+
+  // Mobile-specific preload optimization
+  useEffect(() => {
+    if (isMobileDevice) {
+      // Preload critical hero image for mobile LCP optimization
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = HERO_IMAGE_URL;
+      link.fetchPriority = 'high';
+      document.head.appendChild(link);
+
+      return () => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      };
+    } else {
+      // Desktop: preload video poster for better UX
+      const posterLink = document.createElement('link');
+      posterLink.rel = 'preload';
+      posterLink.as = 'image';
+      posterLink.href = VIDEO_POSTER_URL;
+      posterLink.fetchPriority = 'high';
+      document.head.appendChild(posterLink);
+
+      return () => {
+        if (document.head.contains(posterLink)) {
+          document.head.removeChild(posterLink);
+        }
+      };
+    }
+  }, [isMobileDevice]);
 
   return (
     <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
@@ -178,12 +231,22 @@ const HeroSection = () => {
             loop
             muted
             playsInline
+            preload={isMobileDevice ? "metadata" : "auto"} // Load only metadata on mobile
             poster={videoPosterUrl}
             className={`w-full h-full object-cover hero-background-video ${isMobileDevice ? 'samsung-safe' : ''}`}
+            style={{ 
+              willChange: 'opacity',
+              // Reduce video quality on mobile for better performance
+              filter: isMobileDevice ? 'brightness(1.1) contrast(0.9)' : 'none'
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: isVideoLoaded ? 0.5 : 0 }}
             transition={{ duration: isMobileDevice ? 0.3 : 1 }}
             onLoadedData={() => setIsVideoLoaded(true)}
+            onError={(e) => {
+              console.warn('Video failed to load, falling back to poster image');
+              setIsVideoLoaded(false);
+            }}
             aria-label={t(heroData.videoAltKey) || "Background video of company operations"}
           >
             <source src={backgroundVideoUrl} type="video/mp4" />

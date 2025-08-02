@@ -239,9 +239,17 @@ export default defineConfig({
     reportCompressedSize: true,
     chunkSizeWarningLimit: 500,
     
-    // Enhanced optimizations
-    target: 'es2015',
+    // Enhanced mobile optimizations  
+    target: 'es2020', // More modern target for better compression
     cssCodeSplit: true,
+    
+    // Mobile-specific optimizations
+    experimentalMinChunkSize: 10000, // Reduce number of small chunks for mobile
+    
+    // Preload critical assets
+    modulePreload: {
+      polyfill: false // Save bytes on modern browsers
+    }
     
   },
   server: {
