@@ -138,8 +138,10 @@ async function analyzeIntent(message) {
       max_tokens: 500,
       system: `Analyze the user's message and determine their intent. Respond with a JSON object containing:
       - primaryIntent: one of ['linkedin_post', 'image_generation', 'news_check', 'schedule_content', 'general_query']
-      - entities: extracted entities like content, timing, topics
-      - confidence: confidence score 0-1`,
+      - entities: extracted entities like content, timing, topics (array of topics like ['sugar', 'ethanol', 'power', 'market'])
+      - confidence: confidence score 0-1
+      
+      For news_check intent, extract relevant topics from the message. If they ask about specific topics like 'sugar news', 'ethanol market', 'power industry', extract those as topics.`,
       messages: [
         {
           role: 'user',
@@ -257,28 +259,41 @@ async function handleImageGeneration(message, intent) {
 
 async function handleNewsCheck(intent) {
   try {
-    const news = await getLatestNews(intent.entities.topics || ['sugar', 'ethanol']);
+    const topics = intent.entities.topics || ['sugar', 'ethanol', 'power', 'market'];
+    const news = await getLatestNews(topics, 10);
     
     if (news.length === 0) {
       return {
         message: 'No new industry updates at the moment. I\'ll keep monitoring and alert you when there are relevant news.',
         actions: [],
-        attachments: []
+        attachments: [],
+        newsResults: []
       };
     }
     
-    const newsReport = news.slice(0, 5).map((item, index) => 
-      `${index + 1}. **${item.title}**\n   Source: ${item.source} | ${item.date}\n   ${item.summary}`
+    // Format news for display
+    const newsReport = news.slice(0, 3).map((item, index) => 
+      `${index + 1}. **${item.title}**\n   Source: ${item.source} | ${formatDate(item.date)}\n   ${item.summary || item.content?.substring(0, 100) + '...'}`
     ).join('\n\n');
     
     return {
-      message: `Here are the latest industry news and updates:\n\n${newsReport}\n\nWould you like me to create a LinkedIn post about any of these news items?`,
+      message: `I found ${news.length} relevant industry news articles:\n\n${newsReport}\n\n${news.length > 3 ? `And ${news.length - 3} more articles below.` : ''}\n\nYou can click "Post to Website" on any article to add it to the MSPIL news section.`,
       actions: [{
         type: 'news_fetched',
         count: news.length,
         sources: [...new Set(news.map(n => n.source))]
       }],
-      attachments: []
+      attachments: [],
+      newsResults: news.map(item => ({
+        id: item.id || item.title,
+        title: item.title,
+        summary: item.summary || item.content?.substring(0, 200) + '...',
+        content: item.content || item.summary,
+        source: item.source,
+        date: item.date,
+        url: item.url,
+        categories: item.categories || [inferCategory(item.title + ' ' + (item.summary || ''))]
+      }))
     };
     
   } catch (error) {
@@ -286,9 +301,38 @@ async function handleNewsCheck(intent) {
     return {
       message: 'I couldn\'t fetch the latest news right now. Please try again later.',
       actions: [],
-      attachments: []
+      attachments: [],
+      newsResults: []
     };
   }
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'Recent';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+  
+  if (diffInHours < 1) return 'Just now';
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  if (diffInHours < 48) return 'Yesterday';
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function inferCategory(text) {
+  const lowerText = text.toLowerCase();
+  
+  if (lowerText.includes('sugar') || lowerText.includes('cane') || lowerText.includes('mill')) {
+    return 'sugar';
+  } else if (lowerText.includes('ethanol') || lowerText.includes('alcohol') || lowerText.includes('distillery')) {
+    return 'ethanol';
+  } else if (lowerText.includes('power') || lowerText.includes('energy') || lowerText.includes('electricity')) {
+    return 'power';
+  } else if (lowerText.includes('market') || lowerText.includes('price') || lowerText.includes('demand')) {
+    return 'market';
+  }
+  
+  return 'market';
 }
 
 async function handleScheduling(message, intent) {

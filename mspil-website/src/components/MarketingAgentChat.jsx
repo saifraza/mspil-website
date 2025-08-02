@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import NewsSearchResults from '@/components/NewsSearchResults';
 import { 
   MessageSquare, 
   Send, 
@@ -56,7 +57,8 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
           content: data.message,
           timestamp: data.timestamp,
           actions: data.actions,
-          attachments: data.attachments
+          attachments: data.attachments,
+          newsResults: data.newsResults
         }]);
         setIsLoading(false);
       });
@@ -128,7 +130,8 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
               content: responseData.response,
               timestamp: new Date().toISOString(),
               actions: responseData.actions,
-              attachments: responseData.attachments
+              attachments: responseData.attachments,
+              newsResults: responseData.newsResults
             }]);
             setIsLoading(false);
           }
@@ -177,6 +180,19 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
                 : 'bg-primary/20 backdrop-blur-xl border border-primary/40'
             }`}>
               <p className="text-white whitespace-pre-wrap">{message.content}</p>
+              
+              {/* News Search Results */}
+              {message.newsResults && (
+                <NewsSearchResults 
+                  newsItems={message.newsResults}
+                  onPostToWebsite={(newsItem) => {
+                    // Refresh the page to show new news
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }}
+                />
+              )}
               
               {message.attachments?.map((attachment, index) => (
                 <div key={index} className="mt-2">
@@ -231,9 +247,9 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
 
   const quickActions = [
     { icon: <Linkedin size={16} />, text: 'Post to LinkedIn', action: 'Create a LinkedIn post about ' },
-    { icon: <Newspaper size={16} />, text: 'Post News', action: 'I want to post news about ' },
+    { icon: <Newspaper size={16} />, text: 'Search News', action: 'Search for news about ' },
     { icon: <ImageIcon size={16} />, text: 'Generate Image', action: 'Generate an image of ' },
-    { icon: <Calendar size={16} />, text: 'Check News', action: 'What are the latest industry news?' }
+    { icon: <Calendar size={16} />, text: 'Latest News', action: 'What are the latest industry news?' }
   ];
 
   if (!isOpen) return null;

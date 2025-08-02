@@ -56,14 +56,16 @@ export default function chatRoutes(io) {
         timestamp: new Date().toISOString(),
         type: 'agent',
         actions: response.actions,
-        attachments: response.attachments
+        attachments: response.attachments,
+        newsResults: response.newsResults
       });
       
       const jsonResponse = {
         success: true,
         response: response.message,
         actions: response.actions,
-        attachments: response.attachments
+        attachments: response.attachments,
+        newsResults: response.newsResults
       };
       
       logger.info('Sending response to client:', { 

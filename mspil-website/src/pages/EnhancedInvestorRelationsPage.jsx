@@ -55,7 +55,7 @@ const EnhancedInvestorRelationsPage = () => {
       currency: '₹ Cr'
     },
     timeline: {
-      currentStage: 'Pre-IPO',
+      currentStage: 'Pre-IPO Closed',
       ipoTarget: '15 months',
       listingDate: 'Q3 2026',
       minimumInvestment: '₹ 10 Cr'
@@ -64,7 +64,10 @@ const EnhancedInvestorRelationsPage = () => {
       expectedROI: '150-200%',
       exitMultiple: '2.5-3x',
       irr: '80-100%'
-    }
+    },
+    roundStatus: 'CLOSED',
+    amountRaised: '₹40 Cr',
+    closingDate: 'December 2024'
   };
 
   // Key Investment Highlights
@@ -170,31 +173,36 @@ const EnhancedInvestorRelationsPage = () => {
               Join us in our journey to become India's leading integrated sugar and ethanol producer
             </p>
             
-            {/* Pre-IPO Investment Alert */}
+            {/* Pre-IPO Investment Status */}
             <div className="bg-gradient-to-r from-green-50/80 to-emerald-50/80 dark:from-green-900/40 dark:to-emerald-900/40 backdrop-blur-md border border-green-200/50 dark:border-green-800/50 rounded-xl p-6 max-w-4xl mx-auto shadow-xl">
               <div className="flex items-center justify-center gap-2 mb-4">
-                <AlertCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                 <h3 className="text-xl font-bold text-green-800 dark:text-green-200">
-                  Pre-IPO Investment Opportunity Open
+                  Pre-IPO Round Successfully Closed
                 </h3>
               </div>
               <div className="grid md:grid-cols-4 gap-4 text-center">
                 <div>
                   <p className="text-3xl font-bold text-green-600 dark:text-green-400">₹820 Cr</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Pre-Money Valuation</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Final Valuation</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">₹40 Cr</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Amount Raised</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">Dec 2024</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Closing Date</p>
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-green-600 dark:text-green-400">15 Months</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">IPO Timeline</p>
                 </div>
-                <div>
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">2.5-3x</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Expected Returns</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">₹10 Cr</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Min. Investment</p>
-                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <p className="text-sm text-green-700 dark:text-green-300">
+                  Round successfully completed • IPO preparation underway
+                </p>
               </div>
             </div>
           </motion.div>
