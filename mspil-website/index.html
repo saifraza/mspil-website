@@ -17,10 +17,15 @@
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		
 		<!-- Performance optimizations -->
-		<link rel="preload" href="/images/company_logo.webp" as="image" />
-		<link rel="preload" href="/videos/hero/hero_video_thumbnail.jpg" as="image" />
+		<link rel="preload" href="/images/company_logo.webp" as="image" fetchpriority="high" />
+		<link rel="preload" href="/videos/hero/hero_video_thumbnail.jpg" as="image" fetchpriority="high" />
+		
+		<!-- Google Fonts optimization -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+		<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+		
 		<link rel="dns-prefetch" href="//api.github.com" />
 		<link rel="dns-prefetch" href="//www.mspil.in" />
 		
