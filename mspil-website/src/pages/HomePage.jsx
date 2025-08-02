@@ -20,17 +20,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { fastFadeInProps, fastStaggerProps, eagerProps } from '@/utils/scrollAnimations';
 
 const HomePage = () => {
   const t = useTranslation();
   
 
-  const fadeInProps = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: { duration: 0.6 }
-  };
 
   const investorHighlights = [
     { 
@@ -102,7 +97,7 @@ const HomePage = () => {
       {/* About MSPIL Short Section */}
       <section className="py-8 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div {...fadeInProps} className="max-w-4xl mx-auto text-center">
+          <motion.div {...eagerProps} className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
               {t('homeAboutTitle')}
             </h2>
@@ -122,7 +117,7 @@ const HomePage = () => {
       {/* Investor Highlights */}
       <section className="py-8 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div {...fadeInProps} className="text-center mb-12">
+          <motion.div {...fastFadeInProps} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {t('homeInvestorTitle')}
             </h2>
@@ -135,8 +130,7 @@ const HomePage = () => {
             {investorHighlights.map((item, index) => (
               <motion.div
                 key={index}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
+                {...fastStaggerProps(index)}
               >
                 <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70 shadow-lg">
                   <Link to={item.link}>
@@ -152,7 +146,7 @@ const HomePage = () => {
             ))}
           </div>
 
-          <motion.div {...fadeInProps} className="text-center">
+          <motion.div {...fastFadeInProps} className="text-center">
             <Button asChild variant="outline" size="lg">
               <Link to="/investor-relations">
                 {t('homeInvestorViewAll')}
@@ -166,7 +160,7 @@ const HomePage = () => {
       {/* Recent News & Announcements */}
       <section className="py-8 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
+          <motion.div {...fastFadeInProps} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
             <div className="flex-1">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
                 {t('homeNewsTitle')}
@@ -186,8 +180,7 @@ const HomePage = () => {
             {recentNews.map((news, index) => (
               <motion.div
                 key={index}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
+                {...fastStaggerProps(index)}
               >
                 <Card className="hover:shadow-xl transition-all duration-300 h-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl border border-white/30 hover:bg-white/60 dark:hover:bg-gray-800/60 shadow-lg">
                   <CardHeader>
@@ -218,7 +211,7 @@ const HomePage = () => {
 
           {/* News Ticker */}
           <motion.div 
-            {...fadeInProps}
+            {...fastFadeInProps}
             className="mt-8 bg-primary/10 backdrop-blur-sm rounded-lg p-4"
           >
             <div className="overflow-hidden">
@@ -249,7 +242,7 @@ const HomePage = () => {
       {/* CSR Impact Snapshot */}
       <section className="py-8 bg-white/5 dark:bg-gray-800/5 backdrop-blur-lg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="text-center mb-12">
+          <motion.div {...fastFadeInProps} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {t('homeCSRTitle')}
             </h2>
@@ -262,8 +255,7 @@ const HomePage = () => {
             {csrInitiatives.map((initiative, index) => (
               <motion.div
                 key={index}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
+                {...fastStaggerProps(index * 2)}
                 className="text-center"
               >
                 <div className={`inline-flex p-4 rounded-full bg-gradient-to-br ${initiative.color} text-white mb-4`}>
@@ -279,7 +271,7 @@ const HomePage = () => {
             ))}
           </div>
 
-          <motion.div {...fadeInProps} className="text-center">
+          <motion.div {...fastFadeInProps} className="text-center">
             <Button asChild size="lg" variant="outline">
               <Link to="/sustainability">
                 {t('homeCSRViewMore')}
@@ -293,7 +285,7 @@ const HomePage = () => {
       {/* Call to Action Section */}
       <section className="py-12 bg-gradient-to-r from-primary/70 to-primary/50 backdrop-blur-xl border-t border-white/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="text-center text-white">
+          <motion.div {...fastFadeInProps} className="text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Join Us in Building a Sustainable Future
             </h2>

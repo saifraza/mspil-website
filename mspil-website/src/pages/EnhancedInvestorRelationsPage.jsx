@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
 import { pageBackgrounds, cardBackgrounds, sectionBackgrounds } from '@/utils/backgroundStyles';
+import { fastFadeInProps, fastStaggerProps } from '@/utils/scrollAnimations';
 
 const EnhancedInvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -151,12 +152,6 @@ const EnhancedInvestorRelationsPage = () => {
     }, 200);
   };
 
-  const fadeInProps = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: { duration: 0.6 }
-  };
 
   return (
     <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
@@ -165,7 +160,7 @@ const EnhancedInvestorRelationsPage = () => {
       {/* Hero Section with Investment Opportunity */}
       <section className="relative py-20 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="text-center mb-12">
+          <motion.div {...fastFadeInProps} className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Investor Relations
             </h1>
@@ -222,8 +217,8 @@ const EnhancedInvestorRelationsPage = () => {
               <motion.button
                 key={index}
                 onClick={() => handleQuickNavigation(item.tab, item.section)}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
+                {...fastFadeInProps}
+                transition={{ ...fastFadeInProps.transition, delay: index * 0.1 }}
                 className="flex items-center p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl border border-white/20 rounded-lg shadow-lg hover:shadow-xl hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all text-left w-full hover:-translate-y-1"
               >
                 <item.icon className="w-8 h-8 text-primary mr-3" />
@@ -257,8 +252,8 @@ const EnhancedInvestorRelationsPage = () => {
                   {investmentHighlights.map((highlight, index) => (
                     <motion.div
                       key={index}
-                      {...fadeInProps}
-                      transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
+                      {...fastFadeInProps}
+                      transition={{ ...fastFadeInProps.transition, delay: index * 0.1 }}
                     >
                       <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
                         <CardContent className="p-6">

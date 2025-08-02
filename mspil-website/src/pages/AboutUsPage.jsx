@@ -10,6 +10,7 @@ import AboutUsSection from '@/components/sections/AboutUsSection';
 import { useLocation } from 'react-router-dom';
 import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { fastFadeInProps, fastStaggerProps } from '@/utils/scrollAnimations';
 
 const AboutUsPage = () => {
   const t = useTranslation();
@@ -64,12 +65,6 @@ const AboutUsPage = () => {
     }
   }, [location.hash]);
 
-  const fadeInProps = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: { duration: 0.6 }
-  };
 
 
   // Get images from CMS context
@@ -147,7 +142,7 @@ const AboutUsPage = () => {
       {/* Leadership Profiles */}
       <section id="leadership" className="section-padding-compact bg-white/10 dark:bg-gray-800/10 backdrop-blur-md relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeInProps} className="text-center mb-16">
+          <motion.div {...fastFadeInProps} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
               {t('aboutLeadershipTitle')}
             </h2>
@@ -160,8 +155,7 @@ const AboutUsPage = () => {
             {leadership.map((leader, index) => (
               <motion.div
                 key={index}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.2 }}
+                {...fastStaggerProps(index * 2)}
                 className={`flex flex-col lg:flex-row items-center gap-16 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
               >
                 {/* Large Image Section */}
