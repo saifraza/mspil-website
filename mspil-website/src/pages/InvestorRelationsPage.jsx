@@ -287,20 +287,57 @@ const InvestorRelationsPage = () => {
               {/* Investment Terms Section */}
               <div id="investment-terms" className="mt-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Investment Terms & Structure</h2>
+                
+                {/* Pre-IPO Status Banner */}
+                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">
+                        Pre-IPO Round Successfully Closed
+                      </h3>
+                      <p className="text-sm text-green-700 dark:text-green-300">
+                        Completed in {investmentData.closingDate} • Valuation: {investmentData.valuation.preIPO} • Amount Raised: {investmentData.amountRaised}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pre-IPO Investment Opportunity</CardTitle>
-                    <CardDescription>Strategic investment terms for qualified investors</CardDescription>
+                    <CardTitle>Pre-IPO Investment Round - CLOSED</CardTitle>
+                    <CardDescription>Successfully completed strategic fundraising round</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <h3 className="font-semibold mb-4">Investment Details</h3>
+                        <h3 className="font-semibold mb-4">Round Summary</h3>
                         <div className="space-y-3">
                           <div className="flex justify-between">
-                            <span>Minimum Investment</span>
-                            <span className="font-medium">{investmentData.minimumInvestment}</span>
+                            <span>Round Status</span>
+                            <span className="font-medium text-green-600 dark:text-green-400">
+                              {investmentData.preIPOStatus}
+                            </span>
                           </div>
+                          <div className="flex justify-between">
+                            <span>Amount Raised</span>
+                            <span className="font-medium">{investmentData.amountRaised}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Closing Date</span>
+                            <span className="font-medium">{investmentData.closingDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Pre-IPO Valuation</span>
+                            <span className="font-medium">{investmentData.valuation.preIPO}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-4">Investment Terms</h3>
+                        <div className="space-y-3">
                           <div className="flex justify-between">
                             <span>Instrument Type</span>
                             <span className="font-medium">{investmentData.instrumentType}</span>
@@ -310,31 +347,25 @@ const InvestorRelationsPage = () => {
                             <span className="font-medium">{investmentData.lockInPeriod}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Board Representation</span>
-                            <span className="font-medium">{investmentData.boardRepresentation}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold mb-4">Exit Strategy</h3>
-                        <div className="space-y-3">
-                          <div className="flex justify-between">
-                            <span>Exit Route</span>
+                            <span>Exit Strategy</span>
                             <span className="font-medium">{investmentData.exitStrategy}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Timeline</span>
+                            <span>Exit Timeline</span>
                             <span className="font-medium">{investmentData.exitTimeline}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span>Pre-IPO Valuation</span>
-                            <span className="font-medium">{investmentData.valuation.preIPO}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Current Market Cap</span>
-                            <span className="font-medium">{investmentData.valuation.currentMarketCap}</span>
-                          </div>
                         </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 pt-6 border-t">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Next Steps: IPO Preparation</h4>
+                        <p className="text-sm text-blue-700 dark:text-blue-300">
+                          With the pre-IPO round successfully completed, the company is now focused on IPO preparation 
+                          with an expected timeline of {investmentData.exitTimeline}. The raised capital will be utilized 
+                          for capacity expansion and working capital requirements.
+                        </p>
                       </div>
                     </div>
                   </CardContent>

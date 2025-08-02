@@ -147,6 +147,9 @@ export const financialData = {
       currentMarketCap: '₹615 Cr', // 7.5 Cr shares @ ₹82/share
       postIPOEstimate: '₹1,600 Cr'
     },
+    preIPOStatus: 'CLOSED',
+    amountRaised: '₹40 Cr',
+    closingDate: 'December 2024',
     minimumInvestment: '₹10 Crores',
     instrumentType: 'Equity Shares',
     lockInPeriod: '6 months post-IPO',

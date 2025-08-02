@@ -211,6 +211,8 @@ async function handleLinkedInPost(message, intent) {
     
     if (error.message.includes('credentials not configured')) {
       errorMessage += 'LinkedIn integration is not set up yet. Please configure your LinkedIn access token and organization ID in the environment variables.';
+    } else if (error.message.includes('Missing required scope')) {
+      errorMessage += 'LinkedIn token only has personal posting access. To post to the company page:\n\n1. A page admin needs to verify the app at: https://www.linkedin.com/developers/apps/verification/290e08b1-b1fa-44ff-a40a-e0bf96d267cf\n2. Request Community Management API access\n3. Generate a new token with company posting permissions\n\nSee /automation-service/LINKEDIN_COMPANY_VERIFICATION.md for detailed instructions.';
     } else if (error.message.includes('rate limit')) {
       errorMessage += 'We\'ve reached the LinkedIn daily posting limit. Please try again tomorrow.';
     } else if (error.response?.status === 401) {

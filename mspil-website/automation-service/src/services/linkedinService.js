@@ -96,6 +96,12 @@ export async function postToLinkedIn({ content, imageUrl, imageFile }) {
     
   } catch (error) {
     logger.error('LinkedIn posting error:', error.response?.data || error.message);
+    
+    // Check if it's a scope issue
+    if (error.response?.status === 403 && error.response?.data?.message?.includes('scope')) {
+      throw new Error('Missing required scope: w_organization_social. Current token only has personal posting access.');
+    }
+    
     throw error;
   }
 }

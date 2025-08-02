@@ -231,9 +231,9 @@ const MarketingAgentChat = ({ isOpen, onClose }) => {
 
   const quickActions = [
     { icon: <Linkedin size={16} />, text: 'Post to LinkedIn', action: 'Create a LinkedIn post about ' },
+    { icon: <Newspaper size={16} />, text: 'Post News', action: 'I want to post news about ' },
     { icon: <ImageIcon size={16} />, text: 'Generate Image', action: 'Generate an image of ' },
-    { icon: <Newspaper size={16} />, text: 'Check News', action: 'What are the latest sugar industry news?' },
-    { icon: <Calendar size={16} />, text: 'Schedule Post', action: 'Schedule a post for ' }
+    { icon: <Calendar size={16} />, text: 'Check News', action: 'What are the latest industry news?' }
   ];
 
   if (!isOpen) return null;

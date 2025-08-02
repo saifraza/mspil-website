@@ -1,0 +1,48 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "MSPIL Achieves Record Sugar Production in 2024-25 Season",
+      "content": "Mahakaushal Sugar & Power Industries Ltd. has achieved a record sugar production of 95,000 MT in the current crushing season, marking a 15% increase from the previous year.",
+      "category": "sugar",
+      "author": "MSPIL Team",
+      "date": "2025-01-31T10:00:00Z",
+      "source": "Company News",
+      "tags": ["sugar", "production", "record"],
+      "published": true
+    },
+    {
+      "id": 2,
+      "title": "Ethanol Production Capacity Expansion Complete",
+      "content": "Our ethanol distillery has successfully completed its capacity expansion project, increasing daily production from 300 KLPD to 350 KLPD, supporting India's ethanol blending program.",
+      "category": "ethanol",
+      "author": "MSPIL Team",
+      "date": "2025-01-30T14:30:00Z",
+      "source": "Company News",
+      "tags": ["ethanol", "expansion", "capacity"],
+      "published": true
+    },
+    {
+      "id": 3,
+      "title": "Power Generation Efficiency Improved by 8%",
+      "content": "Implementation of new turbine technology has resulted in an 8% improvement in power generation efficiency at our 24 MW co-generation plant.",
+      "category": "power",
+      "author": "MSPIL Team",
+      "date": "2025-01-29T09:15:00Z",
+      "source": "Company News",
+      "tags": ["power", "efficiency", "technology"],
+      "published": true
+    },
+    {
+      "id": 4,
+      "title": "Sugar Market Shows Positive Trends for Q1 2025",
+      "content": "Market analysis indicates favorable sugar prices and strong demand in domestic and international markets, benefiting sugar producers across India.",
+      "category": "market",
+      "author": "Market Analyst",
+      "date": "2025-01-28T16:45:00Z",
+      "source": "Market Research",
+      "tags": ["market", "prices", "demand"],
+      "published": true
+    }
+  ]
+}

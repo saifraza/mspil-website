@@ -34,48 +34,45 @@ const AINewsSection = () => {
   const fetchNews = async () => {
     setIsLoading(true);
     try {
-      const topics = selectedCategory === 'all' ? ['sugar', 'ethanol'] : [selectedCategory];
-      const response = await fetch(`${AUTOMATION_SERVICE_URL}/api/news?topics=${topics.join(',')}&limit=20`);
+      // First try to get local news
+      const localNews = JSON.parse(localStorage.getItem('mspil_news') || '[]');
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch news');
-      }
-      
+      // Fetch static news data
+      const response = await fetch('/data/news.json');
       const data = await response.json();
-      setNews(data.news || []);
+      const staticNews = data.news || [];
+      
+      // Combine local and static news
+      const allNews = [...localNews, ...staticNews];
+      
+      // Remove duplicates based on title
+      const uniqueNews = allNews.filter((news, index, self) => 
+        index === self.findIndex(n => n.title === news.title)
+      );
+      
+      // Sort by date (newest first)
+      uniqueNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      setNews(uniqueNews);
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Error fetching news:', error);
-      // Set mock data if API fails
-      setNews([
-        {
-          id: 1,
-          title: 'Sugar Production Increases by 15% in Current Season',
-          source: 'ChiniMandi',
-          date: new Date().toISOString(),
-          summary: 'Sugar production in India has seen a significant increase of 15% in the current crushing season, reaching new heights in productivity.',
-          category: 'sugar',
-          url: '#'
-        },
-        {
-          id: 2,
-          title: 'Ethanol Blending Target Achieved Ahead of Schedule',
-          source: 'ChiniMandi',
-          date: new Date().toISOString(),
-          summary: 'India achieves 12% ethanol blending target ahead of the 2025 deadline, marking a major milestone in renewable energy.',
-          category: 'ethanol',
-          url: '#'
-        },
-        {
-          id: 3,
-          title: 'New Technology Improves Sugar Mill Efficiency',
-          source: 'Indian Sugar Mills Association',
-          date: new Date().toISOString(),
-          summary: 'Revolutionary new technology promises to improve sugar mill efficiency by 20%, reducing costs and environmental impact.',
-          category: 'sugar',
-          url: '#'
+      // Try automation service as fallback
+      try {
+        const topics = selectedCategory === 'all' ? ['sugar', 'ethanol'] : [selectedCategory];
+        const response = await fetch(`${AUTOMATION_SERVICE_URL}/api/news?topics=${topics.join(',')}&limit=20`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setNews(data.news || []);
+        } else {
+          throw new Error('Automation service unavailable');
         }
-      ]);
+      } catch (fallbackError) {
+        console.error('Fallback error:', fallbackError);
+        // Set default news if everything fails
+        setNews([]);
+      }
       setLastUpdated(new Date());
     } finally {
       setIsLoading(false);
@@ -227,7 +224,7 @@ const AINewsSection = () => {
 
                     {/* Summary */}
                     <p className="text-gray-400 text-sm mb-4 line-clamp-3 flex-grow">
-                      {item.summary}
+                      {item.summary || item.content?.substring(0, 150) + '...' || 'No summary available'}
                     </p>
 
                     {/* Source and Link */}
