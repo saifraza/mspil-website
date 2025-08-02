@@ -5,15 +5,13 @@ import UnifiedBackground from '@/components/ui/UnifiedBackground';
 import { pageBackgrounds } from '@/utils/backgroundStyles';
 import MarketingAgentChat from '@/components/MarketingAgentChat';
 import MarketingAgentAuth from '@/components/MarketingAgentAuth';
-import NewsPostingForm from '@/components/NewsPostingForm';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, Plus } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const NewsMediaPage = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showNewsForm, setShowNewsForm] = useState(false);
   const [newsRefreshKey, setNewsRefreshKey] = useState(0);
   
   useEffect(() => {
@@ -52,30 +50,15 @@ const NewsMediaPage = () => {
       
       {/* Gallery Section */}
       <NewsMediaSection />
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
-        {/* Post News Button - Only show if authenticated */}
-        {isAuthenticated && (
-          <Button
-            onClick={() => setShowNewsForm(true)}
-            className="bg-green-600 hover:bg-green-700 shadow-lg"
-            size="lg"
-          >
-            <Plus className="mr-2" size={20} />
-            Post News
-          </Button>
-        )}
-        
-        {/* Marketing Agent Button */}
-        <Button
-          onClick={handleAgentClick}
-          className="bg-primary hover:bg-primary/80 shadow-lg"
-          size="lg"
-        >
-          <MessageSquare className="mr-2" size={20} />
-          Marketing Agent
-        </Button>
-      </div>
+      {/* Marketing Agent Button */}
+      <Button
+        onClick={handleAgentClick}
+        className="fixed bottom-6 right-6 z-40 bg-primary hover:bg-primary/80 shadow-lg"
+        size="lg"
+      >
+        <MessageSquare className="mr-2" size={20} />
+        Marketing Agent
+      </Button>
       
       {/* Authentication Modal */}
       {showAuth && (
@@ -92,12 +75,6 @@ const NewsMediaPage = () => {
         />
       )}
 
-      {/* News Posting Form */}
-      <NewsPostingForm
-        isOpen={showNewsForm}
-        onClose={() => setShowNewsForm(false)}
-        onNewsPosted={handleNewsPosted}
-      />
     </div>
   );
 };

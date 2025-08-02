@@ -55,7 +55,7 @@ const EnhancedInvestorRelationsPage = () => {
       currency: '₹ Cr'
     },
     timeline: {
-      currentStage: 'Pre-IPO Closed',
+      currentStage: 'Pre-IPO Closed - IPO Preparation',
       ipoTarget: '15 months',
       listingDate: 'Q3 2026',
       minimumInvestment: '₹ 10 Cr'
@@ -67,7 +67,7 @@ const EnhancedInvestorRelationsPage = () => {
     },
     roundStatus: 'CLOSED',
     amountRaised: '₹40 Cr',
-    closingDate: 'December 2024'
+    closingDate: 'Aug 2, 2025'
   };
 
   // Key Investment Highlights
@@ -191,7 +191,7 @@ const EnhancedInvestorRelationsPage = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">Amount Raised</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">Dec 2024</p>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">Today</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Closing Date</p>
                 </div>
                 <div>
@@ -318,7 +318,7 @@ const EnhancedInvestorRelationsPage = () => {
                           </div>
                           <div>
                             <p className="font-semibold">Current Stage</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Pre-IPO Fundraising</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Pre-IPO Closed - IPO Preparation</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
