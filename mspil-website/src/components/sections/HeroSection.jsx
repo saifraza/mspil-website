@@ -115,9 +115,6 @@ const HeroSection = () => {
     };
     
     loadOptimizedMedia();
-    
-    // Load video if conditions are met
-    loadOptimizedVideo();
   }, [heroData, isMobileDevice]);
 
   return (
