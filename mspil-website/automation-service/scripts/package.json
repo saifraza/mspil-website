@@ -1,0 +1,13 @@
+{
+  "name": "linkedin-auth-script",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "auth": "node linkedin-auth.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "open": "^9.1.0"
+  }
+}
