@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ShoppingBag, Droplets, Zap, Wheat } from 'lu
 import { useTranslation } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useThrottle } from '@/hooks/useThrottle';
+import LazyImage from '@/components/LazyImage';
 
 const businessData = [
   {
@@ -280,7 +281,7 @@ const CoreBusinessArea = () => {
                           const imageUrl = /images/placeholder.jpg;
                           
                           return imageUrl ? (
-                            <img 
+                            <LazyImage 
                               src={imageUrl}
                               alt={t(business.nameKey)}
                               className="w-full h-full object-cover"

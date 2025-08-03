@@ -1,4 +1,0 @@
-Add these environment variables to your MSPIL frontend service in Railway:
-
-NODE_ENV=production
-VITE_AUTOMATION_SERVICE_URL=https://automationservice-production-4565.up.railway.app

@@ -3,8 +3,8 @@
     "annualReports": [
       {
         "title": "Annual Report 2023-24",
-        "filename": "annual_report_2023_24.pdf.txt",
-        "url": "/documents/investor-relations/annual-reports/annual_report_2023_24.pdf.txt",
+        "filename": "annual_report_2023_24.pdf",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2023_24.pdf",
         "date": "2024-03-31",
         "type": "pdf",
         "category": "Annual Reports",
@@ -13,8 +13,8 @@
       },
       {
         "title": "Annual Report 2022-23",
-        "filename": "annual_report_2022_23.pdf.txt",
-        "url": "/documents/investor-relations/annual-reports/annual_report_2022_23.pdf.txt",
+        "filename": "annual_report_2022_23.pdf",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2022_23.pdf",
         "date": "2023-03-31",
         "type": "pdf",
         "category": "Annual Reports",
@@ -23,8 +23,8 @@
       },
       {
         "title": "Annual Report 2021-22",
-        "filename": "annual_report_2021_22.pdf.txt",
-        "url": "/documents/investor-relations/annual-reports/annual_report_2021_22.pdf.txt",
+        "filename": "annual_report_2021_22.pdf",
+        "url": "/documents/investor-relations/annual-reports/annual_report_2021_22.pdf",
         "date": "2022-03-31",
         "type": "pdf",
         "category": "Annual Reports",
@@ -35,8 +35,8 @@
     "quarterlyResults": [
       {
         "title": "Q1 FY2024 Results",
-        "filename": "q1_fy2024_results.pdf.txt",
-        "url": "/documents/investor-relations/quarterly-results/q1_fy2024_results.pdf.txt",
+        "filename": "q1_fy2024_results.pdf",
+        "url": "/documents/investor-relations/quarterly-results/q1_fy2024_results.pdf",
         "date": "2024-06-30",
         "type": "pdf",
         "category": "Quarterly Results",
@@ -46,8 +46,8 @@
     "presentations": [
       {
         "title": "Investor Presentation December 2024",
-        "filename": "investor_presentation_dec2024.pptx.txt",
-        "url": "/documents/investor-relations/presentations/investor_presentation_dec2024.pptx.txt",
+        "filename": "investor_presentation_dec2024.pdf",
+        "url": "/documents/investor-relations/presentations/investor_presentation_dec2024.pdf",
         "date": "2024-12-15",
         "type": "presentation",
         "category": "Presentations",
@@ -57,8 +57,8 @@
     "policies": [
       {
         "title": "Corporate Governance Policy",
-        "filename": "corporate_governance_policy.pdf.txt",
-        "url": "/documents/investor-relations/policies/corporate_governance_policy.pdf.txt",
+        "filename": "corporate_governance_policy.pdf",
+        "url": "/documents/investor-relations/policies/corporate_governance_policy.pdf",
         "date": "2024-01-01",
         "type": "pdf",
         "category": "Policies",
@@ -142,8 +142,8 @@
   "csr": [
     {
       "title": "CSR Report 2023-24",
-      "filename": "csr_report_2023_24.pdf.txt",
-      "url": "/documents/csr/csr_report_2023_24.pdf.txt",
+      "filename": "csr_report_2023_24.pdf",
+      "url": "/documents/csr/csr_report_2023_24.pdf",
       "date": "2024-03-31",
       "type": "pdf",
       "category": "CSR Reports",
@@ -153,8 +153,8 @@
   "general": [
     {
       "title": "Company Brochure 2024",
-      "filename": "company_brochure_2024.pdf.txt",
-      "url": "/documents/general/company_brochure_2024.pdf.txt",
+      "filename": "company_brochure_2024.pdf",
+      "url": "/documents/general/company_brochure_2024.pdf",
       "date": "2024-01-15",
       "type": "pdf",
       "category": "Company Information",

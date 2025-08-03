@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
 import { pageBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
+import LazyImage from '@/components/LazyImage';
 
 // Quick fix for getImage function
 const getImage = (category, fallback, index) => fallback;
@@ -230,7 +231,7 @@ const CSRPage = () => {
               >
                 <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
-                    <img
+                    <LazyImage
                       src={program.getImageUrl() || program.image}
                       alt={program.title}
                       className="w-full h-48 object-cover rounded-t-lg"
@@ -282,7 +283,7 @@ const CSRPage = () => {
               >
                 <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
-                    <img
+                    <LazyImage
                       src={program.getImageUrl() || program.image}
                       alt={program.title}
                       className="w-full h-48 object-cover rounded-t-lg"
@@ -334,7 +335,7 @@ const CSRPage = () => {
               >
                 <Card className={`h-full ${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
                   <div className="aspect-w-16 aspect-h-9">
-                    <img
+                    <LazyImage
                       src={program.getImageUrl() || program.image}
                       alt={program.title}
                       className="w-full h-48 object-cover rounded-t-lg"
@@ -380,7 +381,7 @@ const CSRPage = () => {
                 className="relative group cursor-pointer"
               >
                 <div className="aspect-w-4 aspect-h-3 bg-gray-200 rounded-lg overflow-hidden">
-                  <img
+                  <LazyImage
                     src={image.getImageUrl() || image.src}
                     alt={image.alt}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"

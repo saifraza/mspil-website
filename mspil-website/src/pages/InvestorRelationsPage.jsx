@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,15 +16,73 @@ import {
   Phone,
   MapPin,
   ChevronRight,
-  BarChart3
+  BarChart3,
+  DollarSign,
+  Activity,
+  Percent,
+  Scale
 } from 'lucide-react';
 import { shareholdingData, investmentData } from '@/constants/financialData';
-import { pageBackgrounds, sectionBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
+import { pageBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
+
+// Import financial charts
+import {
+  RevenueGrowthChart,
+  ProfitabilityChart,
+  ReturnRatiosChart,
+  DebtEquityChart,
+  ShareholdingChart,
+  SegmentRevenueChart,
+  CapacityUtilizationChart
+} from '@/components/charts/FinancialCharts';
+
+// Import business/operational charts
+import {
+  SugarProductionChart,
+  EthanolProductionChart,
+  PowerGenerationChart,
+  DDGSProductionChart,
+  OperationalEfficiencyChart,
+  ProductMixChart,
+  CapacityTrendsChart,
+  EthanolMetricsCard
+} from '@/components/charts/BusinessCharts';
+
+// Chart skeleton loader for performance
+const ChartSkeleton = ({ height = 250 }) => (
+  <div className="bg-gray-800/50 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl animate-pulse">
+    <div className="h-6 w-48 mb-4 bg-gray-700/50 rounded"></div>
+    <div className="w-full bg-gray-700/30 rounded" style={{ height: `${height}px` }}></div>
+  </div>
+);
 
 const InvestorRelationsPage = () => {
   const [selectedYear, setSelectedYear] = useState('2024');
-  const [activeTab, setActiveTab] = useState('financial-info');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isChartsLoaded, setIsChartsLoaded] = useState(false);
+  const tabsSectionRef = useRef(null);
+
+  // Load charts progressively after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsChartsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Handle tab change with smooth scroll
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    // Small delay to ensure tab content is rendered
+    setTimeout(() => {
+      if (tabsSectionRef.current) {
+        const yOffset = -120; // Offset for fixed header and some spacing
+        const y = tabsSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   // Handler for document downloads
   const handleDocumentDownload = (documentType, documentKey, fileName) => {
@@ -34,19 +92,6 @@ const InvestorRelationsPage = () => {
   };
 
 
-  // Handler for quick navigation
-  const handleQuickNavigation = (targetTab, targetSection) => {
-    // First, switch to the correct tab
-    setActiveTab(targetTab);
-    
-    // Then scroll to the section after a brief delay to allow tab content to render
-    setTimeout(() => {
-      const element = document.getElementById(targetSection);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 200);
-  };
 
   const fadeInProps = {
     initial: { opacity: 0, y: 20 },
@@ -87,67 +132,391 @@ const InvestorRelationsPage = () => {
     <div className={`min-h-screen ${pageBackgrounds.primary} relative`}>
       <UnifiedBackground />
       
-      {/* Hero Section */}
-      <section className="relative py-20 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Hero Section - Minimal and Clean */}
+      <section className="relative py-8 bg-gradient-to-b from-gray-900/50 to-transparent backdrop-blur-xl w-full">
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">
               Investor Relations
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-4">
-              Committed to transparency, compliance, and creating sustainable value for our stakeholders
+            <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
+              Transparency, compliance, and sustainable value creation
             </p>
-            <div className="bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                📋 <strong>Demo Note:</strong> All download buttons are functional and will show download confirmations. 
-                In production, these would connect to your actual document repository.
-              </p>
-            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Quick Links Section */}
-      <section className="py-12 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { title: 'Annual Reports', icon: FileText, tab: 'financial-info', section: 'annual-reports' },
-              { title: 'Financial Results', icon: TrendingUp, tab: 'financial-info', section: 'financial-results' },
-              { title: 'Shareholding Pattern', icon: Users, tab: 'shareholding', section: 'shareholding' },
-              { title: 'Investment Terms', icon: Building, tab: 'shareholding', section: 'investment-terms' },
-              { title: 'Post-IPO Structure', icon: BarChart3, tab: 'shareholding', section: 'post-ipo-shareholding' },
-              { title: 'Corporate Governance', icon: Shield, tab: 'governance', section: 'governance' }
-            ].map((item, index) => (
-              <motion.button
-                key={index}
-                onClick={() => handleQuickNavigation(item.tab, item.section)}
-                {...fadeInProps}
-                transition={{ ...fadeInProps.transition, delay: index * 0.1 }}
-                className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow text-left w-full"
-              >
-                <item.icon className="w-8 h-8 text-primary mr-3" />
-                <span className="font-medium text-gray-900 dark:text-white">{item.title}</span>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Main Content with Tabs */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-2">
-              <TabsTrigger value="financial-info">Financial Information</TabsTrigger>
-              <TabsTrigger value="shareholding">Shareholding</TabsTrigger>
-              <TabsTrigger value="governance">Governance</TabsTrigger>
-              <TabsTrigger value="policies">Policies</TabsTrigger>
-              <TabsTrigger value="contact">Contact</TabsTrigger>
-            </TabsList>
+      <section ref={tabsSectionRef} className="py-4 w-full">
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+            <div className="w-full flex justify-center mb-6">
+              <TabsList className="inline-flex flex-wrap justify-center gap-1 bg-gray-900/60 backdrop-blur-md p-1 rounded-lg border border-gray-700/50 w-full max-w-4xl">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 relative px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Pre-IPO
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                </TabsTrigger>
+                <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Financials
+                </TabsTrigger>
+                <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Operations
+                </TabsTrigger>
+                <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Shareholding
+                </TabsTrigger>
+                <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Reports
+                </TabsTrigger>
+                <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
+                  Governance
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-            {/* Financial Information Tab */}
-            <TabsContent value="financial-info" className="space-y-8">
+            {/* Overview Tab - Combined Dashboard */}
+            <TabsContent value="overview" className="space-y-6 bg-transparent">
+              <div className="space-y-6">
+                <motion.div {...fadeInProps}>
+                  <h2 className="text-2xl font-bold text-white mb-6">Investor Dashboard</h2>
+                  
+                  {/* Pre-IPO Investment Highlight */}
+                  <div className="mb-6">
+                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-green-600/10 to-blue-600/10 backdrop-blur-xl border border-white/20 p-4">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-green-400/10 rounded-full blur-2xl"></div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-green-400 font-semibold text-sm">PRE-IPO ROUND CLOSED</span>
+                          </div>
+                          <h3 className="text-lg font-bold text-white mb-1">Strategic Investment Completed</h3>
+                          <p className="text-gray-400 text-sm">Successfully raised ₹40 Cr at ₹820 Cr valuation</p>
+                        </div>
+                        <Button 
+                          onClick={() => handleTabChange('pre-ipo')}
+                          className="bg-green-600 hover:bg-green-700 text-white text-sm"
+                        >
+                          View Details
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 6 Charts Grid - 3 rows x 2 columns */}
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    {isChartsLoaded ? (
+                      <>
+                        {/* Row 1 */}
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                          <RevenueGrowthChart />
+                        </motion.div>
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+                          <ProfitabilityChart />
+                        </motion.div>
+                        
+                        {/* Row 2 */}
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
+                          <ReturnRatiosChart />
+                        </motion.div>
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3 }}>
+                          <DebtEquityChart />
+                        </motion.div>
+                        
+                        {/* Row 3 */}
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.4 }}>
+                          <ProductMixChart />
+                        </motion.div>
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.5 }}>
+                          <OperationalEfficiencyChart />
+                        </motion.div>
+                      </>
+                    ) : (
+                      <>
+                        <ChartSkeleton />
+                        <ChartSkeleton />
+                        <ChartSkeleton />
+                        <ChartSkeleton />
+                        <ChartSkeleton />
+                        <ChartSkeleton />
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            {/* Pre-IPO Tab */}
+            <TabsContent value="pre-ipo" className="space-y-8 bg-transparent">
+              <div className="space-y-8">
+                <motion.div {...fadeInProps}>
+                  {/* Pre-IPO Header with Status */}
+                  <div className="mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-3xl font-bold text-white">Pre-IPO Investment Round</h2>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-400 font-semibold uppercase tracking-wider">Round Closed</span>
+                      </div>
+                    </div>
+                    
+                    {/* Pre-IPO Highlights Card */}
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600/10 via-blue-600/10 to-purple-600/10 backdrop-blur-xl border border-white/20 p-8">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-green-400/10 rounded-full blur-3xl"></div>
+                      <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl"></div>
+                      
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-white mb-4">Strategic Investment Round Successfully Completed</h3>
+                        <p className="text-lg text-gray-300 mb-8">
+                          MSPIL has successfully closed its pre-IPO funding round, raising ₹40 Crores at a valuation of ₹820 Crores. 
+                          This strategic investment will fuel our expansion plans and strengthen our market position ahead of the planned IPO.
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                          <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-white/10">
+                            <DollarSign className="w-8 h-8 text-green-400 mb-3" />
+                            <p className="text-3xl font-bold text-white mb-1">₹820 Cr</p>
+                            <p className="text-sm text-gray-400">Pre-Money Valuation</p>
+                          </div>
+                          <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-white/10">
+                            <TrendingUp className="w-8 h-8 text-blue-400 mb-3" />
+                            <p className="text-3xl font-bold text-white mb-1">₹40 Cr</p>
+                            <p className="text-sm text-gray-400">Amount Raised</p>
+                          </div>
+                          <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-white/10">
+                            <Activity className="w-8 h-8 text-purple-400 mb-3" />
+                            <p className="text-3xl font-bold text-white mb-1">15 Months</p>
+                            <p className="text-sm text-gray-400">Expected IPO Timeline</p>
+                          </div>
+                          <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-white/10">
+                            <Percent className="w-8 h-8 text-orange-400 mb-3" />
+                            <p className="text-3xl font-bold text-white mb-1">2.3x</p>
+                            <p className="text-sm text-gray-400">Expected Returns</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Investment Details Grid */}
+                  <div className="grid lg:grid-cols-2 gap-8">
+                    {/* Investment Structure */}
+                    <Card className={`${cardBackgrounds.glass} shadow-2xl`}>
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center gap-2">
+                          <Scale className="w-5 h-5 text-primary" />
+                          Investment Structure
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
+                            <span className="text-gray-300">Instrument Type</span>
+                            <span className="font-semibold text-white">Equity Shares</span>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
+                            <span className="text-gray-300">Price per Share</span>
+                            <span className="font-semibold text-white">₹109.33</span>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
+                            <span className="text-gray-300">Minimum Investment</span>
+                            <span className="font-semibold text-white">₹10 Crores</span>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
+                            <span className="text-gray-300">Lock-in Period</span>
+                            <span className="font-semibold text-white">6 months post-IPO</span>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
+                            <span className="text-gray-300">Board Representation</span>
+                            <span className="font-semibold text-white">Observer Rights</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Use of Funds */}
+                    <Card className={`${cardBackgrounds.glass} shadow-2xl`}>
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center gap-2">
+                          <BarChart3 className="w-5 h-5 text-primary" />
+                          Use of Funds
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-gray-300">Ethanol Plant Expansion</span>
+                              <span className="text-white font-semibold">60%</span>
+                            </div>
+                            <div className="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full" style={{width: '60%'}}></div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-gray-300">Working Capital</span>
+                              <span className="text-white font-semibold">25%</span>
+                            </div>
+                            <div className="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full" style={{width: '25%'}}></div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-gray-300">Technology Upgrades</span>
+                              <span className="text-white font-semibold">10%</span>
+                            </div>
+                            <div className="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full" style={{width: '10%'}}></div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-gray-300">General Corporate</span>
+                              <span className="text-white font-semibold">5%</span>
+                            </div>
+                            <div className="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full" style={{width: '5%'}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* IPO Roadmap */}
+                  <Card className={`${cardBackgrounds.glass} shadow-2xl mt-8`}>
+                    <CardHeader>
+                      <CardTitle className="text-white">IPO Roadmap</CardTitle>
+                      <CardDescription className="text-gray-400">Expected timeline for public listing</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-600"></div>
+                        <div className="space-y-8">
+                          {[
+                            { date: 'Dec 2024', title: 'Pre-IPO Round Closed', status: 'completed', description: 'Successfully raised ₹40 Cr from strategic investors' },
+                            { date: 'Q1 2025', title: 'DRHP Filing', status: 'upcoming', description: 'Submit Draft Red Herring Prospectus to SEBI' },
+                            { date: 'Q2 2025', title: 'SEBI Approval', status: 'upcoming', description: 'Receive regulatory approvals for IPO' },
+                            { date: 'Q3 2025', title: 'IPO Launch', status: 'upcoming', description: 'Public issue opens for subscription' },
+                            { date: 'Q4 2025', title: 'Listing', status: 'upcoming', description: 'Trading commences on BSE & NSE' }
+                          ].map((item, index) => (
+                            <div key={index} className="relative flex items-center">
+                              <div className={`w-4 h-4 rounded-full z-10 ${
+                                item.status === 'completed' ? 'bg-green-500' : 'bg-gray-600'
+                              }`}></div>
+                              <div className="ml-6">
+                                <div className="flex items-center gap-3 mb-1">
+                                  <h4 className="font-semibold text-white">{item.title}</h4>
+                                  <span className="text-sm text-gray-400">{item.date}</span>
+                                </div>
+                                <p className="text-sm text-gray-400">{item.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Value Creation Journey */}
+                  <Card className={`${cardBackgrounds.glass} shadow-2xl mt-8`}>
+                    <CardHeader>
+                      <CardTitle className="text-white">Value Creation Journey</CardTitle>
+                      <CardDescription className="text-gray-400">Expected valuation growth trajectory</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid md:grid-cols-3 gap-6">
+                        <div className="text-center">
+                          <p className="text-sm text-gray-400 mb-2">Current (Pre-IPO)</p>
+                          <p className="text-3xl font-bold text-green-400">₹820 Cr</p>
+                          <p className="text-sm text-gray-500 mt-1">December 2024</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-gray-400 mb-2">IPO Valuation</p>
+                          <p className="text-3xl font-bold text-blue-400">₹1,600 Cr</p>
+                          <p className="text-sm text-gray-500 mt-1">Expected Q3 2025</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-gray-400 mb-2">Post-Listing Target</p>
+                          <p className="text-3xl font-bold text-purple-400">₹2,000+ Cr</p>
+                          <p className="text-sm text-gray-500 mt-1">12-18 months post-IPO</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            {/* Business Operations Tab */}
+            <TabsContent value="business-operations" className="space-y-8 bg-transparent">
+              <div className="space-y-8">
+                <motion.div {...fadeInProps}>
+                  <h2 className="text-3xl font-bold text-white mb-8">Business Operations Dashboard</h2>
+                  
+                  {/* Sugar & Ethanol Production */}
+                  <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                    <SugarProductionChart />
+                    <EthanolProductionChart />
+                  </div>
+                  
+                  {/* Ethanol Business Metrics */}
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-bold text-white mb-4">Ethanol Business Analytics</h3>
+                    <EthanolMetricsCard />
+                  </div>
+                  
+                  {/* Power & DDGS Production */}
+                  <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                    <PowerGenerationChart />
+                    <DDGSProductionChart />
+                  </div>
+                  
+                  {/* Capacity Trends */}
+                  <div className="mb-8">
+                    <CapacityTrendsChart />
+                  </div>
+                  
+                  {/* Segment Revenue Analysis */}
+                  <div className="mb-8">
+                    <SegmentRevenueChart />
+                  </div>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            {/* Financial Performance Tab with Charts */}
+            <TabsContent value="financial-performance" className="space-y-6 bg-transparent">
+              <div className="space-y-6">
+                <motion.div {...fadeInProps}>
+                  <h2 className="text-2xl font-bold text-white mb-6">Financial Performance Dashboard</h2>
+                  
+                  {/* 6 Charts Grid - 3 rows x 2 columns */}
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    {/* Row 1 - Revenue & Profitability */}
+                    <RevenueGrowthChart />
+                    <ProfitabilityChart />
+                    
+                    {/* Row 2 - Returns & Capital */}
+                    <ReturnRatiosChart />
+                    <DebtEquityChart />
+                    
+                    {/* Row 3 - Segments & Capacity */}
+                    <SegmentRevenueChart />
+                    <CapacityUtilizationChart />
+                  </div>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            {/* Reports & Documents Tab */}
+            <TabsContent value="reports" className="space-y-8 bg-transparent">
               <div id="annual-reports">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Annual Reports</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -223,65 +592,45 @@ const InvestorRelationsPage = () => {
               </div>
             </TabsContent>
 
-            {/* Shareholding Tab */}
-            <TabsContent value="shareholding" className="space-y-8">
+            {/* Shareholding Tab with Enhanced Visuals */}
+            <TabsContent value="shareholding" className="space-y-8 bg-transparent">
               <div id="shareholding">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Shareholding Pattern</h2>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>As on {shareholdingData.current.date}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <h3 className="font-semibold mb-4">Shareholding Distribution</h3>
-                          <div className="space-y-3">
-                            {shareholdingData.current.distribution.map((item, index) => (
-                              <div key={index} className="flex justify-between">
-                                <span>{item.category}</span>
-                                <span className="font-medium">{item.percentage}%</span>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="mt-4 pt-4 border-t">
-                            <div className="flex justify-between">
-                              <span className="font-semibold">Total Shares</span>
-                              <span className="font-medium">{shareholdingData.current.totalShares} {shareholdingData.current.shareValue}</span>
-                            </div>
-                          </div>
+                <h2 className="text-3xl font-bold text-white mb-8">Shareholding & Investment Structure</h2>
+                
+                {/* Current vs Post-IPO Shareholding */}
+                <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                  <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.1 }}>
+                    <ShareholdingChart postIPO={false} />
+                  </motion.div>
+                  <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }}>
+                    <ShareholdingChart postIPO={true} />
+                  </motion.div>
+                </div>
+
+                {/* Stock Information Card */}
+                <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }}>
+                  <Card className={`${cardBackgrounds.glass} shadow-2xl mb-8`}>
+                    <CardHeader>
+                      <CardTitle className="text-white">Stock Information</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="p-4 bg-gray-800/30 rounded-lg">
+                          <p className="text-gray-400 text-sm">BSE Code</p>
+                          <p className="text-white font-semibold">{shareholdingData.stockInfo.bseCode}</p>
                         </div>
-                        <div>
-                          <h3 className="font-semibold mb-4">Share Information</h3>
-                          <div className="space-y-3">
-                            <div className="flex justify-between">
-                              <span>BSE Code</span>
-                              <span className="font-medium">{shareholdingData.stockInfo.bseCode}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>NSE Symbol</span>
-                              <span className="font-medium">{shareholdingData.stockInfo.nseSymbol}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>ISIN</span>
-                              <span className="font-medium">{shareholdingData.stockInfo.isin}</span>
-                            </div>
-                          </div>
+                        <div className="p-4 bg-gray-800/30 rounded-lg">
+                          <p className="text-gray-400 text-sm">NSE Symbol</p>
+                          <p className="text-white font-semibold">{shareholdingData.stockInfo.nseSymbol}</p>
+                        </div>
+                        <div className="p-4 bg-gray-800/30 rounded-lg">
+                          <p className="text-gray-400 text-sm">ISIN</p>
+                          <p className="text-white font-semibold">{shareholdingData.stockInfo.isin}</p>
                         </div>
                       </div>
-                    </div>
-                    <div className="mt-6 pt-6 border-t">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleDocumentDownload('Shareholding Pattern', 'shareholding-pattern', 'Shareholding_Pattern_Q3_FY24.pdf')}
-                      >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download Detailed Pattern
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </div>
 
               {/* Investment Terms Section */}
@@ -426,7 +775,7 @@ const InvestorRelationsPage = () => {
             </TabsContent>
 
             {/* Corporate Governance Tab */}
-            <TabsContent value="governance" className="space-y-8">
+            <TabsContent value="governance" className="space-y-8 bg-transparent">
               <div id="governance">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Corporate Governance</h2>
                 
@@ -488,11 +837,10 @@ const InvestorRelationsPage = () => {
                   </Card>
                 </div>
               </div>
-            </TabsContent>
-
-            {/* Policies Tab */}
-            <TabsContent value="policies" className="space-y-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Corporate Policies</h2>
+              
+              {/* Corporate Policies Section */}
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Corporate Policies</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {[
                   { title: 'Code of Conduct', icon: Gavel },
@@ -533,11 +881,12 @@ const InvestorRelationsPage = () => {
                     </CardContent>
                   </Card>
                 ))}
+                </div>
               </div>
             </TabsContent>
 
             {/* Contact Tab */}
-            <TabsContent value="contact" className="space-y-8">
+            <TabsContent value="contact" className="space-y-8 bg-transparent">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Investor Contact</h2>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -623,9 +972,9 @@ const InvestorRelationsPage = () => {
       </section>
 
       {/* Stock Exchange Announcements Section */}
-      <section className="py-16 bg-bio-green-50/30 dark:bg-bio-green-900/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Latest Announcements</h2>
+      <section className="py-8 bg-gray-900/30 backdrop-blur-md w-full">
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-white mb-6">Latest Announcements</h2>
           <Card>
             <CardContent className="p-0">
               <div className="divide-y divide-gray-200 dark:divide-gray-700">

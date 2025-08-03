@@ -1,0 +1,30 @@
+{
+  "name": "Mahakaushal Sugar & Power Industries Ltd",
+  "short_name": "MSPIL",
+  "description": "Leading integrated sugar, ethanol, and power company committed to sustainable growth",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1419",
+  "theme_color": "#22c55e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/company_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/company_logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "finance", "productivity"],
+  "lang": "en-US"
+}

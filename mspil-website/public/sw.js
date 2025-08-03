@@ -7,8 +7,10 @@ const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 // Core assets to cache immediately
 const STATIC_ASSETS = [
   '/',
+  '/index.html',
   '/images/company_logo.webp',
-  '/manifest.json'
+  '/manifest.json',
+  '/favicon.ico'
 ];
 
 // Cache expiration times

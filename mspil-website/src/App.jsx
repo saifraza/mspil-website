@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import ScrollToTop from '@/components/ScrollToTop';
 import { Toaster } from '@/components/ui/toaster';
@@ -13,7 +13,7 @@ const AboutUsPage = lazy(() => import('@/pages/AboutUsPage'));
 const OurBusinessesPage = lazy(() => import('@/pages/OurBusinessesPage'));
 const SustainabilityPage = lazy(() => import('@/pages/SustainabilityPage'));
 const DataInsightsPage = lazy(() => import('@/pages/DataInsightsPage'));
-const InvestorRelationsPage = lazy(() => import('@/pages/EnhancedInvestorRelationsPage'));
+const InvestorRelationsPage = lazy(() => import('@/pages/InvestorRelationsPage'));
 const NewsMediaPage = lazy(() => import('@/pages/NewsMediaPage'));
 const CareersPage = lazy(() => import('@/pages/CareersPage'));
 const ContactUsPage = lazy(() => import('@/pages/ContactUsPage'));
@@ -57,7 +57,7 @@ function App() {
                 <Route path="/about" element={<AboutUsPage />} />
                 <Route path="/businesses" element={<OurBusinessesPage />} />
                 <Route path="/sustainability" element={<SustainabilityPage />} />
-                <Route path="/data-insights" element={<DataInsightsPage />} />
+                <Route path="/data-insights" element={<Navigate to="/investor-relations" replace />} />
                 <Route path="/investor-relations" element={<InvestorRelationsPage />} />
                 <Route path="/news-media" element={<NewsMediaPage />} />
                 <Route path="/careers" element={<CareersPage />} />

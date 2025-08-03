@@ -40,16 +40,18 @@ const Navbar = () => {
       ]
     },
     { href: '/sustainability', labelKey: 'navSustainability' },
-    { href: '/data-insights', labelKey: 'navDataInsights' },
     { 
       labelKey: 'navInvestors',
       hasDropdown: true,
       items: [
         { href: '/investor-relations', labelKey: 'navInvestors' },
-        { href: '/investor-relations#reports', labelKey: 'Annual Reports' },
-        { href: '/investor-relations#quarterly', labelKey: 'Quarterly Results' },
+        { href: '/investor-relations#overview', labelKey: 'Dashboard' },
+        { href: '/investor-relations#business-operations', labelKey: 'Operations' },
+        { href: '/investor-relations#financial-performance', labelKey: 'Financials' },
+        { href: '/investor-relations#shareholding', labelKey: 'Shareholding' },
+        { href: '/investor-relations#reports', labelKey: 'Reports' },
         { href: '/investor-relations#governance', labelKey: 'Governance' },
-        { href: '/investor-disclaimer', labelKey: 'Investor Disclaimer' }
+        { href: '/investor-disclaimer', labelKey: 'Disclaimer' }
       ]
     },
     { 

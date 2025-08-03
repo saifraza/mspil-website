@@ -140,6 +140,16 @@ export const financialData = {
     }
   },
 
+  // Capacity Data
+  capacity: {
+    current: [
+      { segment: 'Sugar', capacity: '8000', unit: 'TCD', utilization: 85 },
+      { segment: 'Ethanol', capacity: '350', unit: 'KLPD', utilization: 92 },
+      { segment: 'Power', capacity: '24', unit: 'MW', utilization: 88 },
+      { segment: 'DDGS', capacity: '300', unit: 'TPD', utilization: 90 }
+    ]
+  },
+
   // Investment Highlights
   investment: {
     valuation: {

@@ -76,7 +76,7 @@ const HeroSection = () => {
       },
       { 
         textKey: "heroCtaDataInsights", 
-        to: "/data-insights", 
+        to: "/investor-relations", 
         variant: "secondary", 
         icon: <BarChart2 className="mr-2 h-5 w-5" /> 
       },
