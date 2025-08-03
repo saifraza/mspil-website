@@ -175,7 +175,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     force: true, // Force re-optimization on every start
-    include: ['react', 'react-dom', 'framer-motion', 'lucide-react']
+    include: ['react', 'react-dom', 'framer-motion', 'lucide-react', 'recharts']
   },
   resolve: {
     alias: {
@@ -186,9 +186,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Chart libraries - only load when needed
-          if (id.includes('recharts') || id.includes('node_modules/d3')) {
-            return 'charts';
+          // Keep Recharts and its dependencies in vendor to avoid initialization issues
+          if (id.includes('recharts')) {
+            return 'vendor';
           }
           
           // Animation library
@@ -206,7 +206,7 @@ export default defineConfig({
             return 'data-heavy-pages';
           }
           
-          // Group ALL vendor dependencies together to avoid circular dependencies
+          // Group ALL vendor dependencies together
           if (id.includes('node_modules')) {
             return 'vendor';
           }
