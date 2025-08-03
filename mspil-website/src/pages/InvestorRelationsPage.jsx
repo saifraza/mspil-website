@@ -26,7 +26,7 @@ import { shareholdingData, investmentData } from '@/constants/financialData';
 import { pageBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
 
-// Import financial charts
+// Import all charts from centralized index
 import {
   RevenueGrowthChart,
   ProfitabilityChart,
@@ -34,11 +34,7 @@ import {
   DebtEquityChart,
   ShareholdingChart,
   SegmentRevenueChart,
-  CapacityUtilizationChart
-} from '@/components/charts/FinancialCharts';
-
-// Import business/operational charts
-import {
+  CapacityUtilizationChart,
   SugarProductionChart,
   EthanolProductionChart,
   PowerGenerationChart,
@@ -47,7 +43,7 @@ import {
   ProductMixChart,
   CapacityTrendsChart,
   EthanolMetricsCard
-} from '@/components/charts/BusinessCharts';
+} from '@/components/charts';
 
 // Chart skeleton loader for performance
 const ChartSkeleton = ({ height = 250 }) => (
