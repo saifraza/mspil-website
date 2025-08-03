@@ -3,3 +3,4 @@
 
 export * from './FinancialCharts';
 export * from './BusinessCharts';
+export { ChartWrapper } from './ChartWrapper';
