@@ -22,6 +22,8 @@ const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
 const InvestorDisclaimerPage = lazy(() => import('@/pages/InvestorDisclaimerPage'));
 const InvestorPresentationPage = lazy(() => import('@/pages/InvestorPresentationPage'));
+const PolicyViewerPage = lazy(() => import('@/pages/PolicyViewerPage'));
+const GalleryPage = lazy(() => import('@/pages/GalleryPage'));
 
 
 // Loading component with bio-energy theme
@@ -67,6 +69,8 @@ function App() {
                 <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                 <Route path="/investor-disclaimer" element={<InvestorDisclaimerPage />} />
                 <Route path="/investor-presentation" element={<InvestorPresentationPage />} />
+                <Route path="/policy/:policyId" element={<PolicyViewerPage />} />
+                <Route path="/gallery" element={<GalleryPage />} />
               </Routes>
             </Suspense>
           </Layout>

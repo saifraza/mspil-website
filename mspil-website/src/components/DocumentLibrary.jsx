@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EnhancedDocumentViewer from '@/components/EnhancedDocumentViewer';
+import { fetchDocuments } from '@/services/documentService';
 
 const DocumentLibrary = ({ category = 'all' }) => {
   const [documents, setDocuments] = useState({});
@@ -21,11 +22,25 @@ const DocumentLibrary = ({ category = 'all' }) => {
 
   const loadDocuments = async () => {
     try {
-      const response = await fetch('/data/documents.json');
-      const data = await response.json();
-      setDocuments(data);
+      const data = await fetchDocuments();
+      if (data) {
+        setDocuments(data);
+      } else {
+        // Fallback to local documents
+        const response = await fetch('/data/documents.json');
+        const localData = await response.json();
+        setDocuments(localData);
+      }
     } catch (error) {
       console.error('Failed to load documents:', error);
+      // Try fallback
+      try {
+        const response = await fetch('/data/documents.json');
+        const localData = await response.json();
+        setDocuments(localData);
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+      }
     } finally {
       setLoading(false);
     }

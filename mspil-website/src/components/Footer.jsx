@@ -13,25 +13,25 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl text-gray-700 dark:text-gray-300 border-t border-white/30 dark:border-white/10 mt-8 overflow-hidden">
+    <footer className="relative bg-gray-900/95 backdrop-blur-xl text-gray-300 border-t border-white/10 mt-8 overflow-hidden">
       {/* Subtle animated background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-50" />
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          <div>
-            <Link to="/" className="flex items-center space-x-2 mb-4">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Link to="/" className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
               <LazyImage src={companyLogoUrl} alt={`${companyName} Logo`} className="h-10 w-auto" />
-              <span className="font-bold text-lg text-gray-900 dark:text-white">{companyName}</span>
+              <span className="font-bold text-base sm:text-lg text-white">{companyName}</span>
             </Link>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-400">
               Leading in Sustainability Since 2005
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="https://www.linkedin.com/company/mahakaushal-sugar-and-power-industries-limited" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/company/mahakaushal-sugar-and-power-industries-limited" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors" aria-label="LinkedIn">
                 <Linkedin size={20} />
                 <span className="sr-only">LinkedIn</span>
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors" aria-label="Twitter">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors" aria-label="Twitter">
                 <Twitter size={20} />
                 <span className="sr-only">Twitter</span>
               </a>
@@ -39,20 +39,20 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-semibold text-gray-900 dark:text-white mb-3">Quick Links</p>
+            <p className="font-semibold text-white mb-3">Quick Links</p>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">About Us</Link></li>
-              <li><Link to="/businesses" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Our Businesses</Link></li>
-              <li><Link to="/sustainability" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Sustainability</Link></li>
-              <li><Link to="/careers" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Careers</Link></li>
+              <li><Link to="/about" className="hover:text-primary transition-colors text-gray-300">About Us</Link></li>
+              <li><Link to="/businesses" className="hover:text-primary transition-colors text-gray-300">Our Businesses</Link></li>
+              <li><Link to="/sustainability" className="hover:text-primary transition-colors text-gray-300">Sustainability</Link></li>
+              <li><Link to="/careers" className="hover:text-primary transition-colors text-gray-300">Careers</Link></li>
             </ul>
           </div>
 
           <div>
             <p className="font-semibold text-gray-900 dark:text-white mb-3">Investor Relations</p>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/investor-relations#annual-reports" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Annual Reports</Link></li>
-              <li><Link to="/investor-relations#financial-results" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Financial Results</Link></li>
+              <li><Link to="/investor-relations#reports" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Annual Reports</Link></li>
+              <li><Link to="/investor-relations#reports" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Financial Results</Link></li>
               <li><Link to="/investor-relations#shareholding" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Shareholding Pattern</Link></li>
               <li><Link to="/investor-relations#governance" className="hover:text-primary transition-colors text-gray-600 dark:text-gray-300">Corporate Governance</Link></li>
             </ul>

@@ -171,7 +171,7 @@ const HeroSection = () => {
   }, [isMobileDevice, videoPosterUrl, heroData]);
 
   return (
-    <section ref={heroRef} className={`relative min-h-[100vh] sm:h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero} pt-20`}>
+    <section ref={heroRef} className={`relative min-h-screen md:min-h-[80vh] flex items-center justify-center overflow-hidden ${pageBackgrounds.hero}`}>
       {/* Enhanced animated gradient background */}
       {/* <AnimatedGradient /> */}
       
@@ -253,11 +253,11 @@ const HeroSection = () => {
             {t('heroVideoNotSupported') || 'Your browser does not support the video tag.'}
           </motion.video>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/10 via-transparent to-eco-lime-900/10"></div>
+        <div className={`absolute inset-0 ${isMobileDevice ? 'bg-gradient-to-t from-black/80 via-black/70 to-black/50' : 'bg-gradient-to-t from-black/70 via-black/50 to-black/30'}`}></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-bio-green-900/20 via-transparent to-eco-lime-900/20"></div>
       </motion.div>
       
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-8 md:py-12">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-12 md:py-16">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -286,10 +286,10 @@ const HeroSection = () => {
               }
             }
           }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6"
+          className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6"
         >
           <motion.span 
-            className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-primary via-green-600 to-teal-500 dark:from-primary dark:via-green-400 dark:to-teal-300"
+            className="inline-block text-white drop-shadow-2xl"
             animate={{
               backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
             }}
@@ -305,7 +305,7 @@ const HeroSection = () => {
             {t(heroData.taglinePart1Key)}
           </motion.span>
           <motion.span 
-            className="block text-3xl sm:text-4xl md:text-5xl text-foreground/80 dark:text-foreground/70 mt-2"
+            className="block text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-white/90 drop-shadow-xl mt-2"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -318,7 +318,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-3xl mx-auto text-lg sm:text-xl text-foreground/70 dark:text-foreground/60 mb-10"
+          className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-white/80 drop-shadow-lg mb-6 md:mb-10 px-2"
         >
           {t(heroData.introKey)}
         </motion.p>
@@ -335,7 +335,7 @@ const HeroSection = () => {
               }
             }
           }}
-          className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 md:mb-12"
         >
           {heroData.ctaButtons.map((button, index) => (
             <motion.div
@@ -350,9 +350,9 @@ const HeroSection = () => {
             >
               <Button 
                 variant={button.variant} 
-                size="lg" 
+                size="default" 
                 asChild 
-                className="shadow-lg hover:shadow-xl transform transition-all duration-300 relative overflow-hidden group"
+                className="w-full sm:w-auto shadow-lg hover:shadow-xl transform transition-all duration-300 relative overflow-hidden group"
               >
                 <Link to={button.to}>
                   <motion.span
@@ -370,7 +370,7 @@ const HeroSection = () => {
 
         {/* Enhanced Key Metrics with Glass Morphism - Mobile Optimized */}
         <motion.div 
-          className={`relative ${isMobileDevice ? 'bg-white/20 samsung-safe' : 'bg-white/10 backdrop-blur-md'} rounded-2xl p-4 mx-4 sm:mx-auto sm:max-w-2xl border border-white/20 shadow-lg overflow-hidden mt-6 mb-8`}
+          className={`relative ${isMobileDevice ? 'bg-white/20 samsung-safe' : 'bg-white/10 backdrop-blur-md'} rounded-2xl p-4 sm:p-6 mx-0 sm:mx-auto max-w-full sm:max-w-2xl border border-white/20 shadow-lg overflow-hidden`}
           variants={{
             hidden: { opacity: 0, y: 50, scale: 0.9 },
             visible: { 

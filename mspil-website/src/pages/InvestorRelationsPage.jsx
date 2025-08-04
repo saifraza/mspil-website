@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,11 +21,14 @@ import {
   DollarSign,
   Activity,
   Percent,
-  Scale
+  Scale,
+  Calendar,
+  FileCheck
 } from 'lucide-react';
 import { shareholdingData, investmentData } from '@/constants/financialData';
 import { pageBackgrounds, cardBackgrounds } from '@/utils/backgroundStyles';
 import UnifiedBackground from '@/components/ui/UnifiedBackground';
+import { fetchDocuments } from '@/services/documentService';
 
 // Import all charts from centralized index
 import {
@@ -54,9 +58,12 @@ const ChartSkeleton = ({ height = 250 }) => (
 );
 
 const InvestorRelationsPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedYear, setSelectedYear] = useState('2024');
   const [activeTab, setActiveTab] = useState('overview');
   const [isChartsLoaded, setIsChartsLoaded] = useState(false);
+  const [documentsData, setDocumentsData] = useState(null);
   const tabsSectionRef = useRef(null);
 
   // Load charts progressively after initial render
@@ -67,24 +74,93 @@ const InvestorRelationsPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Load documents data from Railway
+  useEffect(() => {
+    fetchDocuments()
+      .then(data => setDocumentsData(data))
+      .catch(err => {
+        console.error('Error loading documents:', err);
+        // Fallback to local documents
+        fetch('/data/documents.json')
+          .then(res => res.json())
+          .then(data => setDocumentsData(data))
+          .catch(fallbackErr => console.error('Fallback also failed:', fallbackErr));
+      });
+  }, []);
+
+  // Handle hash navigation from location
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (hash) {
+      // Map hash values to tab values
+      const tabMap = {
+        'overview': 'overview',
+        'pre-ipo': 'pre-ipo',
+        'financial-performance': 'financial-performance',
+        'business-operations': 'business-operations',
+        'shareholding': 'shareholding',
+        'reports': 'reports',
+        'governance': 'governance',
+        // Legacy mappings for compatibility
+        'annual-reports': 'reports',
+        'financial-results': 'reports'
+      };
+      
+      const tabValue = tabMap[hash] || 'overview';
+      setActiveTab(tabValue);
+      
+      // Scroll to tabs section after a small delay
+      setTimeout(() => {
+        if (tabsSectionRef.current) {
+          const yOffset = -100;
+          const y = tabsSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 300);
+    }
+  }, [location]);
+
   // Handle tab change with smooth scroll
   const handleTabChange = (value) => {
     setActiveTab(value);
-    // Small delay to ensure tab content is rendered
-    setTimeout(() => {
-      if (tabsSectionRef.current) {
-        const yOffset = -120; // Offset for fixed header and some spacing
-        const y = tabsSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }, 100);
+    
+    // Update URL hash
+    window.history.pushState(null, '', `#${value}`);
+    
+    // Use requestAnimationFrame to wait for next paint
+    requestAnimationFrame(() => {
+      // Double rAF to ensure content is painted
+      requestAnimationFrame(() => {
+        // Additional small delay for chart rendering
+        setTimeout(() => {
+          const tabsContainer = tabsSectionRef.current;
+          if (tabsContainer) {
+            // Get the position of the tabs section
+            const tabsRect = tabsContainer.getBoundingClientRect();
+            // Calculate scroll position to show tabs near top with content visible
+            const scrollTop = window.pageYOffset + tabsRect.top - 80; // 80px offset for header
+            
+            // Smooth scroll to position
+            window.scrollTo({
+              top: Math.max(0, scrollTop),
+              behavior: 'smooth'
+            });
+          }
+        }, 150); // Small delay for charts to initialize
+      });
+    });
   };
 
   // Handler for document downloads
-  const handleDocumentDownload = (documentType, documentKey, fileName) => {
-    // In production, these would be actual document URLs
-    // For now, we'll show a placeholder message
-    alert(`Document ${fileName} will be available soon.`);
+  const handleDocumentDownload = (url, filename) => {
+    // Create a download link
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
 
@@ -129,13 +205,13 @@ const InvestorRelationsPage = () => {
       <UnifiedBackground />
       
       {/* Hero Section - Minimal and Clean */}
-      <section className="relative py-8 bg-gradient-to-b from-gray-900/50 to-transparent backdrop-blur-xl w-full">
+      <section className="relative pt-28 pb-4 md:pt-24 md:pb-8 bg-gradient-to-b from-gray-900/50 to-transparent backdrop-blur-xl w-full">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeInProps} className="text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3">
               Investor Relations
             </h1>
-            <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
               Transparency, compliance, and sustainable value creation
             </p>
           </motion.div>
@@ -143,61 +219,92 @@ const InvestorRelationsPage = () => {
       </section>
 
       {/* Main Content with Tabs */}
-      <section ref={tabsSectionRef} className="py-4 w-full">
+      <section ref={tabsSectionRef} className="py-2 sm:py-4 md:py-8 w-full">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-            <div className="w-full flex justify-center mb-6">
-              <TabsList className="inline-flex flex-wrap justify-center gap-1 bg-gray-900/60 backdrop-blur-md p-1 rounded-lg border border-gray-700/50 w-full max-w-4xl">
-                <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 relative px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Pre-IPO
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                </TabsTrigger>
-                <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Financials
-                </TabsTrigger>
-                <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Operations
-                </TabsTrigger>
-                <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Shareholding
-                </TabsTrigger>
-                <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Reports
-                </TabsTrigger>
-                <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent">
-                  Governance
-                </TabsTrigger>
-              </TabsList>
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4 sm:space-y-6">
+            {/* Desktop & Tablet: Centered tabs */}
+            <div className="hidden sm:flex justify-center mb-6">
+              <TabsList className="flex gap-1 bg-gray-900/60 backdrop-blur-md p-1 rounded-lg border border-gray-700/50">
+                    <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 relative px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Pre-IPO
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    </TabsTrigger>
+                    <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Financials
+                    </TabsTrigger>
+                    <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Operations
+                    </TabsTrigger>
+                    <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Shareholding
+                    </TabsTrigger>
+                    <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Reports
+                    </TabsTrigger>
+                    <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-gray-300 px-4 py-1.5 text-sm font-medium transition-all rounded-md border border-transparent whitespace-nowrap">
+                      Governance
+                    </TabsTrigger>
+                  </TabsList>
+            </div>
+            
+            {/* Mobile: Fixed container with proper spacing */}
+            <div className="block sm:hidden">
+                <div className="bg-gray-900/90 backdrop-blur-lg rounded-lg border border-gray-700/50 p-2 mb-4">
+                  <TabsList className="grid grid-cols-2 gap-2 bg-transparent">
+                    <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 relative px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Pre-IPO
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    </TabsTrigger>
+                    <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Financials
+                    </TabsTrigger>
+                    <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Operations
+                    </TabsTrigger>
+                    <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Shareholding
+                    </TabsTrigger>
+                    <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                      Reports
+                    </TabsTrigger>
+                    <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center col-span-2">
+                      Governance
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
             </div>
 
             {/* Overview Tab - Combined Dashboard */}
-            <TabsContent value="overview" className="space-y-6 bg-transparent">
-              <div className="space-y-6">
+            <TabsContent value="overview" className="space-y-4 sm:space-y-6 bg-transparent mt-4 sm:mt-6">
+              <div className="space-y-4 sm:space-y-6">
                 <motion.div {...fadeInProps}>
-                  <h2 className="text-2xl font-bold text-white mb-6">Investor Dashboard</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Investor Dashboard</h2>
                   
                   {/* Pre-IPO Investment Highlight */}
-                  <div className="mb-6">
-                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-green-600/10 to-blue-600/10 backdrop-blur-xl border border-white/20 p-4">
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-green-400/10 rounded-full blur-2xl"></div>
-                      <div className="flex items-center justify-between">
-                        <div>
+                  <div className="mb-4 sm:mb-6">
+                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-green-600/10 to-blue-600/10 backdrop-blur-xl border border-white/20 p-3 sm:p-4">
+                      <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 bg-green-400/10 rounded-full blur-2xl"></div>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="relative z-10">
                           <div className="flex items-center gap-2 mb-1">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-green-400 font-semibold text-sm">PRE-IPO ROUND CLOSED</span>
+                            <span className="text-green-400 font-semibold text-xs sm:text-sm">PRE-IPO ROUND CLOSED</span>
                           </div>
-                          <h3 className="text-lg font-bold text-white mb-1">Strategic Investment Completed</h3>
-                          <p className="text-gray-400 text-sm">Successfully raised ₹40 Cr at ₹820 Cr valuation</p>
+                          <h3 className="text-base sm:text-lg font-bold text-white mb-1">Strategic Investment Completed</h3>
+                          <p className="text-gray-400 text-xs sm:text-sm">Successfully raised ₹40 Cr at ₹820 Cr valuation</p>
                         </div>
                         <Button 
                           onClick={() => handleTabChange('pre-ipo')}
-                          className="bg-green-600 hover:bg-green-700 text-white text-sm"
+                          className="bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm w-full sm:w-auto"
                         >
                           View Details
-                          <ChevronRight className="w-4 h-4 ml-1" />
+                          <ChevronRight className="w-3 sm:w-4 h-3 sm:h-4 ml-1" />
                         </Button>
                       </div>
                     </div>
@@ -474,8 +581,9 @@ const InvestorRelationsPage = () => {
                     <DDGSProductionChart />
                   </div>
                   
-                  {/* Capacity Trends */}
-                  <div className="mb-8">
+                  {/* Capacity Utilization & Trends */}
+                  <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                    <CapacityUtilizationChart />
                     <CapacityTrendsChart />
                   </div>
                   
@@ -503,9 +611,9 @@ const InvestorRelationsPage = () => {
                     <ReturnRatiosChart />
                     <DebtEquityChart />
                     
-                    {/* Row 3 - Segments & Capacity */}
+                    {/* Row 3 - Segments & Operational Efficiency */}
                     <SegmentRevenueChart />
-                    <CapacityUtilizationChart />
+                    <OperationalEfficiencyChart />
                   </div>
                 </motion.div>
               </div>
@@ -513,79 +621,186 @@ const InvestorRelationsPage = () => {
 
             {/* Reports & Documents Tab */}
             <TabsContent value="reports" className="space-y-8 bg-transparent">
-              <div id="annual-reports">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Annual Reports</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card className="hover:shadow-lg transition-shadow bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
-                    <CardContent className="p-6">
-                      <FileText className="w-8 h-8 text-primary mb-4" />
-                      <h3 className="font-semibold mb-2">Annual Report 2023-24</h3>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PDF
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
-              <div id="financial-results">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Financial Results</h2>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Quarterly & Annual Results</CardTitle>
-                    <CardDescription>Select a year to view financial results</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex gap-2 mb-4">
-                        {['2024', '2023', '2022'].map((year) => (
-                          <Button
-                            key={year}
-                            variant={selectedYear === year ? 'default' : 'outline'}
-                            size="sm"
-                            onClick={() => setSelectedYear(year)}
-                          >
-                            FY {year}
-                          </Button>
-                        ))}
-                      </div>
-                      
-                      {financialResults[selectedYear]?.quarterly.map((result, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <div>
-                            <p className="font-medium">{result.quarter}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{result.date}</p>
-                          </div>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDocumentDownload('Financial Results', `quarterly-${result.quarter.replace(' ', '-')}`, `${result.quarter}_Results.pdf`)}
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </Button>
-                        </div>
+              {documentsData && documentsData.investorRelations && (
+                <>
+                  {/* Annual Reports */}
+                  <motion.div {...fadeInProps}>
+                    <h2 className="text-2xl font-bold text-white mb-6">Annual Reports</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {documentsData.investorRelations.annualReports.map((report, index) => (
+                        <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-2xl transition-all duration-300 hover:scale-105`}>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-white">
+                              <FileText className="w-5 h-5 text-green-400" />
+                              {report.title}
+                            </CardTitle>
+                            <CardDescription className="text-gray-400 flex items-center gap-2">
+                              <Calendar className="w-4 h-4" />
+                              {new Date(report.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-gray-300 mb-4">{report.description}</p>
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="text-xs text-gray-400">Size: {report.fileSize}</span>
+                              <span className="text-xs text-gray-400">PDF</span>
+                            </div>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="w-full bg-green-600/10 hover:bg-green-600/20 border-green-600/30 text-green-400"
+                              onClick={() => handleDocumentDownload(report.url, report.filename)}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Download Report
+                            </Button>
+                          </CardContent>
+                        </Card>
                       ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </motion.div>
 
-              <div id="quarterly-results">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Quarterly Results</h2>
-                <div className="text-gray-600">Quarterly results will be displayed here.</div>
-              </div>
+                  {/* Quarterly Results */}
+                  <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.1 }}>
+                    <h2 className="text-2xl font-bold text-white mb-6">Quarterly Results</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {documentsData.investorRelations.quarterlyResults.map((result, index) => (
+                        <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-white mb-2">{result.title}</h3>
+                                <p className="text-sm text-gray-400 mb-3">{result.description}</p>
+                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                  <span className="flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {new Date(result.date).toLocaleDateString()}
+                                  </span>
+                                  <span>{result.fileSize || '1.0 MB'}</span>
+                                </div>
+                              </div>
+                              <Button 
+                                size="sm"
+                                className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-600/30 text-blue-400"
+                                onClick={() => handleDocumentDownload(result.url, result.filename)}
+                              >
+                                <Download className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </motion.div>
 
-              <div id="presentations">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Investor Presentations</h2>
-                <div className="text-gray-600">Presentations will be displayed here.</div>
-              </div>
+                  {/* Corporate Policies */}
+                  <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.2 }}>
+                    <h2 className="text-2xl font-bold text-white mb-6">Corporate Policies</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {documentsData.investorRelations.policies.map((policy, index) => {
+                        const IconComponent = {
+                          'Code of Conduct': Gavel,
+                          'Whistleblower Policy': Shield,
+                          'Related Party Transaction Policy': Users,
+                          'Insider Trading Policy': FileSpreadsheet,
+                          'Dividend Distribution Policy': TrendingUp,
+                          'Corporate Social Responsibility Policy': Building,
+                          'Corporate Governance Policy': FileCheck
+                        }[policy.title] || FileText;
 
-              <div id="notices">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Notices & Announcements</h2>
-                <div className="text-gray-600">Notices and announcements will be displayed here.</div>
-              </div>
+                        // Convert policy filename to URL-friendly ID
+                        const policyId = policy.filename.replace('.pdf', '').replace(/_/g, '-');
+
+                        return (
+                          <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-lg transition-all cursor-pointer`}
+                            onClick={() => navigate(`/policy/${policyId}`)}
+                          >
+                            <CardHeader className="pb-3">
+                              <CardTitle className="flex items-center gap-2 text-base text-white">
+                                <IconComponent className="w-5 h-5 text-purple-400" />
+                                {policy.title}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-xs text-gray-400 mb-3">{policy.description}</p>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs bg-purple-600/10 hover:bg-purple-600/20 border-purple-600/30 text-purple-400"
+                              >
+                                <FileText className="w-3 h-3 mr-1" />
+                                View Policy
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+
+                  {/* Investor Presentations */}
+                  <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.3 }}>
+                    <h2 className="text-2xl font-bold text-white mb-6">Investor Presentations</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {documentsData.investorRelations.presentations.map((presentation, index) => (
+                        <Card key={index} className={`${cardBackgrounds.glass} hover:shadow-xl transition-all`}>
+                          <CardHeader>
+                            <CardTitle className="text-white">{presentation.title}</CardTitle>
+                            <CardDescription className="text-gray-400">
+                              {new Date(presentation.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-gray-300 mb-4">{presentation.description}</p>
+                            <Button 
+                              className="w-full bg-orange-600/20 hover:bg-orange-600/30 border border-orange-600/30 text-orange-400"
+                              onClick={() => handleDocumentDownload(presentation.url, presentation.filename)}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Download Presentation
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  {/* Notices & Announcements */}
+                  {documentsData.investorRelations.notices && (
+                    <motion.div {...fadeInProps} transition={{ ...fadeInProps.transition, delay: 0.4 }}>
+                      <h2 className="text-2xl font-bold text-white mb-6">Notices & Announcements</h2>
+                      <Card className={`${cardBackgrounds.glass}`}>
+                        <CardContent className="p-0">
+                          <div className="divide-y divide-gray-700">
+                            {documentsData.investorRelations.notices.map((notice, index) => (
+                              <div key={index} className="p-4 hover:bg-gray-800/50 transition-colors">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <h3 className="font-medium text-white">{notice.title}</h3>
+                                    <p className="text-sm text-gray-400 mt-1">{notice.description}</p>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                      {new Date(notice.date).toLocaleDateString()} • {notice.fileSize}
+                                    </p>
+                                  </div>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    className="text-green-400 hover:text-green-300"
+                                    onClick={() => handleDocumentDownload(notice.url, notice.filename)}
+                                  >
+                                    Download
+                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  )}
+                </>
+              )}
             </TabsContent>
 
             {/* Shareholding Tab with Enhanced Visuals */}
@@ -839,14 +1054,16 @@ const InvestorRelationsPage = () => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Corporate Policies</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  { title: 'Code of Conduct', icon: Gavel },
-                  { title: 'Whistleblower Policy', icon: Shield },
-                  { title: 'Related Party Transaction Policy', icon: Users },
-                  { title: 'Insider Trading Policy', icon: FileSpreadsheet },
-                  { title: 'Dividend Distribution Policy', icon: TrendingUp },
-                  { title: 'Corporate Social Responsibility Policy', icon: Building }
+                  { title: 'Code of Conduct', icon: Gavel, id: 'code-of-conduct' },
+                  { title: 'Whistleblower Policy', icon: Shield, id: 'whistleblower-policy' },
+                  { title: 'Related Party Transaction Policy', icon: Users, id: 'related-party-policy' },
+                  { title: 'Insider Trading Policy', icon: FileSpreadsheet, id: 'insider-trading-policy' },
+                  { title: 'Dividend Distribution Policy', icon: TrendingUp, id: 'dividend-policy' },
+                  { title: 'Corporate Social Responsibility Policy', icon: Building, id: 'csr-policy' }
                 ].map((policy, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70">
+                  <Card key={index} className="hover:shadow-lg transition-shadow bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-white/70 dark:hover:bg-gray-800/70 cursor-pointer"
+                    onClick={() => navigate(`/policy/${policy.id}`)}
+                  >
                     <CardHeader>
                       <CardTitle className="flex items-center">
                         <policy.icon className="w-5 h-5 mr-2 text-primary" />
@@ -858,21 +1075,9 @@ const InvestorRelationsPage = () => {
                         variant="outline" 
                         size="sm" 
                         className="w-full"
-                        onClick={() => {
-                          const policyKeys = {
-                            'Code of Conduct': 'code-of-conduct',
-                            'Whistleblower Policy': 'whistleblower-policy',
-                            'Related Party Transaction Policy': 'related-party-policy',
-                            'Insider Trading Policy': 'insider-trading-policy',
-                            'Dividend Distribution Policy': 'dividend-policy',
-                            'Corporate Social Responsibility Policy': 'csr-policy'
-                          };
-                          const key = policyKeys[policy.title];
-                          handleDocumentDownload('Policy', key, policy.title.replace(/\s+/g, '_') + '.pdf');
-                        }}
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download PDF
+                        <FileText className="w-4 h-4 mr-2" />
+                        View Policy
                       </Button>
                     </CardContent>
                   </Card>
@@ -967,42 +1172,6 @@ const InvestorRelationsPage = () => {
         </div>
       </section>
 
-      {/* Stock Exchange Announcements Section */}
-      <section className="py-8 bg-gray-900/30 backdrop-blur-md w-full">
-        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Latest Announcements</h2>
-          <Card>
-            <CardContent className="p-0">
-              <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                {[
-                  { date: 'January 15, 2024', title: 'Declaration of Q3 FY24 Results', exchange: 'BSE/NSE' },
-                  { date: 'December 28, 2023', title: 'Intimation of Board Meeting', exchange: 'BSE/NSE' },
-                  { date: 'November 30, 2023', title: 'Disclosure under Regulation 30', exchange: 'BSE/NSE' }
-                ].map((announcement, index) => (
-                  <div key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{announcement.title}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {announcement.date} | {announcement.exchange}
-                        </p>
-                      </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleDocumentDownload('Announcement', 'announcement-general', announcement.title.replace(/\s+/g, '_') + '.pdf')}
-                      >
-                        View
-                        <ChevronRight className="w-4 h-4 ml-1" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
     </div>
   );
 };

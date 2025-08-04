@@ -1,0 +1,23 @@
+{
+  "production": {
+    "apiUrl": "https://automationservice-production-4565.up.railway.app/api",
+    "mediaEndpoint": "/media",
+    "uploadEndpoint": "/media/upload",
+    "listEndpoint": "/media/list",
+    "deleteEndpoint": "/media/delete"
+  },
+  "development": {
+    "apiUrl": "http://localhost:3002/api",
+    "mediaEndpoint": "/media",
+    "uploadEndpoint": "/media/upload",
+    "listEndpoint": "/media/list",
+    "deleteEndpoint": "/media/delete"
+  },
+  "categories": {
+    "newsGallery": "news-gallery",
+    "csr": "csr-images",
+    "infrastructure": "infrastructure",
+    "leadership": "leadership",
+    "general": "general-media"
+  }
+}

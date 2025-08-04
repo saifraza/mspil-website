@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Newspaper, CalendarDays, Video, Image as ImageIcon, Linkedin, Twitter, ImageOff, X, ChevronLeft, ChevronRight, TrendingUp, Clock, Eye } from 'lucide-react';
 import { useTranslation } from '@/contexts/LanguageContext';
@@ -138,11 +139,11 @@ const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) =>
 
 const NewsMediaSection = () => {
   const t = useTranslation();
-  const [galleryItemsWithUrls, setGalleryItemsWithUrls] = useState([]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [hoveredNewsItem, setHoveredNewsItem] = useState(null);
-  const [uploadedMediaFiles, setUploadedMediaFiles] = useState([]);
+  const [galleryItemsWithUrls, setGalleryItemsWithUrls] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fadeInProps = {
     initial: { opacity: 0, y: 20 },
@@ -157,64 +158,61 @@ const NewsMediaSection = () => {
     { titleKey: "newsItem3Title", dateKey: "newsItem3Date", categoryKey: "newsItem3Category", icon: <CalendarDays className="w-5 h-5 text-primary" />, views: 2341 },
   ], []);
 
-  const initialGalleryItems = useMemo(() => [
-    { type: 'video', titleKey: 'newsGalleryVideo1Title', imagePath: 'news_media/video1_thumbnail.jpg', videoPath: 'news_media/video1.mp4', altKey: 'newsGalleryVideo1Alt' },
-    { type: 'image', titleKey: 'newsGalleryImage1Title', imagePath: 'news_media/image1.jpg', altKey: 'newsGalleryImage1Alt' },
-    { type: 'image', titleKey: 'newsGalleryImage2Title', imagePath: 'news_media/image2.jpg', altKey: 'newsGalleryImage2Alt' },
-    { type: 'image', titleKey: 'newsGalleryImage3Title', imagePath: 'news_media/image3.jpg', altKey: 'newsGalleryImage3Alt' },
-    { type: 'image', titleKey: 'newsGalleryImage4Title', imagePath: 'news_media/image4.jpg', altKey: 'newsGalleryImage4Alt' },
-    { type: 'image', titleKey: 'newsGalleryImage5Title', imagePath: 'news_media/image5.jpg', altKey: 'newsGalleryImage5Alt' }
-  ], []);
-  
+  // Fetch gallery items from Railway API with fallback
   useEffect(() => {
-    const fetchUploadedMedia = async () => {
+    const fetchGalleryMedia = async () => {
       try {
         const API_URL = process.env.NODE_ENV === 'production' 
-          ? 'https://mspil-mcp-production.up.railway.app/api' 
+          ? 'https://automationservice-production-4565.up.railway.app/api'
           : 'http://localhost:3002/api';
-        const response = await fetch(`${API_URL}/content`);
-        const allContent = await response.json();
         
-        // Filter for media-images and news-images
-        const mediaFiles = allContent.filter(item => 
-          item.category === 'media-images' || item.category === 'news-images'
-        );
-        
-        setUploadedMediaFiles(mediaFiles);
+        const response = await fetch(`${API_URL}/media/list?category=news-gallery`);
+        if (response.ok) {
+          const mediaFiles = await response.json();
+          
+          if (mediaFiles && mediaFiles.length > 0) {
+            // Transform API response to gallery format
+            const galleryItems = mediaFiles.map((file, index) => ({
+              type: file.type || (file.filename.endsWith('.mp4') ? 'video' : 'image'),
+              titleKey: `newsGalleryImage${index + 1}Title`,
+              imageUrl: file.url,
+              videoUrl: file.type === 'video' ? file.url : undefined,
+              altKey: `newsGalleryImage${index + 1}Alt`,
+              metadata: file.metadata || {}
+            }));
+            
+            setGalleryItemsWithUrls(galleryItems.slice(0, 8)); // Show max 8 items
+          } else {
+            // Use static fallback if no media from API
+            setStaticGalleryItems();
+          }
+        } else {
+          // Use static fallback if API fails
+          setStaticGalleryItems();
+        }
       } catch (error) {
-        console.log('Could not fetch media files:', error);
+        console.log('Failed to fetch gallery media:', error);
+        // Use static fallback
+        setStaticGalleryItems();
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    const processGalleryItems = () => {
-      // Combine static gallery items with uploaded media files
-      const staticItems = initialGalleryItems.map((item, index) => {
-        let imageUrl = '';
-        if (item.imagePath) {
-          // Use static image path
-          imageUrl = `/images/${item.imagePath}`;
-        }
-        return { ...item, imageUrl: imageUrl };
-      });
-
-      // Convert uploaded media files to gallery format
-      const uploadedItems = uploadedMediaFiles.map((file, index) => ({
-        type: 'image',
-        titleKey: `uploadedMedia${index}Title`,
-        imagePath: file.url,
-        altKey: `uploadedMedia${index}Alt`,
-        imageUrl: file.url,
-        isUploaded: true,
-        uploadedTitle: file.metadata?.title || file.filename,
-        uploadedDescription: file.comment || 'Uploaded media file'
-      }));
-
-      setGalleryItemsWithUrls([...staticItems, ...uploadedItems]);
+    const setStaticGalleryItems = () => {
+      const staticGalleryItems = [
+        { type: 'image', titleKey: 'newsGalleryImage1Title', imageUrl: '/images/news_media/image1.jpg', altKey: 'newsGalleryImage1Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage2Title', imageUrl: '/images/news_media/image2.jpg', altKey: 'newsGalleryImage2Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage3Title', imageUrl: '/images/news_media/image3.jpg', altKey: 'newsGalleryImage3Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage4Title', imageUrl: '/images/news_media/image4.jpg', altKey: 'newsGalleryImage4Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage5Title', imageUrl: '/images/news_media/image5.jpg', altKey: 'newsGalleryImage5Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage6Title', imageUrl: '/images/placeholder.jpg', altKey: 'newsGalleryImage6Alt' }
+      ];
+      setGalleryItemsWithUrls(staticGalleryItems);
     };
 
-    fetchUploadedMedia();
-    processGalleryItems();
-  }, [initialGalleryItems, uploadedMediaFiles.length]);
+    fetchGalleryMedia();
+  }, []);
 
   const openLightbox = (index) => {
     setLightboxIndex(index);
@@ -364,7 +362,13 @@ const NewsMediaSection = () => {
               {t('newsMediaGalleryTitle')}
             </motion.h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {galleryItemsWithUrls.map((item, index) => (
+              {isLoading ? (
+                // Loading skeleton
+                [...Array(6)].map((_, index) => (
+                  <div key={index} className="aspect-square bg-gray-800/60 animate-pulse rounded-lg" />
+                ))
+              ) : galleryItemsWithUrls.length > 0 ? (
+                galleryItemsWithUrls.map((item, index) => (
                 <motion.div 
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -405,28 +409,35 @@ const NewsMediaSection = () => {
                           <ImageIcon className="w-10 h-10 text-white mb-2" />
                         }
                         <p className="text-white text-sm font-medium text-center">
-                          {item.isUploaded ? item.uploadedTitle : t(item.titleKey)}
+                          {t(item.titleKey)}
                         </p>
                       </motion.div>
                     </motion.div>
                   </div>
                 </motion.div>
-              ))}
+                ))
+              ) : (
+                <div className="col-span-3 text-center py-8 text-gray-400">
+                  No media available
+                </div>
+              )}
             </div>
             <motion.div
               whileHover={{ x: 5 }}
               transition={{ type: "spring" }}
             >
-              <Button variant="link" className="mt-6 text-primary">
-                {t('newsExploreGalleryButton')} 
-                <motion.span 
-                  className="ml-1"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  →
-                </motion.span>
-              </Button>
+              <Link to="/gallery">
+                <Button variant="link" className="mt-6 text-primary">
+                  {t('newsExploreGalleryButton')} 
+                  <motion.span 
+                    className="ml-1"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    →
+                  </motion.span>
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </motion.div>

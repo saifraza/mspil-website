@@ -128,24 +128,24 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-8 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-8 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? 'bg-bio-green-900/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+          : 'bg-bio-green-900/80 backdrop-blur-sm md:bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 gap-4">
+        <div className="flex justify-between items-center h-16 md:h-20 gap-4">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0 max-w-[200px] sm:max-w-[300px] lg:max-w-none">
             <LazyImage
               src="/images/company_logo.png"
               alt={t('companyLogoAlt')}
-              className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
+              className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 object-contain flex-shrink-0"
               fallbackSrc="/images/company_logo.png"
             />
             <div className="flex flex-col min-w-0">
               {/* Show only short name on mobile, full layout on larger screens */}
-              <span className="text-lg sm:text-xl font-bold text-foreground truncate">
+              <span className="text-base sm:text-lg md:text-xl font-bold text-white md:text-foreground truncate">
                 {t('companyNameShort')}
               </span>
               <span className="hidden sm:block text-xs lg:text-sm text-foreground/80 truncate">
@@ -228,7 +228,7 @@ const Navbar = () => {
               variant="ghost" 
               size="icon" 
               onClick={toggleLanguage} 
-              className="mr-1 text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
+              className="mr-1 text-white md:text-foreground hover:bg-bio-green-700 md:hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
             >
               <Globe size={20} />
             </Button>
@@ -236,7 +236,7 @@ const Navbar = () => {
               variant="ghost" 
               size="icon" 
               onClick={toggleMobileMenu} 
-              className="text-foreground hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
+              className="text-white md:text-foreground hover:bg-bio-green-700 md:hover:bg-bio-green-100 dark:hover:bg-bio-green-800"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>

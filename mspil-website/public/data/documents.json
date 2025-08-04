@@ -34,13 +34,44 @@
     ],
     "quarterlyResults": [
       {
+        "title": "Q3 FY2024 Results",
+        "filename": "q3_fy2024_results.pdf",
+        "url": "/documents/investor-relations/quarterly-results/q3_fy2024_results.pdf",
+        "date": "2024-12-31",
+        "type": "pdf",
+        "category": "Quarterly Results",
+        "description": "Third quarter financial results and performance highlights for fiscal year 2024",
+        "fileSize": "1.2 MB"
+      },
+      {
+        "title": "Q2 FY2024 Results",
+        "filename": "q2_fy2024_results.pdf",
+        "url": "/documents/investor-relations/quarterly-results/q2_fy2024_results.pdf",
+        "date": "2024-09-30",
+        "type": "pdf",
+        "category": "Quarterly Results",
+        "description": "Second quarter financial performance and operational metrics for fiscal year 2024",
+        "fileSize": "1.1 MB"
+      },
+      {
         "title": "Q1 FY2024 Results",
         "filename": "q1_fy2024_results.pdf",
         "url": "/documents/investor-relations/quarterly-results/q1_fy2024_results.pdf",
         "date": "2024-06-30",
         "type": "pdf",
         "category": "Quarterly Results",
-        "description": "First quarter financial results and performance metrics for fiscal year 2024"
+        "description": "First quarter financial results and performance metrics for fiscal year 2024",
+        "fileSize": "1.0 MB"
+      },
+      {
+        "title": "Q4 FY2023 Results",
+        "filename": "q4_fy2023_results.pdf",
+        "url": "/documents/investor-relations/quarterly-results/q4_fy2023_results.pdf",
+        "date": "2023-03-31",
+        "type": "pdf",
+        "category": "Quarterly Results",
+        "description": "Fourth quarter and annual financial results for fiscal year 2023",
+        "fileSize": "1.3 MB"
       }
     ],
     "presentations": [
@@ -56,13 +87,106 @@
     ],
     "policies": [
       {
+        "title": "Code of Conduct",
+        "filename": "code_of_conduct.pdf",
+        "url": "/documents/investor-relations/policies/code_of_conduct.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Code of conduct for directors, senior management, and employees",
+        "fileSize": "0.8 MB"
+      },
+      {
+        "title": "Whistleblower Policy",
+        "filename": "whistleblower_policy.pdf",
+        "url": "/documents/investor-relations/policies/whistleblower_policy.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Policy for reporting unethical behavior and protecting whistleblowers",
+        "fileSize": "0.6 MB"
+      },
+      {
+        "title": "Related Party Transaction Policy",
+        "filename": "related_party_policy.pdf",
+        "url": "/documents/investor-relations/policies/related_party_policy.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Framework for dealing with related party transactions",
+        "fileSize": "0.7 MB"
+      },
+      {
+        "title": "Insider Trading Policy",
+        "filename": "insider_trading_policy.pdf",
+        "url": "/documents/investor-relations/policies/insider_trading_policy.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Policy on prohibition of insider trading and fair disclosure",
+        "fileSize": "0.9 MB"
+      },
+      {
+        "title": "Dividend Distribution Policy",
+        "filename": "dividend_policy.pdf",
+        "url": "/documents/investor-relations/policies/dividend_policy.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "Policy framework for dividend declaration and distribution",
+        "fileSize": "0.5 MB"
+      },
+      {
+        "title": "Corporate Social Responsibility Policy",
+        "filename": "csr_policy.pdf",
+        "url": "/documents/investor-relations/policies/csr_policy.pdf",
+        "date": "2024-01-01",
+        "type": "pdf",
+        "category": "Policies",
+        "description": "CSR policy outlining focus areas and implementation framework",
+        "fileSize": "0.7 MB"
+      },
+      {
         "title": "Corporate Governance Policy",
         "filename": "corporate_governance_policy.pdf",
         "url": "/documents/investor-relations/policies/corporate_governance_policy.pdf",
         "date": "2024-01-01",
         "type": "pdf",
         "category": "Policies",
-        "description": "Corporate governance framework, board structure, and compliance policies"
+        "description": "Corporate governance framework, board structure, and compliance policies",
+        "fileSize": "1.0 MB"
+      }
+    ],
+    "notices": [
+      {
+        "title": "Board Meeting Notice - Q3 FY2024",
+        "filename": "board_meeting_notice_q3_2024.pdf",
+        "url": "/documents/investor-relations/notices/board_meeting_notice_q3_2024.pdf",
+        "date": "2024-01-15",
+        "type": "pdf",
+        "category": "Notices",
+        "description": "Notice of board meeting to consider Q3 FY2024 financial results",
+        "fileSize": "0.3 MB"
+      },
+      {
+        "title": "Annual General Meeting Notice 2024",
+        "filename": "agm_notice_2024.pdf",
+        "url": "/documents/investor-relations/notices/agm_notice_2024.pdf",
+        "date": "2024-06-15",
+        "type": "pdf",
+        "category": "Notices",
+        "description": "Notice convening the Annual General Meeting for the year 2024",
+        "fileSize": "0.5 MB"
+      },
+      {
+        "title": "Disclosure under Regulation 30",
+        "filename": "disclosure_regulation_30.pdf",
+        "url": "/documents/investor-relations/notices/disclosure_regulation_30.pdf",
+        "date": "2023-11-30",
+        "type": "pdf",
+        "category": "Notices",
+        "description": "Material event disclosure as per SEBI regulations",
+        "fileSize": "0.4 MB"
       }
     ]
   },

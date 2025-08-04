@@ -492,6 +492,64 @@ Contact Claude (me) directly with your change requests. I can update:
 
 ---
 
-**Last Updated:** January 31, 2025  
-**Version:** 2.0.0 (Complete Rewrite)  
+## 📸 Media & Document Management System
+
+### **NEW: Railway Cloud Storage**
+
+All media files (images, videos) and documents (PDFs, reports) are now stored in Railway's cloud database instead of GitHub:
+
+#### **Architecture**
+```
+Local Files → Upload Scripts → Railway Database → Website Display
+```
+
+#### **Benefits**
+- ✅ **No large files in GitHub** - Keeps repository lightweight
+- ✅ **Easy updates** - Upload new files anytime without code changes
+- ✅ **Centralized storage** - All files in one place
+- ✅ **Fast CDN delivery** - Railway serves files globally
+
+#### **Media Management Directory**
+```
+media-management/
+├── config/
+│   └── railway-api.json      # API endpoints configuration
+├── scripts/
+│   ├── upload-media.js       # Upload images/videos
+│   ├── upload-documents.js   # Upload PDFs/reports
+│   ├── list-media.js         # List all files
+│   └── delete-media.js       # Delete files
+├── docs/
+│   ├── COMPLETE_DOCUMENTATION.md
+│   └── QUICK_REFERENCE.md
+└── temp/                     # Upload results
+```
+
+#### **How to Upload Media**
+```bash
+# Navigate to scripts
+cd media-management/scripts
+
+# Upload images/videos
+node upload-media.js /path/to/media news-gallery --env=production
+
+# Upload documents
+node upload-documents.js --env=production
+```
+
+#### **Categories**
+- **Media**: `news-gallery`, `csr-images`, `infrastructure`, `leadership`
+- **Documents**: `investor-annual-reports`, `investor-quarterly-results`, `investor-policies`, `csr-reports`
+
+#### **API Integration**
+- **Service**: `automationservice-production-4565.up.railway.app`
+- **Endpoints**: `/api/media/upload`, `/api/media/list`, `/api/media/delete`
+- **Components**: NewsMediaSection, GalleryPage, InvestorRelationsPage auto-fetch from Railway
+
+**Note**: The Railway integration is ready but currently disabled until the automation service is deployed with media routes. Components use local files as fallback.
+
+---
+
+**Last Updated:** February 1, 2025  
+**Version:** 2.1.0 (Added Media Management)  
 **Maintained By:** Claude (AI Assistant)

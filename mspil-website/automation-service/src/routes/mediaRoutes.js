@@ -1,7 +1,6 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import pg from 'pg';
 
@@ -14,19 +13,8 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    const uploadDir = path.join(process.cwd(), 'uploads', req.body.category || 'general');
-    await fs.mkdir(uploadDir, { recursive: true });
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueId = uuidv4();
-    const extension = path.extname(file.originalname);
-    cb(null, `${uniqueId}${extension}`);
-  }
-});
+// Configure multer for memory storage (store files in memory to save as base64)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -69,21 +57,26 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     const mediaUrl = `${baseUrl}/api/media/file/${category}/${req.file.filename}`;
     const metadataJson = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
 
-    // Store in database
+    // Convert file to base64
+    const fileContent = req.file.buffer.toString('base64');
+    const filename = `${uuidv4()}${path.extname(req.file.originalname)}`;
+    
+    // Store in database with file content
     const query = `
-      INSERT INTO media_files (filename, original_name, category, file_size, mime_type, url, metadata)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO media_files (filename, original_name, category, file_size, mime_type, url, metadata, file_content)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
     
     const values = [
-      req.file.filename,
+      filename,
       req.file.originalname,
       category,
       req.file.size,
       req.file.mimetype,
-      mediaUrl,
-      metadataJson
+      mediaUrl.replace(req.file.filename, filename),
+      metadataJson,
+      fileContent
     ];
 
     const result = await pool.query(query, values);
@@ -143,17 +136,33 @@ router.get('/list', async (req, res) => {
   }
 });
 
-// Serve media files
+// Serve media files from database
 router.get('/file/:category/:filename', async (req, res) => {
   try {
     const { category, filename } = req.params;
-    const filePath = path.join(process.cwd(), 'uploads', category, filename);
     
-    // Check if file exists
-    await fs.access(filePath);
+    // Get file from database
+    const query = 'SELECT file_content, mime_type FROM media_files WHERE category = $1 AND filename = $2';
+    const result = await pool.query(query, [category, filename]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    
+    const { file_content, mime_type } = result.rows[0];
+    
+    // Convert base64 back to buffer
+    const buffer = Buffer.from(file_content, 'base64');
+    
+    // Set appropriate headers
+    res.set({
+      'Content-Type': mime_type,
+      'Content-Length': buffer.length,
+      'Cache-Control': 'public, max-age=31536000'
+    });
     
     // Send file
-    res.sendFile(filePath);
+    res.send(buffer);
   } catch (error) {
     console.error('File serve error:', error);
     res.status(404).json({ error: 'File not found' });
@@ -175,13 +184,7 @@ router.delete('/delete/:id', async (req, res) => {
     
     const mediaInfo = selectResult.rows[0];
 
-    // Delete physical file
-    const filePath = path.join(process.cwd(), 'uploads', mediaInfo.category, mediaInfo.filename);
-    try {
-      await fs.unlink(filePath);
-    } catch (fileError) {
-      console.warn('File not found on disk:', fileError.message);
-    }
+    // No need to delete physical file as it's stored in database
 
     // Remove from database
     const deleteQuery = 'DELETE FROM media_files WHERE id = $1';
