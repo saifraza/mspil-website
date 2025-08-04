@@ -500,14 +500,15 @@ All media files (images, videos) and documents (PDFs, reports) are now stored in
 
 #### **Architecture**
 ```
-Local Files → Upload Scripts → Railway Database → Website Display
+Local Files → Upload Scripts → Railway Postgres (base64) → API Endpoints → Website Display
 ```
 
 #### **Benefits**
-- ✅ **No large files in GitHub** - Keeps repository lightweight
-- ✅ **Easy updates** - Upload new files anytime without code changes
-- ✅ **Centralized storage** - All files in one place
-- ✅ **Fast CDN delivery** - Railway serves files globally
+- ✅ **No large files in GitHub** - Repository stays under 100MB
+- ✅ **Persistent storage** - Files survive container restarts
+- ✅ **Easy updates** - Upload new files anytime via scripts
+- ✅ **Fast API delivery** - Direct database serving with caching
+- ✅ **Automatic fallback** - Uses local files if API unavailable
 
 #### **Media Management Directory**
 ```
@@ -530,26 +531,62 @@ media-management/
 # Navigate to scripts
 cd media-management/scripts
 
-# Upload images/videos
-node upload-media.js /path/to/media news-gallery --env=production
+# Upload images/videos (MUST use NODE_ENV=production)
+NODE_ENV=production node upload-media.js /path/to/media news-gallery
 
 # Upload documents
-node upload-documents.js --env=production
+NODE_ENV=production node upload-documents.js
+
+# List uploaded files
+NODE_ENV=production node list-media.js news-gallery
+
+# Delete a file
+NODE_ENV=production node delete-media.js <file-id>
 ```
 
 #### **Categories**
 - **Media**: `news-gallery`, `csr-images`, `infrastructure`, `leadership`
 - **Documents**: `investor-annual-reports`, `investor-quarterly-results`, `investor-policies`, `csr-reports`
 
+#### **Database Schema**
+```sql
+CREATE TABLE media_files (
+    id UUID PRIMARY KEY,
+    filename VARCHAR(255),
+    original_name VARCHAR(255),
+    category VARCHAR(100),
+    file_size BIGINT,
+    mime_type VARCHAR(100),
+    url TEXT,
+    metadata JSONB,
+    file_content TEXT,  -- Base64 encoded file
+    uploaded_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+```
+
 #### **API Integration**
 - **Service**: `automationservice-production-4565.up.railway.app`
-- **Endpoints**: `/api/media/upload`, `/api/media/list`, `/api/media/delete`
-- **Components**: NewsMediaSection, GalleryPage, InvestorRelationsPage auto-fetch from Railway
+- **Endpoints**: 
+  - `POST /api/media/upload` - Upload files
+  - `GET /api/media/list?category=X` - List files
+  - `GET /api/media/file/:category/:filename` - Serve files
+  - `DELETE /api/media/delete/:id` - Delete files
+- **Components**: 
+  - `NewsMediaSection` - Displays gallery with Railway API
+  - `GalleryPage` - Full gallery view
+  - `InvestorRelationsPage` - Documents from Railway
+  - `DocumentService` - Handles document fetching
 
-**Note**: The Railway integration is ready but currently disabled until the automation service is deployed with media routes. Components use local files as fallback.
+#### **Important Notes**
+- **File Size Limit**: 50MB per file
+- **Storage**: Files are stored as base64 in Postgres
+- **Caching**: Files are cached for 1 year on CDN
+- **Fallback**: Components use local files if API fails
+- **CORS**: Configured for localhost and production domains
 
 ---
 
-**Last Updated:** February 1, 2025  
-**Version:** 2.1.0 (Added Media Management)  
+**Last Updated:** February 4, 2025  
+**Version:** 2.2.0 (Implemented Railway Media Storage)  
 **Maintained By:** Claude (AI Assistant)
