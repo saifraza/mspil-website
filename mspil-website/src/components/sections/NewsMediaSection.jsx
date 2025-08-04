@@ -36,17 +36,17 @@ const NewsTicker = ({ items }) => {
   );
 };
 
-// Lightbox component for gallery
-const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) => {
+// Lightbox component for gallery (images and videos)
+const Lightbox = ({ isOpen, onClose, media = [], currentIndex, setCurrentIndex }) => {
   const t = useTranslation();
   
   const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  }, [setCurrentIndex, images.length]);
+    setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1));
+  }, [setCurrentIndex, media.length]);
   
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  }, [setCurrentIndex, images.length]);
+    setCurrentIndex((prev) => (prev === media.length - 1 ? 0 : prev + 1));
+  }, [setCurrentIndex, media.length]);
   
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -113,10 +113,17 @@ const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) =>
           className="max-w-4xl max-h-[80vh] relative"
           onClick={(e) => e.stopPropagation()}
         >
-          {images[currentIndex]?.imageUrl ? (
+          {media[currentIndex]?.type === 'video' ? (
+            <video
+              src={media[currentIndex].videoUrl || media[currentIndex].imageUrl}
+              controls
+              autoPlay
+              className="w-full h-full max-h-[70vh] object-contain rounded-lg"
+            />
+          ) : media[currentIndex]?.imageUrl ? (
             <img
-              src={images[currentIndex].imageUrl}
-              alt={t(images[currentIndex].altKey) || t(images[currentIndex].titleKey)}
+              src={media[currentIndex].imageUrl}
+              alt={t(media[currentIndex].altKey) || t(media[currentIndex].titleKey)}
               className="w-full h-full object-contain rounded-lg"
             />
           ) : (
@@ -129,7 +136,7 @@ const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) =>
             animate={{ opacity: 1, y: 0 }}
             className="text-white text-center mt-4 text-lg"
           >
-            {t(images[currentIndex]?.titleKey)}
+            {media[currentIndex]?.title || (media[currentIndex]?.titleKey ? t(media[currentIndex].titleKey) : '')}
           </motion.p>
         </motion.div>
       </motion.div>
@@ -181,7 +188,7 @@ const NewsMediaSection = () => {
               metadata: file.metadata || {}
             }));
             
-            setGalleryItemsWithUrls(galleryItems.slice(0, 8)); // Show max 8 items
+            setGalleryItemsWithUrls(galleryItems.slice(0, 6)); // Show max 6 items
           } else {
             // Use static fallback if no media from API
             setStaticGalleryItems();
@@ -376,7 +383,7 @@ const NewsMediaSection = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                   whileHover={{ scale: 1.05, zIndex: 10 }}
-                  onClick={() => item.type === 'image' && openLightbox(index)}
+                  onClick={() => openLightbox(index)}
                   className="cursor-pointer"
                 >
                   <div className="overflow-hidden aspect-square group relative bg-gray-800/60 backdrop-blur-xl border border-white/40 hover:bg-gray-800/70 hover:border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
@@ -508,7 +515,7 @@ const NewsMediaSection = () => {
       <Lightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        images={galleryItemsWithUrls.filter(item => item.type === 'image')}
+        media={galleryItemsWithUrls}
         currentIndex={lightboxIndex}
         setCurrentIndex={setLightboxIndex}
       />

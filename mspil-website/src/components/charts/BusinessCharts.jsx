@@ -429,66 +429,87 @@ export const OperationalEfficiencyChart = () => {
   // Data showing achievement percentage towards target
   const data = [
     { 
-      metric: 'Sugar (Steam)', 
+      metric: 'Sugar', 
+      fullMetric: 'Sugar - Steam Consumption (ton/ton of cane)', 
       achieved: 70.3, // 26/37 * 100 = 70.3% achieved (target is lower)
       target: 100,
       currentLabel: '37%',
       targetLabel: '26%',
-      info: 'Lower is better'
+      info: 'Steam consumption per ton of cane (Lower is better)'
     },
     { 
-      metric: 'Ethanol (Yield)', 
+      metric: 'Ethanol', 
+      fullMetric: 'Ethanol - Yield (L/ton of corn)', 
       achieved: 97.5, // 390/400 * 100 = 97.5% achieved
       target: 100,
       currentLabel: '390 L/ton',
       targetLabel: '400 L/ton',
-      info: 'Higher is better'
+      info: 'Liters per ton of corn (Higher is better)'
     },
     { 
       metric: 'Power', 
+      fullMetric: 'Power - Export to Grid (MW)', 
       achieved: 64.3, // 9/14 * 100 = 64.3% achieved
       target: 100,
       currentLabel: '9 MW',
       targetLabel: '14 MW',
-      info: 'Higher is better'
+      info: 'Megawatts exported to grid (Higher is better)'
     },
     { 
-      metric: 'DDGS (Aflatoxin)', 
+      metric: 'DDGS', 
+      fullMetric: 'DDGS - Aflatoxins (ppb)', 
       achieved: 20, // 20/100 * 100 = 20% achieved (target is lower)
       target: 100,
       currentLabel: '100 ppb',
       targetLabel: '20 ppb',
-      info: 'Lower is better'
+      info: 'Parts per billion aflatoxins (Lower is better)'
     }
   ];
 
   return (
     <div className="bg-gray-800/50 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
-      <h3 className="text-xl font-semibold text-white mb-2">Operational Efficiency (5 Year Target)</h3>
+      <h3 className="text-xl font-semibold text-white mb-4">Operational Efficiency (5 Year Target)</h3>
       
       {/* Value labels above chart */}
-      <div className="mb-4">
-        <div className="grid grid-cols-4 gap-4 text-center">
-          {data.map((item, idx) => (
-            <div key={idx} className="flex flex-col items-center space-y-1">
-              <div className="text-green-400 font-bold text-sm">{item.currentLabel}</div>
-              <div className="text-gray-500 text-xs">↓</div>
-              <div className="text-yellow-400 font-bold text-sm">{item.targetLabel}</div>
-            </div>
-          ))}
+      <div className="mb-3">
+        <div className="grid grid-cols-4 gap-2 text-center">
+          <div className="flex flex-col items-center space-y-1">
+            <div className="text-green-400 font-bold text-sm">37%</div>
+            <div className="text-gray-500 text-xs">↓</div>
+            <div className="text-yellow-400 font-bold text-sm">26%</div>
+            <div className="text-gray-400 text-xs mt-1">ton/ton of cane</div>
+          </div>
+          <div className="flex flex-col items-center space-y-1">
+            <div className="text-green-400 font-bold text-sm">390 L/ton</div>
+            <div className="text-gray-500 text-xs">↓</div>
+            <div className="text-yellow-400 font-bold text-sm">400 L/ton</div>
+            <div className="text-gray-400 text-xs mt-1">L/ton of corn</div>
+          </div>
+          <div className="flex flex-col items-center space-y-1">
+            <div className="text-green-400 font-bold text-sm">9 MW</div>
+            <div className="text-gray-500 text-xs">↓</div>
+            <div className="text-yellow-400 font-bold text-sm">14 MW</div>
+            <div className="text-gray-400 text-xs mt-1">to grid</div>
+          </div>
+          <div className="flex flex-col items-center space-y-1">
+            <div className="text-green-400 font-bold text-sm">100 ppb</div>
+            <div className="text-gray-500 text-xs">↓</div>
+            <div className="text-yellow-400 font-bold text-sm">20 ppb</div>
+            <div className="text-gray-400 text-xs mt-1">aflatoxins</div>
+          </div>
         </div>
       </div>
       
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data} margin={{ top: 10, right: 20, left: 40, bottom: 80 }}>
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis 
             dataKey="metric" 
             stroke="#9CA3AF" 
-            angle={-35} 
-            textAnchor="end"
+            angle={0} 
+            textAnchor="middle"
             interval={0}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 13 }}
           />
           <YAxis 
             stroke="#9CA3AF" 
@@ -502,7 +523,7 @@ export const OperationalEfficiencyChart = () => {
                 const item = data.find(d => d.metric === label);
                 return (
                   <div className="bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-700">
-                    <p className="text-white font-semibold mb-1">{label}</p>
+                    <p className="text-white font-semibold mb-1">{item.fullMetric}</p>
                     <p className="text-green-400 text-sm">Current: {item.currentLabel}</p>
                     <p className="text-yellow-400 text-sm">Target: {item.targetLabel}</p>
                     <p className="text-blue-400 text-sm">Achievement: {item.achieved.toFixed(1)}%</p>

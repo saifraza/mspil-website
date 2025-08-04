@@ -240,31 +240,31 @@ const HomePage = () => {
       </section>
 
       {/* CSR Impact Snapshot */}
-      <section className="py-8 bg-white/5 dark:bg-gray-800/5 backdrop-blur-lg">
+      <section className="py-8 sm:py-12 bg-white/5 dark:bg-gray-800/5 backdrop-blur-lg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fastFadeInProps} className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <motion.div {...fastFadeInProps} className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
               {t('homeCSRTitle')}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0">
               {t('homeCSRDescription')}
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-8">
             {csrInitiatives.map((initiative, index) => (
               <motion.div
                 key={index}
                 {...fastStaggerProps(index * 2)}
-                className="text-center"
+                className="flex flex-col items-center text-center px-4 sm:px-0"
               >
-                <div className={`inline-flex p-4 rounded-full bg-gradient-to-br ${initiative.color} text-white mb-4`}>
-                  <initiative.icon className="w-8 h-8" />
+                <div className={`inline-flex p-3 sm:p-4 rounded-full bg-gradient-to-br ${initiative.color} text-white mb-3 sm:mb-4 shadow-lg`}>
+                  <initiative.icon className="w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {initiative.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-xs">
                   {initiative.description}
                 </p>
               </motion.div>
@@ -272,7 +272,7 @@ const HomePage = () => {
           </div>
 
           <motion.div {...fastFadeInProps} className="text-center">
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline" className="text-sm sm:text-base">
               <Link to="/sustainability">
                 {t('homeCSRViewMore')}
                 <ArrowRight className="w-4 h-4 ml-2" />

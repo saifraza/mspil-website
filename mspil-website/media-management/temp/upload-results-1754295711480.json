@@ -1,0 +1,10 @@
+{
+  "successful": [
+    {
+      "file": "gallery-video.mp4",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/95479932-7e6d-4895-ad80-03c5c28255fc.mp4",
+      "id": "b6d2070a-6808-4d5c-96c1-92c2e9ada8d5"
+    }
+  ],
+  "failed": []
+}

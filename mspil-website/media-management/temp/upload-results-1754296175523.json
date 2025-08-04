@@ -1,0 +1,30 @@
+{
+  "successful": [
+    {
+      "file": "csr-community-event.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/73a9fdc4-ae5e-420c-83b7-a778be4cda35.jpg",
+      "id": "be6fa07c-c1a8-4b91-a397-2670194b5f87"
+    },
+    {
+      "file": "ethanol-plant.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/1ba4db8e-1877-4632-8a13-49c5d8c63c2d.jpg",
+      "id": "39531d14-290c-4dd1-953d-1878a2159ca1"
+    },
+    {
+      "file": "power-generation-unit.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/eca2e8e6-637f-4a64-aca1-4b936b4c4609.jpg",
+      "id": "e4255ba4-17fd-45dd-83e9-a1849ec0d9d1"
+    },
+    {
+      "file": "production-facility.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/d9798a53-44f2-4d51-9a7c-2b7a5f703f29.jpg",
+      "id": "5f5ff60b-b474-479b-8a69-2f2840d7b5cc"
+    },
+    {
+      "file": "sugar-factory-overview.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/130583cf-c399-45a5-ab3c-7431ac540ed8.jpg",
+      "id": "677cece5-d762-4bc3-83ee-3f743e2ae4a2"
+    }
+  ],
+  "failed": []
+}

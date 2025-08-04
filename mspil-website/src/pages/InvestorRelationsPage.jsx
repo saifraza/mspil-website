@@ -117,6 +117,10 @@ const InvestorRelationsPage = () => {
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }, 300);
+    } else {
+      // No hash present, default to overview and update URL
+      setActiveTab('overview');
+      window.history.replaceState(null, '', '#overview');
     }
   }, [location]);
 
@@ -127,28 +131,28 @@ const InvestorRelationsPage = () => {
     // Update URL hash
     window.history.pushState(null, '', `#${value}`);
     
-    // Use requestAnimationFrame to wait for next paint
-    requestAnimationFrame(() => {
-      // Double rAF to ensure content is painted
-      requestAnimationFrame(() => {
-        // Additional small delay for chart rendering
-        setTimeout(() => {
-          const tabsContainer = tabsSectionRef.current;
-          if (tabsContainer) {
-            // Get the position of the tabs section
-            const tabsRect = tabsContainer.getBoundingClientRect();
-            // Calculate scroll position to show tabs near top with content visible
-            const scrollTop = window.pageYOffset + tabsRect.top - 80; // 80px offset for header
-            
-            // Smooth scroll to position
-            window.scrollTo({
-              top: Math.max(0, scrollTop),
-              behavior: 'smooth'
-            });
-          }
-        }, 150); // Small delay for charts to initialize
-      });
-    });
+    // Wait for tab content to render
+    setTimeout(() => {
+      // Find the tab content area
+      const tabContent = document.querySelector(`[role="tabpanel"][data-state="active"]`);
+      if (tabContent) {
+        // Get the tabs container position
+        const tabsContainer = tabsSectionRef.current;
+        if (tabsContainer) {
+          // Get tabs position
+          const tabsRect = tabsContainer.getBoundingClientRect();
+          // Calculate position to show tabs with content immediately visible below
+          // Account for fixed header (80px) and some padding (20px)
+          const scrollPosition = window.pageYOffset + tabsRect.top - 100;
+          
+          // Scroll to show tabs and content
+          window.scrollTo({
+            top: Math.max(0, scrollPosition),
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 50); // Small delay to ensure tab switch completes
   };
 
   // Handler for document downloads
