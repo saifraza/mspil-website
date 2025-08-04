@@ -13,6 +13,29 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
+// Run migration on startup
+async function ensureTableSchema() {
+  try {
+    // Check if file_content column exists
+    const checkColumn = await pool.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'media_files' AND column_name = 'file_content'
+    `);
+    
+    if (checkColumn.rows.length === 0) {
+      console.log('Adding file_content column to media_files table...');
+      await pool.query('ALTER TABLE media_files ADD COLUMN file_content TEXT');
+      console.log('file_content column added successfully');
+    }
+  } catch (error) {
+    console.error('Schema check error:', error.message);
+  }
+}
+
+// Run migration
+ensureTableSchema();
+
 // Configure multer for memory storage (store files in memory to save as base64)
 const storage = multer.memoryStorage();
 
