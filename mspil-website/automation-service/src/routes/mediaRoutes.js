@@ -3,8 +3,16 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
+import pg from 'pg';
 
 const router = express.Router();
+const { Pool } = pg;
+
+// Create database connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -46,9 +54,6 @@ const upload = multer({
   }
 });
 
-// Store media metadata in memory (in production, use database)
-const mediaDatabase = new Map();
-
 // Upload media file
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
@@ -61,25 +66,40 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       ? 'https://automationservice-production-4565.up.railway.app'
       : `http://localhost:${process.env.PORT || 3002}`;
 
-    const mediaId = uuidv4();
-    const mediaInfo = {
-      id: mediaId,
-      filename: req.file.filename,
-      originalName: req.file.originalname,
-      category,
-      size: req.file.size,
-      mimetype: req.file.mimetype,
-      url: `${baseUrl}/api/media/file/${category}/${req.file.filename}`,
-      uploadDate: new Date().toISOString(),
-      metadata: typeof metadata === 'string' ? JSON.parse(metadata) : metadata
-    };
+    const mediaUrl = `${baseUrl}/api/media/file/${category}/${req.file.filename}`;
+    const metadataJson = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
 
     // Store in database
-    mediaDatabase.set(mediaId, mediaInfo);
+    const query = `
+      INSERT INTO media_files (filename, original_name, category, file_size, mime_type, url, metadata)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *
+    `;
+    
+    const values = [
+      req.file.filename,
+      req.file.originalname,
+      category,
+      req.file.size,
+      req.file.mimetype,
+      mediaUrl,
+      metadataJson
+    ];
+
+    const result = await pool.query(query, values);
+    const mediaInfo = result.rows[0];
 
     res.json({
       success: true,
-      ...mediaInfo
+      id: mediaInfo.id,
+      filename: mediaInfo.filename,
+      originalName: mediaInfo.original_name,
+      category: mediaInfo.category,
+      size: mediaInfo.file_size,
+      mimetype: mediaInfo.mime_type,
+      url: mediaInfo.url,
+      uploadDate: mediaInfo.uploaded_at,
+      metadata: mediaInfo.metadata
     });
   } catch (error) {
     console.error('Upload error:', error);
@@ -88,14 +108,33 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 // List media files
-router.get('/list', (req, res) => {
+router.get('/list', async (req, res) => {
   try {
     const { category } = req.query;
-    let mediaFiles = Array.from(mediaDatabase.values());
-
+    
+    let query = 'SELECT * FROM media_files';
+    const values = [];
+    
     if (category) {
-      mediaFiles = mediaFiles.filter(file => file.category === category);
+      query += ' WHERE category = $1';
+      values.push(category);
     }
+    
+    query += ' ORDER BY uploaded_at DESC';
+    
+    const result = await pool.query(query, values);
+    
+    const mediaFiles = result.rows.map(row => ({
+      id: row.id,
+      filename: row.filename,
+      originalName: row.original_name,
+      category: row.category,
+      size: row.file_size,
+      mimetype: row.mime_type,
+      url: row.url,
+      uploadDate: row.uploaded_at,
+      metadata: row.metadata
+    }));
 
     res.json(mediaFiles);
   } catch (error) {
@@ -125,18 +164,28 @@ router.get('/file/:category/:filename', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const mediaInfo = mediaDatabase.get(id);
-
-    if (!mediaInfo) {
+    
+    // Get file info from database
+    const selectQuery = 'SELECT * FROM media_files WHERE id = $1';
+    const selectResult = await pool.query(selectQuery, [id]);
+    
+    if (selectResult.rows.length === 0) {
       return res.status(404).json({ error: 'Media not found' });
     }
+    
+    const mediaInfo = selectResult.rows[0];
 
     // Delete physical file
     const filePath = path.join(process.cwd(), 'uploads', mediaInfo.category, mediaInfo.filename);
-    await fs.unlink(filePath);
+    try {
+      await fs.unlink(filePath);
+    } catch (fileError) {
+      console.warn('File not found on disk:', fileError.message);
+    }
 
     // Remove from database
-    mediaDatabase.delete(id);
+    const deleteQuery = 'DELETE FROM media_files WHERE id = $1';
+    await pool.query(deleteQuery, [id]);
 
     res.json({ success: true, message: 'Media deleted successfully' });
   } catch (error) {
@@ -146,15 +195,33 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 // Get media by ID
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const mediaInfo = mediaDatabase.get(id);
-
-  if (!mediaInfo) {
-    return res.status(404).json({ error: 'Media not found' });
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const query = 'SELECT * FROM media_files WHERE id = $1';
+    const result = await pool.query(query, [id]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Media not found' });
+    }
+    
+    const row = result.rows[0];
+    res.json({
+      id: row.id,
+      filename: row.filename,
+      originalName: row.original_name,
+      category: row.category,
+      size: row.file_size,
+      mimetype: row.mime_type,
+      url: row.url,
+      uploadDate: row.uploaded_at,
+      metadata: row.metadata
+    });
+  } catch (error) {
+    console.error('Get media error:', error);
+    res.status(500).json({ error: 'Failed to get media' });
   }
-
-  res.json(mediaInfo);
 });
 
 export default router;
