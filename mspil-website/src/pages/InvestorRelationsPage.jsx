@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,6 +65,12 @@ const InvestorRelationsPage = () => {
   const [isChartsLoaded, setIsChartsLoaded] = useState(false);
   const [documentsData, setDocumentsData] = useState(null);
   const tabsSectionRef = useRef(null);
+  
+  // Tab order for swipe navigation
+  const tabOrder = ['overview', 'pre-ipo', 'financial-performance', 'business-operations', 'shareholding', 'reports', 'governance'];
+  const swipeX = useMotionValue(0);
+  const swipeXInput = [-100, 0, 100];
+  const tabContentRef = useRef(null);
 
   // Load charts progressively after initial render
   useEffect(() => {
@@ -131,28 +137,58 @@ const InvestorRelationsPage = () => {
     // Update URL hash
     window.history.pushState(null, '', `#${value}`);
     
-    // Wait for tab content to render
-    setTimeout(() => {
-      // Find the tab content area
-      const tabContent = document.querySelector(`[role="tabpanel"][data-state="active"]`);
-      if (tabContent) {
-        // Get the tabs container position
-        const tabsContainer = tabsSectionRef.current;
-        if (tabsContainer) {
-          // Get tabs position
-          const tabsRect = tabsContainer.getBoundingClientRect();
-          // Calculate position to show tabs with content immediately visible below
-          // Account for fixed header (80px) and some padding (20px)
-          const scrollPosition = window.pageYOffset + tabsRect.top - 100;
+    // On mobile, scroll to top of tabs section
+    if (window.innerWidth < 640) {
+      setTimeout(() => {
+        if (tabsSectionRef.current) {
+          const headerHeight = 80; // Fixed header height
+          const targetPosition = tabsSectionRef.current.offsetTop - headerHeight - 20;
           
-          // Scroll to show tabs and content
           window.scrollTo({
-            top: Math.max(0, scrollPosition),
+            top: targetPosition,
             behavior: 'smooth'
           });
         }
-      }
-    }, 50); // Small delay to ensure tab switch completes
+      }, 100); // Give time for content to render
+    } else {
+      // Desktop behavior - scroll to show tabs and content
+      setTimeout(() => {
+        const tabContent = document.querySelector(`[role="tabpanel"][data-state="active"]`);
+        if (tabContent) {
+          const tabsContainer = tabsSectionRef.current;
+          if (tabsContainer) {
+            const tabsRect = tabsContainer.getBoundingClientRect();
+            const scrollPosition = window.pageYOffset + tabsRect.top - 100;
+            
+            window.scrollTo({
+              top: Math.max(0, scrollPosition),
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 50);
+    }
+  };
+
+  // Handle swipe gestures for mobile tab navigation
+  const handleSwipe = (event, info) => {
+    const swipeThreshold = 50;
+    const currentIndex = tabOrder.indexOf(activeTab);
+    
+    if (info.offset.x > swipeThreshold && currentIndex > 0) {
+      // Swipe right - go to previous tab
+      handleTabChange(tabOrder[currentIndex - 1]);
+      // Reset swipe position
+      animate(swipeX, 0, { type: "spring", stiffness: 300, damping: 30 });
+    } else if (info.offset.x < -swipeThreshold && currentIndex < tabOrder.length - 1) {
+      // Swipe left - go to next tab
+      handleTabChange(tabOrder[currentIndex + 1]);
+      // Reset swipe position
+      animate(swipeX, 0, { type: "spring", stiffness: 300, damping: 30 });
+    } else {
+      // Not enough swipe distance, spring back
+      animate(swipeX, 0, { type: "spring", stiffness: 300, damping: 30 });
+    }
   };
 
   // Handler for document downloads
@@ -254,39 +290,71 @@ const InvestorRelationsPage = () => {
                   </TabsList>
             </div>
             
-            {/* Mobile: Enhanced visibility with proper contrast */}
-            <div className="block sm:hidden">
-                <div className="bg-gray-900/95 backdrop-blur-xl rounded-xl border border-gray-600/50 p-3 mb-4 shadow-xl">
-                  <TabsList className="grid grid-cols-2 gap-2 bg-transparent">
-                    <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
-                      Overview
-                    </TabsTrigger>
-                    <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 relative px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
+            {/* Mobile: Tab name with swipe navigation */}
+            <div className="block sm:hidden mb-6">
+              {/* Hidden TabsList for mobile functionality */}
+              <TabsList className="hidden">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="pre-ipo">Pre-IPO</TabsTrigger>
+                <TabsTrigger value="financial-performance">Financials</TabsTrigger>
+                <TabsTrigger value="business-operations">Operations</TabsTrigger>
+                <TabsTrigger value="shareholding">Shareholding</TabsTrigger>
+                <TabsTrigger value="reports">Reports</TabsTrigger>
+                <TabsTrigger value="governance">Governance</TabsTrigger>
+              </TabsList>
+              
+              {/* Current Tab Display */}
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-semibold text-white">
+                  {activeTab === 'overview' && 'Overview'}
+                  {activeTab === 'pre-ipo' && (
+                    <span className="relative">
                       Pre-IPO
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    </TabsTrigger>
-                    <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
-                      Financials
-                    </TabsTrigger>
-                    <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
-                      Operations
-                    </TabsTrigger>
-                    <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
-                      Shareholding
-                    </TabsTrigger>
-                    <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
-                      Reports
-                    </TabsTrigger>
-                    <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center col-span-2 shadow-sm">
-                      Governance
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
+                      <span className="absolute -top-1 -right-8 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    </span>
+                  )}
+                  {activeTab === 'financial-performance' && 'Financials'}
+                  {activeTab === 'business-operations' && 'Operations'}
+                  {activeTab === 'shareholding' && 'Shareholding'}
+                  {activeTab === 'reports' && 'Reports'}
+                  {activeTab === 'governance' && 'Governance'}
+                </h2>
+              </div>
+              
+              {/* Swipe indicator dots */}
+              <div className="flex justify-center items-center gap-1.5 mb-3">
+                {tabOrder.map((tab, index) => (
+                  <button
+                    key={tab}
+                    onClick={() => handleTabChange(tab)}
+                    className={`transition-all duration-300 rounded-full ${
+                      tab === activeTab 
+                        ? 'w-6 h-2 bg-green-500' 
+                        : 'w-2 h-2 bg-gray-600 hover:bg-gray-500'
+                    }`}
+                    aria-label={`Go to ${tab} tab`}
+                  />
+                ))}
+              </div>
+              
+              {/* Swipe hint */}
+              <p className="text-center text-xs text-gray-500">
+                Swipe left or right to navigate
+              </p>
             </div>
 
-            {/* Overview Tab - Combined Dashboard */}
-            <TabsContent value="overview" className="space-y-4 sm:space-y-6 bg-transparent mt-4 sm:mt-6">
-              <div className="space-y-4 sm:space-y-6">
+            {/* Tab Content with Swipe Support */}
+            <motion.div
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleSwipe}
+              className="touch-pan-y sm:pointer-events-none" // Enable vertical scroll on mobile
+              style={{ x: swipeX }}
+            >
+              {/* Overview Tab - Combined Dashboard */}
+              <TabsContent value="overview" className="space-y-4 sm:space-y-6 bg-transparent mt-4 sm:mt-6">
+                <div className="space-y-4 sm:space-y-6">
                 <motion.div {...fadeInProps}>
                   <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Investor Dashboard</h2>
                   
@@ -1172,6 +1240,7 @@ const InvestorRelationsPage = () => {
                 </CardContent>
               </Card>
             </TabsContent>
+            </motion.div>
           </Tabs>
         </div>
       </section>
