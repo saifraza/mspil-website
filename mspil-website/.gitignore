@@ -144,3 +144,6 @@ public/documents/**/*_2025-*
 
 # Ignore all uploaded files with timestamps in their names
 **/2025-*
+
+# Documents now stored in Railway database
+public/documents/

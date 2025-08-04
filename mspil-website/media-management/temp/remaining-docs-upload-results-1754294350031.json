@@ -1,0 +1,50 @@
+{
+  "success": [
+    {
+      "file": "csr_report_2023_24.pdf",
+      "category": "csr-reports",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/csr-reports/0c13fdd9-7547-4c06-a038-13fd75990968.pdf"
+    },
+    {
+      "file": "ethanol_production_q1_2024.csv",
+      "category": "business-ethanol-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-ethanol-data/61a8e27b-d594-400a-8fac-c751e5626a5d.csv"
+    },
+    {
+      "file": "ethanol_production_sample_2024.csv",
+      "category": "business-ethanol-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-ethanol-data/d5c1e38c-d77e-4ce3-89b0-ca0e66beb653.csv"
+    },
+    {
+      "file": "feed_production_q1_2024.csv",
+      "category": "business-feed-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-feed-data/15782975-fe59-463b-a25d-3b3e6960e638.csv"
+    },
+    {
+      "file": "feed_production_sample_2024.csv",
+      "category": "business-feed-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-feed-data/640debaa-0713-4903-9bcd-0ce4a927ba81.csv"
+    },
+    {
+      "file": "company_brochure_2024.pdf",
+      "category": "general-documents",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/general-documents/e7f80322-714e-48be-adf2-4b8192325298.pdf"
+    },
+    {
+      "file": "power_generation_q1_2024.csv",
+      "category": "business-power-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-power-data/6442cca3-9186-49ca-b266-ee27ef6fde8c.csv"
+    },
+    {
+      "file": "power_generation_sample_2024.csv",
+      "category": "business-power-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-power-data/d11f81cd-bf29-4aba-82a4-64c7363ac83f.csv"
+    },
+    {
+      "file": "sugar_production_q1_2024.csv",
+      "category": "business-sugar-data",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/business-sugar-data/0901c163-a326-40e1-ad5e-49d668304b0a.csv"
+    }
+  ],
+  "failed": []
+}

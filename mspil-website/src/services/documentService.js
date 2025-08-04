@@ -33,15 +33,7 @@ export async function fetchDocuments(forceRefresh = false) {
 
   // Try Railway API first, but don't fail if CORS blocks it
   try {
-    // Quick test if API is accessible
-    const testResponse = await fetch(`${API_URL}/health`, { 
-      method: 'GET',
-      mode: 'cors'
-    }).catch(() => null);
-    
-    if (!testResponse || !testResponse.ok) {
-      throw new Error('API not accessible, using local fallback');
-    }
+    // Skip health check and try to fetch documents directly
     
     // Fetch all document categories
     const categories = Object.keys(CATEGORY_MAPPING);

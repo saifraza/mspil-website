@@ -1,0 +1,95 @@
+{
+  "success": [
+    {
+      "file": "annual_report_2021_22.pdf",
+      "category": "investor-annual-reports",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-annual-reports/d18cfbd9-2d95-49c2-9cf0-31e4cbb7fd11.pdf"
+    },
+    {
+      "file": "annual_report_2022_23.pdf",
+      "category": "investor-annual-reports",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-annual-reports/ce6eb226-f499-47cb-b20c-a3b5a0fa5f65.pdf"
+    },
+    {
+      "file": "annual_report_2023_24.pdf",
+      "category": "investor-annual-reports",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-annual-reports/1c359211-6642-4d62-b42b-9dced9772963.pdf"
+    },
+    {
+      "file": "agm_notice_2024.pdf",
+      "category": "investor-notices",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-notices/a619ec03-8035-4b49-8f48-262554f5e37a.pdf"
+    },
+    {
+      "file": "board_meeting_notice_q3_2024.pdf",
+      "category": "investor-notices",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-notices/260b8f6a-add8-44e3-9998-18cad338a61b.pdf"
+    },
+    {
+      "file": "disclosure_regulation_30.pdf",
+      "category": "investor-notices",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-notices/90cf2dfc-97ad-4ec1-80cf-69a40f22b912.pdf"
+    },
+    {
+      "file": "code_of_conduct.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/0bc0ca2d-3976-4155-a6f1-7c4827eb7367.pdf"
+    },
+    {
+      "file": "corporate_governance_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/37362b27-803d-40f8-ad26-17ebeae06f1e.pdf"
+    },
+    {
+      "file": "csr_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/bbbda0a4-b8f1-438f-85a4-914ad75008bd.pdf"
+    },
+    {
+      "file": "dividend_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/596396bb-79f8-43e3-a600-16dc41e05321.pdf"
+    },
+    {
+      "file": "insider_trading_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/1af4537a-4b48-4418-8552-046e69d2b3a9.pdf"
+    },
+    {
+      "file": "related_party_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/3cd80f4f-9fa9-41b2-b8c4-911ae8bfdfa0.pdf"
+    },
+    {
+      "file": "whistleblower_policy.pdf",
+      "category": "investor-policies",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-policies/4209e169-afa9-44dd-8870-d90f745b4aa3.pdf"
+    },
+    {
+      "file": "investor_presentation_dec2024.pdf",
+      "category": "investor-presentations",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-presentations/aa948534-7b5b-4fc9-8d0b-e4777133941c.pdf"
+    },
+    {
+      "file": "q1_fy2024_results.pdf",
+      "category": "investor-quarterly-results",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-quarterly-results/211dcaf7-9f55-46f8-9870-848564d748dd.pdf"
+    },
+    {
+      "file": "q2_fy2024_results.pdf",
+      "category": "investor-quarterly-results",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-quarterly-results/f99ecd71-92d6-405c-8b1c-e7b9f99190d8.pdf"
+    },
+    {
+      "file": "q3_fy2024_results.pdf",
+      "category": "investor-quarterly-results",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-quarterly-results/9caacd68-afab-474b-be67-eda75bc3011a.pdf"
+    },
+    {
+      "file": "q4_fy2023_results.pdf",
+      "category": "investor-quarterly-results",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/investor-quarterly-results/f0e0c51d-916b-4db8-a31e-f08ea8267bc5.pdf"
+    }
+  ],
+  "failed": []
+}
