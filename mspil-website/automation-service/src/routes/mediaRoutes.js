@@ -191,7 +191,8 @@ router.get('/file/:category/:filename', async (req, res) => {
       res.set({
         'Content-Type': mime_type,
         'Cache-Control': 'public, max-age=31536000',
-        'X-Content-Type-Options': 'nosniff'
+        'X-Content-Type-Options': 'nosniff',
+        'Cross-Origin-Resource-Policy': 'cross-origin'
       });
       
       // Stream the file content
@@ -223,7 +224,8 @@ router.get('/file/:category/:filename', async (req, res) => {
       res.set({
         'Content-Type': mime_type,
         'Content-Length': buffer.length,
-        'Cache-Control': 'public, max-age=31536000'
+        'Cache-Control': 'public, max-age=31536000',
+        'Cross-Origin-Resource-Policy': 'cross-origin'
       });
       
       res.send(buffer);

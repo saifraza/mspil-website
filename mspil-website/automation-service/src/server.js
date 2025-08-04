@@ -56,7 +56,8 @@ const io = new Server(httpServer, {
 // Middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable CSP for development
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: false // Allow cross-origin resource loading
 }));
 app.use(cors({
   origin: function(origin, callback) {
