@@ -186,19 +186,37 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Keep Recharts and its dependencies in vendor to avoid initialization issues
-          if (id.includes('recharts')) {
-            return 'vendor';
+          // Core React dependencies
+          if (id.includes('react-dom')) {
+            return 'react-dom';
+          }
+          if (id.includes('node_modules/react/')) {
+            return 'react';
+          }
+          
+          // Charts library (recharts is heavy)
+          if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-vendor')) {
+            return 'charts';
           }
           
           // Animation library
-          if (id.includes('framer-motion')) {
+          if (id.includes('framer-motion') || id.includes('@motionone')) {
             return 'motion';
           }
           
-          // UI components that depend on React
-          if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+          // UI components 
+          if (id.includes('@radix-ui') || id.includes('lucide-react') || id.includes('class-variance-authority')) {
             return 'ui';
+          }
+          
+          // Utility libraries
+          if (id.includes('clsx') || id.includes('tailwind-merge') || id.includes('date-fns')) {
+            return 'utils';
+          }
+          
+          // Router
+          if (id.includes('react-router')) {
+            return 'router';
           }
           
           // Split page components into separate chunks
@@ -206,9 +224,9 @@ export default defineConfig({
             return 'data-heavy-pages';
           }
           
-          // Group ALL vendor dependencies together
+          // Remaining vendor dependencies
           if (id.includes('node_modules')) {
-            return 'vendor';
+            return 'vendor-misc';
           }
         },
         chunkFileNames: (chunkInfo) => {
@@ -241,7 +259,7 @@ export default defineConfig({
     },
     sourcemap: false,
     reportCompressedSize: true,
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 600, // Increased slightly since we've optimized chunks
     
     // Enhanced mobile optimizations  
     target: 'es2020', // More modern target for better compression

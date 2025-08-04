@@ -254,30 +254,30 @@ const InvestorRelationsPage = () => {
                   </TabsList>
             </div>
             
-            {/* Mobile: Fixed container with proper spacing */}
+            {/* Mobile: Enhanced visibility with proper contrast */}
             <div className="block sm:hidden">
-                <div className="bg-gray-900/90 backdrop-blur-lg rounded-lg border border-gray-700/50 p-2 mb-4">
+                <div className="bg-gray-900/95 backdrop-blur-xl rounded-xl border border-gray-600/50 p-3 mb-4 shadow-xl">
                   <TabsList className="grid grid-cols-2 gap-2 bg-transparent">
-                    <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="overview" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Overview
                     </TabsTrigger>
-                    <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 relative px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="pre-ipo" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 relative px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Pre-IPO
                       <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     </TabsTrigger>
-                    <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="financial-performance" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Financials
                     </TabsTrigger>
-                    <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="business-operations" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Operations
                     </TabsTrigger>
-                    <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="shareholding" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Shareholding
                     </TabsTrigger>
-                    <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center">
+                    <TabsTrigger value="reports" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center shadow-sm">
                       Reports
                     </TabsTrigger>
-                    <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/30 data-[state=active]:text-green-400 data-[state=active]:border-green-500/50 data-[state=inactive]:text-gray-400 data-[state=inactive]:bg-gray-800/50 px-3 py-2 text-xs font-medium transition-all rounded-md border border-gray-700/50 text-center col-span-2">
+                    <TabsTrigger value="governance" className="data-[state=active]:bg-green-600/40 data-[state=active]:text-white data-[state=active]:border-green-400/60 data-[state=active]:font-semibold data-[state=inactive]:text-gray-300 data-[state=inactive]:bg-gray-800/60 px-3 py-2.5 text-xs font-medium transition-all rounded-lg border border-gray-600/50 text-center col-span-2 shadow-sm">
                       Governance
                     </TabsTrigger>
                   </TabsList>
