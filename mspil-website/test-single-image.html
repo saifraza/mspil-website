@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Single Image</title>
+</head>
+<body>
+    <h1>Test Single Railway Image</h1>
+    
+    <h2>Direct Image Tag (no service worker interference)</h2>
+    <img src="https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg?sw=bypass&t=123456" 
+         style="max-width: 500px;" 
+         onload="console.log('Image loaded successfully')"
+         onerror="console.error('Image failed to load')"
+         alt="Test image">
+    
+    <h2>Fetch Test</h2>
+    <div id="status"></div>
+    
+    <script>
+        // Unregister service worker for this test
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+                console.log('Service worker unregistered');
+            }
+        });
+        
+        // Test direct fetch
+        const status = document.getElementById('status');
+        
+        fetch('https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg')
+            .then(res => {
+                status.innerHTML += `<p>Fetch status: ${res.status}</p>`;
+                status.innerHTML += `<p>Content-Type: ${res.headers.get('content-type')}</p>`;
+                status.innerHTML += `<p>Content-Length: ${res.headers.get('content-length')}</p>`;
+                
+                if (res.ok) {
+                    status.innerHTML += '<p style="color: green;">✅ Direct fetch successful!</p>';
+                } else {
+                    status.innerHTML += '<p style="color: red;">❌ Direct fetch failed</p>';
+                }
+            })
+            .catch(err => {
+                status.innerHTML += `<p style="color: red;">❌ Fetch error: ${err.message}</p>`;
+            });
+    </script>
+</body>
+</html>

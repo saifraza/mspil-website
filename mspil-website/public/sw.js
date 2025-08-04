@@ -1,5 +1,5 @@
 // Enhanced service worker for better performance
-const CACHE_VERSION = 'mspil-v3'; // Updated to exclude Railway API from caching
+const CACHE_VERSION = 'mspil-v4'; // Updated to exclude all external URLs from service worker
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const IMAGE_CACHE = `images-${CACHE_VERSION}`;
@@ -84,8 +84,13 @@ self.addEventListener('fetch', (event) => {
   // Skip non-http(s) requests
   if (!url.protocol.startsWith('http')) return;
 
-  // Skip Railway API requests - let them go directly to network
-  if (request.url.includes('automationservice-production-4565.up.railway.app')) {
+  // Skip external requests (including Railway API) - let them go directly to network
+  if (!url.origin.includes('localhost') && !url.origin.includes('mspil.in')) {
+    return;
+  }
+
+  // Also skip Railway API requests explicitly
+  if (request.url.includes('railway.app')) {
     return;
   }
 

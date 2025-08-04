@@ -202,6 +202,10 @@ async function startServer() {
     startNewsMonitoring();
     logger.info('News monitoring started');
     
+    // Increase timeout for large file serving
+    httpServer.timeout = 300000; // 5 minutes
+    httpServer.keepAliveTimeout = 310000; // Slightly higher than timeout
+    
     httpServer.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
     });

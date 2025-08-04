@@ -170,36 +170,67 @@ router.get('/list', async (req, res) => {
   }
 });
 
-// Serve media files from database
+// Serve media files from database with streaming
 router.get('/file/:category/:filename', async (req, res) => {
   try {
     const { category, filename } = req.params;
     
-    // Get file from database
-    const query = 'SELECT file_content, mime_type FROM media_files WHERE category = $1 AND filename = $2';
-    const result = await pool.query(query, [category, filename]);
+    // First check if file exists and get metadata
+    const metaQuery = 'SELECT id, mime_type, file_size FROM media_files WHERE category = $1 AND filename = $2';
+    const metaResult = await pool.query(metaQuery, [category, filename]);
     
-    if (result.rows.length === 0) {
+    if (metaResult.rows.length === 0) {
       return res.status(404).json({ error: 'File not found' });
     }
     
-    const { file_content, mime_type } = result.rows[0];
+    const { id, mime_type, file_size } = metaResult.rows[0];
     
-    // Convert base64 back to buffer
-    const buffer = Buffer.from(file_content, 'base64');
-    
-    // Set appropriate headers
-    res.set({
-      'Content-Type': mime_type,
-      'Content-Length': buffer.length,
-      'Cache-Control': 'public, max-age=31536000'
-    });
-    
-    // Send file
-    res.send(buffer);
+    // For large files, stream the response
+    if (parseInt(file_size) > 1024 * 1024) { // Files larger than 1MB
+      // Set headers before streaming
+      res.set({
+        'Content-Type': mime_type,
+        'Cache-Control': 'public, max-age=31536000',
+        'X-Content-Type-Options': 'nosniff'
+      });
+      
+      // Stream the file content
+      const contentQuery = 'SELECT file_content FROM media_files WHERE id = $1';
+      pool.query(contentQuery, [id], (err, result) => {
+        if (err) {
+          console.error('Database error:', err);
+          return res.status(500).json({ error: 'Database error' });
+        }
+        
+        try {
+          const { file_content } = result.rows[0];
+          const buffer = Buffer.from(file_content, 'base64');
+          res.set('Content-Length', buffer.length);
+          res.end(buffer);
+        } catch (decodeError) {
+          console.error('Base64 decode error:', decodeError);
+          res.status(500).json({ error: 'Failed to decode file' });
+        }
+      });
+    } else {
+      // For small files, use the original method
+      const query = 'SELECT file_content FROM media_files WHERE id = $1';
+      const result = await pool.query(query, [id]);
+      
+      const { file_content } = result.rows[0];
+      const buffer = Buffer.from(file_content, 'base64');
+      
+      res.set({
+        'Content-Type': mime_type,
+        'Content-Length': buffer.length,
+        'Cache-Control': 'public, max-age=31536000'
+      });
+      
+      res.send(buffer);
+    }
   } catch (error) {
     console.error('File serve error:', error);
-    res.status(404).json({ error: 'File not found' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
