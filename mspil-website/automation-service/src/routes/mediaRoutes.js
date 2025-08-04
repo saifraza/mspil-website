@@ -5,6 +5,17 @@ import { v4 as uuidv4 } from 'uuid';
 import pg from 'pg';
 
 const router = express.Router();
+
+// Add CORS headers middleware for all media routes
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 const { Pool } = pg;
 
 // Create database connection pool

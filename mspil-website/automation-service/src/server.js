@@ -59,15 +59,26 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 app.use(cors({
-  origin: [
-    process.env.CORS_ORIGIN || 'http://localhost:5173',
-    'https://mspil.in',
-    'https://www.mspil.in',
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://mspil-website-production.up.railway.app',
-    'https://mspil-mcp-production.up.railway.app'
-  ],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://mspil.in',
+      'https://www.mspil.in',
+      'https://mspil-website-production.up.railway.app',
+      'https://mspil-mcp-production.up.railway.app'
+    ];
+    
+    if (allowedOrigins.includes(origin) || origin.includes('localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
