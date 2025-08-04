@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Direct Image Load</title>
+</head>
+<body>
+    <h1>Test Direct Image Load</h1>
+    <p>Testing image URL: https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg</p>
+    
+    <h2>Method 1: Direct img tag</h2>
+    <img src="https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg" style="max-width: 300px;" alt="Test image">
+    
+    <h2>Method 2: JavaScript Image</h2>
+    <div id="js-image"></div>
+    
+    <h2>Method 3: Fetch and Blob</h2>
+    <div id="blob-image"></div>
+    
+    <div id="status"></div>
+    
+    <script>
+        const status = document.getElementById('status');
+        
+        // Method 2: JavaScript Image
+        const img = new Image();
+        img.src = 'https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg?t=' + Date.now();
+        img.style.maxWidth = '300px';
+        img.onload = () => {
+            status.innerHTML += '<p>✅ JavaScript Image loaded</p>';
+            document.getElementById('js-image').appendChild(img);
+        };
+        img.onerror = () => {
+            status.innerHTML += '<p>❌ JavaScript Image failed</p>';
+        };
+        
+        // Method 3: Fetch and Blob
+        fetch('https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/17c9bba0-20b6-47a6-b3fc-04d4100a231f.jpg')
+            .then(res => {
+                status.innerHTML += `<p>Fetch status: ${res.status}</p>`;
+                if (res.ok) {
+                    return res.blob();
+                }
+                throw new Error('Fetch failed');
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const blobImg = document.createElement('img');
+                blobImg.src = url;
+                blobImg.style.maxWidth = '300px';
+                document.getElementById('blob-image').appendChild(blobImg);
+                status.innerHTML += '<p>✅ Blob image created</p>';
+            })
+            .catch(err => {
+                status.innerHTML += `<p>❌ Blob error: ${err.message}</p>`;
+            });
+    </script>
+</body>
+</html>
