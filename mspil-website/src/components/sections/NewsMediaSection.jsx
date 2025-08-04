@@ -172,10 +172,11 @@ const NewsMediaSection = () => {
           if (mediaFiles && mediaFiles.length > 0) {
             // Transform API response to gallery format
             const galleryItems = mediaFiles.map((file, index) => ({
-              type: file.type || (file.filename.endsWith('.mp4') ? 'video' : 'image'),
+              type: file.mimetype?.includes('video') || file.filename.endsWith('.mp4') ? 'video' : 'image',
               titleKey: `newsGalleryImage${index + 1}Title`,
-              imageUrl: file.url,
-              videoUrl: file.type === 'video' ? file.url : undefined,
+              title: file.metadata?.title || file.originalName || `Gallery Image ${index + 1}`,
+              imageUrl: `${file.url}?t=${Date.now()}`,
+              videoUrl: file.mimetype?.includes('video') ? `${file.url}?t=${Date.now()}` : undefined,
               altKey: `newsGalleryImage${index + 1}Alt`,
               metadata: file.metadata || {}
             }));
@@ -408,7 +409,7 @@ const NewsMediaSection = () => {
                           <ImageIcon className="w-10 h-10 text-white mb-2" />
                         }
                         <p className="text-white text-sm font-medium text-center">
-                          {t(item.titleKey)}
+                          {item.title || (item.titleKey ? t(item.titleKey) : '')}
                         </p>
                       </motion.div>
                     </motion.div>

@@ -34,8 +34,8 @@ const GalleryPage = () => {
               type: file.mimetype?.includes('video') ? 'video' : 'image',
               titleKey: `galleryImage${index + 1}`,
               title: file.metadata?.title || file.originalName || `Gallery Image ${index + 1}`,
-              imageUrl: file.url,
-              videoUrl: file.mimetype?.includes('video') ? file.url : undefined,
+              imageUrl: `${file.url}?t=${Date.now()}`,
+              videoUrl: file.mimetype?.includes('video') ? `${file.url}?t=${Date.now()}` : undefined,
               altKey: `galleryImage${index + 1}Alt`,
               uploadDate: file.uploadDate
             }));

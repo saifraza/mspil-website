@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache and Service Worker</title>
+</head>
+<body>
+    <h1>Clear Cache and Service Worker</h1>
+    <button onclick="clearAll()">Clear Everything</button>
+    <div id="status"></div>
+    
+    <script>
+        async function clearAll() {
+            const status = document.getElementById('status');
+            
+            // 1. Unregister service workers
+            status.innerHTML += '<p>Unregistering service workers...</p>';
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for(let registration of registrations) {
+                await registration.unregister();
+            }
+            status.innerHTML += '<p>✅ Service workers unregistered</p>';
+            
+            // 2. Clear caches
+            status.innerHTML += '<p>Clearing caches...</p>';
+            const cacheNames = await caches.keys();
+            await Promise.all(
+                cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+            status.innerHTML += '<p>✅ Caches cleared</p>';
+            
+            // 3. Clear local storage
+            localStorage.clear();
+            sessionStorage.clear();
+            status.innerHTML += '<p>✅ Storage cleared</p>';
+            
+            status.innerHTML += '<h3>Done! Now refresh the gallery page.</h3>';
+            
+            // Redirect to gallery after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'http://localhost:3000/gallery';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

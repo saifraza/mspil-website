@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Gallery API</title>
+</head>
+<body>
+    <h1>Debug Gallery API</h1>
+    <div id="results"></div>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        async function debugAPI() {
+            try {
+                // Test 1: List API
+                resultsDiv.innerHTML += '<h2>1. Testing List API...</h2>';
+                const listResponse = await fetch('https://automationservice-production-4565.up.railway.app/api/media/list?category=news-gallery');
+                resultsDiv.innerHTML += `<p>List API Status: ${listResponse.status}</p>`;
+                
+                if (listResponse.ok) {
+                    const files = await listResponse.json();
+                    resultsDiv.innerHTML += `<p>Found ${files.length} files</p>`;
+                    
+                    // Test first file
+                    if (files.length > 0) {
+                        const firstFile = files[0];
+                        resultsDiv.innerHTML += '<h3>First file details:</h3>';
+                        resultsDiv.innerHTML += '<pre>' + JSON.stringify(firstFile, null, 2) + '</pre>';
+                        
+                        // Test 2: Try to load the image
+                        resultsDiv.innerHTML += '<h2>2. Testing Image Load...</h2>';
+                        resultsDiv.innerHTML += `<p>URL: ${firstFile.url}</p>`;
+                        
+                        // Create image element
+                        const img = new Image();
+                        img.src = firstFile.url;
+                        img.style.maxWidth = '300px';
+                        img.onload = () => {
+                            resultsDiv.innerHTML += '<p style="color: green;">✅ Image loaded successfully!</p>';
+                            resultsDiv.appendChild(img);
+                        };
+                        img.onerror = () => {
+                            resultsDiv.innerHTML += '<p style="color: red;">❌ Image failed to load</p>';
+                            
+                            // Try direct fetch
+                            fetch(firstFile.url)
+                                .then(res => {
+                                    resultsDiv.innerHTML += `<p>Direct fetch status: ${res.status}</p>`;
+                                    resultsDiv.innerHTML += `<p>Content-Type: ${res.headers.get('content-type')}</p>`;
+                                })
+                                .catch(err => {
+                                    resultsDiv.innerHTML += `<p>Fetch error: ${err.message}</p>`;
+                                });
+                        };
+                    }
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        debugAPI();
+    </script>
+</body>
+</html>
