@@ -162,9 +162,8 @@ const NewsMediaSection = () => {
   useEffect(() => {
     const fetchGalleryMedia = async () => {
       try {
-        const API_URL = process.env.NODE_ENV === 'production' 
-          ? 'https://automationservice-production-4565.up.railway.app/api'
-          : 'http://localhost:3002/api';
+        // Always use production API for now since local isn't running
+        const API_URL = 'https://automationservice-production-4565.up.railway.app/api';
         
         const response = await fetch(`${API_URL}/media/list?category=news-gallery`);
         if (response.ok) {

@@ -1,8 +1,7 @@
 // Document Service - Fetches documents from Railway database
 
-const API_URL = process.env.NODE_ENV === 'production'
-  ? 'https://automationservice-production-4565.up.railway.app/api'
-  : 'http://localhost:3002/api';
+// Always use production API for now since local isn't running
+const API_URL = 'https://automationservice-production-4565.up.railway.app/api';
 
 // Cache for documents
 let documentCache = null;
@@ -32,8 +31,18 @@ export async function fetchDocuments(forceRefresh = false) {
     return documentCache;
   }
 
-  // Enable Railway API integration
+  // Try Railway API first, but don't fail if CORS blocks it
   try {
+    // Quick test if API is accessible
+    const testResponse = await fetch(`${API_URL}/health`, { 
+      method: 'GET',
+      mode: 'cors'
+    }).catch(() => null);
+    
+    if (!testResponse || !testResponse.ok) {
+      throw new Error('API not accessible, using local fallback');
+    }
+    
     // Fetch all document categories
     const categories = Object.keys(CATEGORY_MAPPING);
     const promises = categories.map(cat => 

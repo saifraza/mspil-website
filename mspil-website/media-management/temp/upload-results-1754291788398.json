@@ -1,0 +1,37 @@
+{
+  "successful": [],
+  "failed": [
+    {
+      "file": "070a9889-b80e-4766-8681-54ab8fd371d7.jpg",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "4bcb5dab-39ae-4667-ba93-2f23d539d2e1.jpg",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "9544b905-cc7f-48c2-b83c-53250da4a0c8.mp4",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "DSC_3180.JPG",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "DSC_3218.JPG",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "c445bb58-3029-4afc-ad5b-aa0d390220aa.jpg",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "e58c9b21-c941-4ab6-aea8-f6fce1848c41.jpg",
+      "error": "fetch is not a function"
+    },
+    {
+      "file": "f6652b09-6a8a-4f48-8f85-b22682453bb9.jpg",
+      "error": "fetch is not a function"
+    }
+  ]
+}

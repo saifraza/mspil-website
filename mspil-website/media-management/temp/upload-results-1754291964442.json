@@ -1,0 +1,45 @@
+{
+  "successful": [
+    {
+      "file": "070a9889-b80e-4766-8681-54ab8fd371d7.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/c6fe619b-c74d-4a6e-be93-1d5c1d6f9e51.jpg",
+      "id": "86b223e3-b6eb-4fe8-a515-460a180bfde4"
+    },
+    {
+      "file": "4bcb5dab-39ae-4667-ba93-2f23d539d2e1.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/995bb03d-6eee-4234-a459-40dc69bc93e0.jpg",
+      "id": "1ec8afa9-e8a7-404d-9220-ec9eaf9eeeec"
+    },
+    {
+      "file": "9544b905-cc7f-48c2-b83c-53250da4a0c8.mp4",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/906ad467-eb95-426b-8869-808a4dddf1b8.mp4",
+      "id": "e0ee13c3-6b6a-4e92-ae66-3940b385c537"
+    },
+    {
+      "file": "DSC_3180.JPG",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/c7ac8a93-4935-4e35-be10-881edb951a98.JPG",
+      "id": "add0dcf5-41e8-48ee-9208-7813c16e4356"
+    },
+    {
+      "file": "DSC_3218.JPG",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/fe77142e-ae04-4749-b781-4029a6bdf5db.JPG",
+      "id": "1a98883e-d994-41c0-b648-a19835b25319"
+    },
+    {
+      "file": "c445bb58-3029-4afc-ad5b-aa0d390220aa.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/66303d8f-f5b7-47cb-a7ae-7d741b053bc3.jpg",
+      "id": "27babad1-f47f-4f5a-a1e4-3d42fd410764"
+    },
+    {
+      "file": "e58c9b21-c941-4ab6-aea8-f6fce1848c41.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/b353b64b-46d7-40f8-814a-4507a415fb83.jpg",
+      "id": "feca34a7-da64-4601-9ca6-d2d29ef5f416"
+    },
+    {
+      "file": "f6652b09-6a8a-4f48-8f85-b22682453bb9.jpg",
+      "url": "https://automationservice-production-4565.up.railway.app/api/media/file/news-gallery/21cb3b10-6cf3-4d05-a7e8-842d5d59e995.jpg",
+      "id": "063116c9-c383-42d0-9383-d7390f82e893"
+    }
+  ],
+  "failed": []
+}

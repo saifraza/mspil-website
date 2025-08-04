@@ -14,19 +14,63 @@ const GalleryPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Use static gallery items for now
-    const staticItems = [
-      { type: 'image', titleKey: 'newsGalleryImage1Title', imageUrl: '/images/news_media/image1.jpg', altKey: 'newsGalleryImage1Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage2Title', imageUrl: '/images/news_media/image2.jpg', altKey: 'newsGalleryImage2Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage3Title', imageUrl: '/images/news_media/image3.jpg', altKey: 'newsGalleryImage3Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage4Title', imageUrl: '/images/news_media/image4.jpg', altKey: 'newsGalleryImage4Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage5Title', imageUrl: '/images/news_media/image5.jpg', altKey: 'newsGalleryImage5Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage6Title', imageUrl: '/images/placeholder.jpg', altKey: 'newsGalleryImage6Alt' },
-      { type: 'image', titleKey: 'newsGalleryImage7Title', imageUrl: '/images/placeholder.jpg', altKey: 'newsGalleryImage7Alt' }
-    ];
-    
-    setGalleryItems(staticItems);
-    setIsLoading(false);
+    const fetchGalleryMedia = async () => {
+      try {
+        // Always use production API for now since local isn't running
+        const API_URL = 'https://automationservice-production-4565.up.railway.app/api';
+        
+        const response = await fetch(`${API_URL}/media/list?category=news-gallery`, {
+          mode: 'cors',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        if (response.ok) {
+          const mediaFiles = await response.json();
+          
+          if (mediaFiles && mediaFiles.length > 0) {
+            // Transform API response to gallery format
+            const galleryItems = mediaFiles.map((file, index) => ({
+              type: file.mimetype?.includes('video') ? 'video' : 'image',
+              titleKey: `galleryImage${index + 1}`,
+              title: file.metadata?.title || file.originalName || `Gallery Image ${index + 1}`,
+              imageUrl: file.url,
+              videoUrl: file.mimetype?.includes('video') ? file.url : undefined,
+              altKey: `galleryImage${index + 1}Alt`,
+              uploadDate: file.uploadDate
+            }));
+            
+            setGalleryItems(galleryItems);
+          } else {
+            // Use static fallback
+            setStaticGalleryItems();
+          }
+        } else {
+          // Use static fallback
+          setStaticGalleryItems();
+        }
+      } catch (error) {
+        console.log('Failed to fetch gallery media:', error);
+        // Use static fallback
+        setStaticGalleryItems();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const setStaticGalleryItems = () => {
+      const staticItems = [
+        { type: 'image', titleKey: 'newsGalleryImage1Title', imageUrl: '/images/news_media/image1.jpg', altKey: 'newsGalleryImage1Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage2Title', imageUrl: '/images/news_media/image2.jpg', altKey: 'newsGalleryImage2Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage3Title', imageUrl: '/images/news_media/image3.jpg', altKey: 'newsGalleryImage3Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage4Title', imageUrl: '/images/news_media/image4.jpg', altKey: 'newsGalleryImage4Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage5Title', imageUrl: '/images/news_media/image5.jpg', altKey: 'newsGalleryImage5Alt' },
+        { type: 'image', titleKey: 'newsGalleryImage6Title', imageUrl: '/images/placeholder.jpg', altKey: 'newsGalleryImage6Alt' }
+      ];
+      setGalleryItems(staticItems);
+    };
+
+    fetchGalleryMedia();
   }, []);
 
   const openLightbox = (index) => {
@@ -89,7 +133,7 @@ const GalleryPage = () => {
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <div className="flex items-center justify-between">
                       <p className="text-white font-medium">
-                        {t(item.titleKey)}
+                        {item.title || t(item.titleKey)}
                       </p>
                       {item.type === 'video' ? (
                         <Video className="w-5 h-5 text-white" />

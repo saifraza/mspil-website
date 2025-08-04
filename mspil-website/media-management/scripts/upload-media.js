@@ -3,12 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 const FormData = require('form-data');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Load configuration
 const config = require('../config/railway-api.json');
-const env = process.env.NODE_ENV || 'development';
-const apiConfig = config[env];
 
 // Colors for console output
 const colors = {
@@ -37,6 +35,10 @@ async function uploadMedia(filePath, category, metadata = {}) {
     const fileStats = fs.statSync(filePath);
     
     log.info(`Uploading: ${fileName} (${(fileStats.size / 1024 / 1024).toFixed(2)} MB)`);
+    
+    // Get current config based on environment
+    const env = process.env.NODE_ENV || 'development';
+    const apiConfig = config[env];
     
     // Create form data
     const formData = new FormData();
