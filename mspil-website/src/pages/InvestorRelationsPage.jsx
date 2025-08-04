@@ -17,6 +17,7 @@ import {
   Phone,
   MapPin,
   ChevronRight,
+  ChevronLeft,
   BarChart3,
   DollarSign,
   Activity,
@@ -137,19 +138,24 @@ const InvestorRelationsPage = () => {
     // Update URL hash
     window.history.pushState(null, '', `#${value}`);
     
-    // On mobile, scroll to top of tabs section
+    // On mobile, scroll to show tab content immediately
     if (window.innerWidth < 640) {
+      // Force a small delay to ensure content is rendered
       setTimeout(() => {
-        if (tabsSectionRef.current) {
-          const headerHeight = 80; // Fixed header height
-          const targetPosition = tabsSectionRef.current.offsetTop - headerHeight - 20;
-          
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
+        const mobileTabSection = document.querySelector('[role="tabpanel"][data-state="active"]');
+        if (mobileTabSection) {
+          // Get the position of the hero section (just below header)
+          const heroSection = document.querySelector('h1')?.parentElement?.parentElement;
+          if (heroSection) {
+            const heroBottom = heroSection.getBoundingClientRect().bottom + window.pageYOffset;
+            // Scroll to just below the hero section to show tabs and content
+            window.scrollTo({
+              top: heroBottom - 20,
+              behavior: 'smooth'
+            });
+          }
         }
-      }, 100); // Give time for content to render
+      }, 150); // Slightly longer delay for mobile to ensure render
     } else {
       // Desktop behavior - scroll to show tabs and content
       setTimeout(() => {
@@ -303,14 +309,33 @@ const InvestorRelationsPage = () => {
                 <TabsTrigger value="governance">Governance</TabsTrigger>
               </TabsList>
               
-              {/* Current Tab Display */}
-              <div className="text-center mb-4">
-                <h2 className="text-lg font-semibold text-white">
+              {/* Current Tab Display with navigation arrows */}
+              <div className="flex items-center justify-center mb-4 px-4">
+                {/* Previous arrow */}
+                <button
+                  onClick={() => {
+                    const currentIndex = tabOrder.indexOf(activeTab);
+                    if (currentIndex > 0) {
+                      handleTabChange(tabOrder[currentIndex - 1]);
+                    }
+                  }}
+                  className={`p-2 transition-all ${
+                    tabOrder.indexOf(activeTab) === 0
+                      ? 'opacity-0 pointer-events-none'
+                      : 'opacity-50 hover:opacity-100'
+                  }`}
+                  aria-label="Previous tab"
+                >
+                  <ChevronLeft className="w-5 h-5 text-gray-400" />
+                </button>
+                
+                {/* Tab name */}
+                <h2 className="text-lg font-semibold text-white mx-4 min-w-[120px] text-center">
                   {activeTab === 'overview' && 'Overview'}
                   {activeTab === 'pre-ipo' && (
-                    <span className="relative">
+                    <span className="relative inline-flex items-center">
                       Pre-IPO
-                      <span className="absolute -top-1 -right-8 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                      <span className="absolute -top-1 -right-6 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     </span>
                   )}
                   {activeTab === 'financial-performance' && 'Financials'}
@@ -319,6 +344,24 @@ const InvestorRelationsPage = () => {
                   {activeTab === 'reports' && 'Reports'}
                   {activeTab === 'governance' && 'Governance'}
                 </h2>
+                
+                {/* Next arrow */}
+                <button
+                  onClick={() => {
+                    const currentIndex = tabOrder.indexOf(activeTab);
+                    if (currentIndex < tabOrder.length - 1) {
+                      handleTabChange(tabOrder[currentIndex + 1]);
+                    }
+                  }}
+                  className={`p-2 transition-all ${
+                    tabOrder.indexOf(activeTab) === tabOrder.length - 1
+                      ? 'opacity-0 pointer-events-none'
+                      : 'opacity-50 hover:opacity-100'
+                  }`}
+                  aria-label="Next tab"
+                >
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                </button>
               </div>
               
               {/* Swipe indicator dots */}
@@ -337,10 +380,12 @@ const InvestorRelationsPage = () => {
                 ))}
               </div>
               
-              {/* Swipe hint */}
-              <p className="text-center text-xs text-gray-500">
-                Swipe left or right to navigate
-              </p>
+              {/* Swipe hint with better visibility */}
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                <ChevronLeft className="w-3 h-3 animate-pulse" />
+                <span>Swipe to navigate</span>
+                <ChevronRight className="w-3 h-3 animate-pulse" />
+              </div>
             </div>
 
             {/* Tab Content with Swipe Support */}
