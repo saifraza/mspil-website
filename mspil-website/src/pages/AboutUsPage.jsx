@@ -85,7 +85,7 @@ const AboutUsPage = () => {
 
   // Use static images for now (CMS has issues)
   const leadership = [
-   {
+  {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
@@ -117,7 +117,7 @@ const AboutUsPage = () => {
       bio: t('aboutBoard3Bio'),
       image: '/images/leadership/rajandubey.jpeg' // Fallback until Rajan image is added
     },
-     
+   
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
@@ -130,7 +130,7 @@ const AboutUsPage = () => {
       bio: t('aboutBoard1Bio'),
       image: '/images/leadership/sakshiji.jpeg' // Fallback until Ranganathan image is added
     },
-     {
+       {
       name: t('aboutBoard2Name'),
       title: t('aboutBoard2Title'),
       bio: t('aboutBoard2Bio'),
