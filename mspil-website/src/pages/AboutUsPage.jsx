@@ -85,7 +85,7 @@ const AboutUsPage = () => {
 
   // Use static images for now (CMS has issues)
   const leadership = [
-    {
+   {
       name: t('aboutFounderName'),
       title: t('aboutFounderTitle'),
       bio: t('aboutFounderBio'),
@@ -95,38 +95,52 @@ const AboutUsPage = () => {
       name: t('aboutMDName'),
       title: t('aboutMDTitle'),
       bio: t('aboutMDBio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Saif image is added
+      image: '/images/leadership/saifraza.jpeg' // Fallback until Saif image is added
     },
     {
       name: t('aboutDirectorName'),
       title: t('aboutDirectorTitle'),
       bio: t('aboutDirectorBio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Sahil image is added
+      image: '/images/leadership/sahilraza.jpeg' // Fallback until Sahil image is added
     },
-    {
-      name: t('aboutBoard1Name'),
-      title: t('aboutBoard1Title'),
-      bio: t('aboutBoard1Bio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Ranganathan image is added
+     {
+      name: t('aboutDirector4Name'),
+      title: t('aboutDirector4Title'),
+      bio: t('aboutDirector4Bio'),
+      image: '/images/leadership/asmatraza.png' // Fallback until Sahil image is added
     },
-    {
-      name: t('aboutBoard2Name'),
-      title: t('aboutBoard2Title'),
-      bio: t('aboutBoard2Bio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Mohan image is added
-    },
+ 
+  
     {
       name: t('aboutBoard3Name'),
       title: t('aboutBoard3Title'),
       bio: t('aboutBoard3Bio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Rajan image is added
+      image: '/images/leadership/rajandubey.jpeg' // Fallback until Rajan image is added
+    },
+      {
+      name: t('aboutBoard2Name'),
+      title: t('aboutBoard2Title'),
+      bio: t('aboutBoard2Bio'),
+      image: '/images/leadership/devrajji.jpeg' // Fallback until Mohan image is added
     },
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
       bio: t('aboutBoard4Bio'),
-      image: '/images/leadership/nawab_raza.png' // Fallback until Chandrakant image is added
-    }
+      image: '/images/leadership/manishsir.jpeg' // Fallback until Chandrakant image is added
+    },
+       {
+      name: t('aboutBoard1Name'),
+      title: t('aboutBoard1Title'),
+      bio: t('aboutBoard1Bio'),
+      image: '/images/leadership/sakshiji.jpeg' // Fallback until Ranganathan image is added
+    },
+       {
+      name: t('aboutBoard5Name'),
+      title: t('aboutBoard5Title'),
+      bio: t('aboutBoard5Bio'),
+      image: '/images/leadership/dilshadji.jpeg' // Fallback until Chandrakant image is added
+    },
   ];
 
 
@@ -196,7 +210,7 @@ const AboutUsPage = () => {
                       <CardContent className="p-6">
                         <h4 className="text-xl font-semibold text-primary mb-3">Key Responsibilities</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/70">
-                          {index === 0 && (
+                         {index === 0 && (
                             <>
                               <div>• Strategic Leadership & Vision</div>
                               <div>• Board Governance</div>
@@ -222,26 +236,50 @@ const AboutUsPage = () => {
                           )}
                           {index === 3 && (
                             <>
-                              <div>• Manufacturing Operations</div>
-                              <div>• Process Optimization</div>
-                              <div>• Safety Management</div>
-                              <div>• Production Planning</div>
+                              <div>• Strategic Advisory</div>
+                              <div>• Social Development Oversight</div>
+                              <div>• Agro-Research Coordination</div>
+                              <div>• Sustainability Integration</div>
                             </>
                           )}
                           {index === 4 && (
                             <>
-                              <div>• Financial Planning & Analysis</div>
-                              <div>• Investment Strategy</div>
-                              <div>• Risk Management</div>
-                              <div>• Investor Relations</div>
+                              <div>• Program Leadership and Execution</div>
+                              <div>• Strategic Advisory in Public Health</div>
+                              <div>• Innovation and Product Commercialization</div>
+                              <div>• Global Collaboration</div>
                             </>
                           )}
                           {index === 5 && (
                             <>
+                              <div>• Organizational Management</div>
+                              <div>• Strategic Foresight and Planning</div>
+                              <div>• Governance and Compliance</div>
+                              <div>• Cross-Functional Integration</div>
+                            </>
+                          )}
+                             {index === 6 && (
+                            <>
+                              <div>• Finance Function Leadership</div>
+                              <div>• Business Growth Advisory</div>
+                              <div>• Regulatory Compliance Management</div>
+                              <div>• Strategic Financial Planning</div>
+                            </>
+                          )}
+                             {index === 7 && (
+                            <>
                               <div>• Talent Acquisition</div>
-                              <div>• Organizational Development</div>
-                              <div>• Employee Engagement</div>
-                              <div>• Culture Building</div>
+                              <div>• Stakeholder Transparency Enhancement</div>
+                              <div>• Listing and IPO Readiness</div>
+                              <div>• Regulatory Compliance Management</div>
+                            </>
+                          )}
+                             {index === 8 && (
+                            <>
+                              <div>• Talent Acquisition</div>
+                              <div>• Financial Reporting and Audit Oversight</div>
+                              <div>• Tax and Legal Compliance</div>
+                              <div>• Regulatory Liaisoning</div>
                             </>
                           )}
                         </div>
