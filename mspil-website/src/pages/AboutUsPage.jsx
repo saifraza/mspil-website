@@ -117,12 +117,7 @@ const AboutUsPage = () => {
       bio: t('aboutBoard3Bio'),
       image: '/images/leadership/rajandubey.jpeg' // Fallback until Rajan image is added
     },
-      {
-      name: t('aboutBoard2Name'),
-      title: t('aboutBoard2Title'),
-      bio: t('aboutBoard2Bio'),
-      image: '/images/leadership/devrajji.jpeg' // Fallback until Mohan image is added
-    },
+     
     {
       name: t('aboutBoard4Name'),
       title: t('aboutBoard4Title'),
@@ -134,6 +129,12 @@ const AboutUsPage = () => {
       title: t('aboutBoard1Title'),
       bio: t('aboutBoard1Bio'),
       image: '/images/leadership/sakshiji.jpeg' // Fallback until Ranganathan image is added
+    },
+     {
+      name: t('aboutBoard2Name'),
+      title: t('aboutBoard2Title'),
+      bio: t('aboutBoard2Bio'),
+      image: '/images/leadership/devrajji.jpeg' // Fallback until Mohan image is added
     },
        {
       name: t('aboutBoard5Name'),
@@ -210,7 +211,7 @@ const AboutUsPage = () => {
                       <CardContent className="p-6">
                         <h4 className="text-xl font-semibold text-primary mb-3">Key Responsibilities</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/70">
-                         {index === 0 && (
+                       {index === 0 && (
                             <>
                               <div>• Strategic Leadership & Vision</div>
                               <div>• Board Governance</div>
@@ -250,15 +251,8 @@ const AboutUsPage = () => {
                               <div>• Global Collaboration</div>
                             </>
                           )}
-                          {index === 5 && (
-                            <>
-                              <div>• Organizational Management</div>
-                              <div>• Strategic Foresight and Planning</div>
-                              <div>• Governance and Compliance</div>
-                              <div>• Cross-Functional Integration</div>
-                            </>
-                          )}
-                             {index === 6 && (
+                          
+                             {index === 5 && (
                             <>
                               <div>• Finance Function Leadership</div>
                               <div>• Business Growth Advisory</div>
@@ -266,12 +260,20 @@ const AboutUsPage = () => {
                               <div>• Strategic Financial Planning</div>
                             </>
                           )}
-                             {index === 7 && (
+                             {index === 6 && (
                             <>
                               <div>• Talent Acquisition</div>
                               <div>• Stakeholder Transparency Enhancement</div>
                               <div>• Listing and IPO Readiness</div>
                               <div>• Regulatory Compliance Management</div>
+                            </>
+                          )}
+                          {index === 7 && (
+                            <>
+                              <div>• Organizational Management</div>
+                              <div>• Strategic Foresight and Planning</div>
+                              <div>• Governance and Compliance</div>
+                              <div>• Cross-Functional Integration</div>
                             </>
                           )}
                              {index === 8 && (
